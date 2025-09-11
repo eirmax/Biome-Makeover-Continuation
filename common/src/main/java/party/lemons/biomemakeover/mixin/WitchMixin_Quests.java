@@ -1,7 +1,9 @@
 package party.lemons.biomemakeover.mixin;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
@@ -15,6 +17,7 @@ import net.minecraft.world.entity.monster.Witch;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.loot.LootTable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -37,7 +40,7 @@ import party.lemons.taniwha.util.ItemUtil;
 public abstract class WitchMixin_Quests extends Raider implements WitchQuestEntity
 {
     @Shadow private NearestAttackableWitchTargetGoal<Player> attackPlayersGoal;
-    private static ResourceLocation WITCH_HAT_TABLE;
+    private static ResourceKey<LootTable> WITCH_HAT_TABLE;
 
     private Player customer;
     private WitchQuestList quests;
@@ -216,7 +219,7 @@ public abstract class WitchMixin_Quests extends Raider implements WitchQuestEnti
     }
 
     @Override
-    public void applyRaidBuffs(int i, boolean bl) {
+    public void applyRaidBuffs(ServerLevel serverLevel, int i, boolean bl) {
 
     }
 
