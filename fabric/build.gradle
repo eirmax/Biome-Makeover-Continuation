@@ -28,10 +28,10 @@ dependencies {
     modApi "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"
     modApi "dev.architectury:architectury-fabric:${rootProject.architectury_version}"
 
-    include("party.lemons:taniwha-fabric:${rootProject.taniwha_version}"){
+   include("eirmax:taniwha-remaked-fabric:${rootProject.taniwha_version}"){
         transitive = true;
-    }
-    modApi("party.lemons:taniwha-fabric:${rootProject.taniwha_version}"){
+   }
+    modApi("eirmax:taniwha-remaked-fabric:${rootProject.taniwha_version}"){
         transitive = true;
     }
 

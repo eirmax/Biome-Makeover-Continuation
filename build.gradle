@@ -1,16 +1,19 @@
 plugins {
     id "architectury-plugin" version "3.4-SNAPSHOT"
-    id "dev.architectury.loom" version "1.4-SNAPSHOT" apply false
+    id "dev.architectury.loom" version "1.11-SNAPSHOT" apply false
     id 'io.github.juuxel.loom-quiltflower' version '1.8.0' apply false
+    id "maven-publish"
 }
 
 architectury {
     minecraft = rootProject.minecraft_version
 }
 
+
 subprojects {
     apply plugin: "dev.architectury.loom"
     apply plugin: "io.github.juuxel.loom-quiltflower"
+    apply plugin: "maven-publish"
 
     loom {
         silentMojangMappingsLicense()
@@ -22,35 +25,39 @@ subprojects {
     }
 }
 
+
 allprojects {
     apply plugin: "java"
     apply plugin: "architectury-plugin"
-    apply plugin: "maven-publish"
 
     archivesBaseName = rootProject.archives_base_name
     version = rootProject.mod_version
     group = rootProject.maven_group
 
+
     def apikeyPropertiesFile = rootProject.file("secret/secrets.properties");
     def apikeyProperties = new Properties()
     apikeyProperties.load(new FileInputStream(apikeyPropertiesFile))
 
+
     repositories {
         maven {
-            url = uri("https://maven.pkg.github.com/Lemonszz/taniwha")
+            url = uri("https://maven.pkg.github.com/eirmax/taniwha-remaked")
             credentials {
                 username = apikeyProperties['gpr.user'] ?: System.getenv("USERNAME")
                 password = apikeyProperties['gpr.key'] ?: System.getenv("TOKEN")
             }
         }
         maven { url "https://maven.shedaniel.me" }
+        maven { url "https://maven.neoforged.net/releases" }
+        maven { url "https://maven.blamejared.com/" }
         maven { url 'https://jitpack.io' }
         maven { url "https://maven.terraformersmc.com/" }
     }
 
     tasks.withType(JavaCompile) {
         options.encoding = "UTF-8"
-        options.release = 17
+        options.release = 21
     }
 
     java {
