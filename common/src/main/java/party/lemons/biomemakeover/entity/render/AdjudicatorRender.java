@@ -22,6 +22,7 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import party.lemons.biomemakeover.BiomeMakeover;
+import party.lemons.biomemakeover.Constants;
 import party.lemons.biomemakeover.entity.adjudicator.AdjudicatorEntity;
 import party.lemons.biomemakeover.entity.adjudicator.AdjudicatorState;
 import party.lemons.biomemakeover.entity.adjudicator.AdjudicatorStateProvider;
@@ -38,8 +39,8 @@ public class AdjudicatorRender extends MobRenderer<AdjudicatorEntity, Adjudicato
     }
 
     @Override
-    protected void setupRotations(AdjudicatorEntity entity, PoseStack poseStack, float animationProgress, float bodyYaw, float tickDelta) {
-        super.setupRotations(entity, poseStack, animationProgress, bodyYaw, tickDelta);
+    protected void setupRotations(AdjudicatorEntity entity, PoseStack poseStack, float animationProgress, float bodyYaw, float tickDelta, float i) {
+        super.setupRotations(entity, poseStack, animationProgress, bodyYaw, tickDelta, i);
 
         switch (entity.getState()) {
             case WAITING -> {
@@ -120,7 +121,7 @@ public class AdjudicatorRender extends MobRenderer<AdjudicatorEntity, Adjudicato
     }
 
     private class InvulnerableFeatureRenderer extends EnergySwirlLayer<AdjudicatorEntity, AdjudicatorModel<AdjudicatorEntity>> {
-        private final ResourceLocation SKIN = new ResourceLocation("textures/entity/wither/wither_armor.png");
+        private final ResourceLocation SKIN = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID,"textures/entity/wither/wither_armor.png");
 
         public InvulnerableFeatureRenderer(AdjudicatorRender adjudicatorRender) {
             super(adjudicatorRender);

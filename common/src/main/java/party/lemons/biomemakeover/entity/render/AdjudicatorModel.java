@@ -141,7 +141,7 @@ public class AdjudicatorModel<T extends Monster & AdjudicatorStateProvider> exte
     }
 
     @Override
-    public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, int i) {
         body.render(poseStack, buffer, packedLight, packedOverlay);
         head.render(poseStack, buffer, packedLight, packedOverlay);
     }
