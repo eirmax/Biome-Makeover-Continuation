@@ -10,7 +10,7 @@ import party.lemons.biomemakeover.init.BMEnchantments;
 @Mixin(ItemStack.class)
 public class ItemStackMixin
 {
-    @ModifyVariable(at = @At("HEAD"), method = "hurtAndBreak")
+    @ModifyVariable(at = @At("HEAD"), method = "hurtAndBreak*", argsOnly = true)
     private int modifyAmount(int amount)
     {
         return amount + EnchantmentHelper.getItemEnchantmentLevel(BMEnchantments.DECAY_CURSE.get(), ((ItemStack) (Object)this));
