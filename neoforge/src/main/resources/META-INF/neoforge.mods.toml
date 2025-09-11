@@ -14,22 +14,19 @@ Biome Makeover is a mod designed to update vanilla's biomes.
 logoFile = "bm-logo.png"
 
 [[dependencies.biomemakeover]]
-modId = "forge"
-mandatory = true
-versionRange = "[41.0.22,)"
+modId = "neoforge"
+versionRange = "21.1,)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.biomemakeover]]
 modId = "minecraft"
-mandatory = true
-versionRange = "[1.19,)"
+versionRange = "[1.21,)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.biomemakeover]]
 modId = "architectury"
-mandatory = true
-versionRange = "[5.8.29,)"
+versionRange = "[13.0.8,)"
 ordering = "AFTER"
 side = "BOTH"
