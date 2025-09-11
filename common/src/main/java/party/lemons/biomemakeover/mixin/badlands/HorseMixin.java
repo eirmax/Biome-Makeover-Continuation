@@ -30,7 +30,7 @@ public class HorseMixin extends AbstractHorse implements HorseHat
     @Inject(at = @At("TAIL"), method = "defineSynchedData")
     private void initDataTacker(CallbackInfo cbi)
     {
-        this.getEntityData().define(HAS_HAT, false);
+        this.getEntityData().set(HAS_HAT, false);
     }
 
     @Inject(at = @At("RETURN"), method = "addAdditionalSaveData")
@@ -53,7 +53,7 @@ public class HorseMixin extends AbstractHorse implements HorseHat
     {
         if(getControllingPassenger() == null)
         {
-            if(isSaddled() || isWearingArmor() || isLeashed())
+            if(isSaddled() || isWearingBodyArmor() || isLeashed())
             {
                 cowboySpawned = false;
                 return false;
