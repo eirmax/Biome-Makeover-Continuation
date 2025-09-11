@@ -23,7 +23,7 @@ public class AntidoteMobEffect extends InstantenousMobEffect {
 
     public void doEffect(LivingEntity target)
     {
-        target.getActiveEffects().stream().filter((e) -> e.getEffect().getCategory() == MobEffectCategory.HARMFUL).toList().forEach(e->target.removeEffect(e.getEffect()));
+        target.getActiveEffects().stream().filter((e) -> e.getEffect().value().getCategory() == MobEffectCategory.HARMFUL).toList().forEach(e->target.removeEffect(e.getEffect()));
 
         if(!target.level().isClientSide())
         {
@@ -41,8 +41,7 @@ public class AntidoteMobEffect extends InstantenousMobEffect {
     }
 
     @Override
-    public void addAttributeModifiers(LivingEntity livingEntity, AttributeMap attributeMap, int i) {
-        doEffect(livingEntity);
-        super.addAttributeModifiers(livingEntity, attributeMap, i);
+    public void addAttributeModifiers(AttributeMap attributeMap, int i) {
+        super.addAttributeModifiers(attributeMap, i);
     }
 }
