@@ -44,7 +44,7 @@ public abstract class PatrolSpawnerMixin_Cowboy {
             {
                 Horse horse = EntityType.HORSE.create(level);
                 horse.setPos(pos.getX(), pos.getY(), pos.getZ());
-                horse.finalizeSpawn(level, level.getCurrentDifficultyAt(pos), MobSpawnType.PATROL, null, null);
+                horse.finalizeSpawn(level, level.getCurrentDifficultyAt(pos), MobSpawnType.PATROL, null);
                 patrollingMonster.startRiding(horse);
                 ((HorseHat)horse).setCowboySpawned();
 
@@ -55,7 +55,7 @@ public abstract class PatrolSpawnerMixin_Cowboy {
                     ((HorseHat)horse).setHat();
                 }
                 patrollingMonster.setPos(pos.getX(), pos.getY(), pos.getZ());
-                patrollingMonster.finalizeSpawn(level, level.getCurrentDifficultyAt(pos), MobSpawnType.PATROL, null, null);
+                patrollingMonster.finalizeSpawn(level, level.getCurrentDifficultyAt(pos), MobSpawnType.PATROL, null);
                 level.addFreshEntityWithPassengers(horse);
                 cbi.setReturnValue(true);
             }

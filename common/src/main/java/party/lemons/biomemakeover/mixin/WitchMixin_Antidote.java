@@ -1,5 +1,6 @@
 package party.lemons.biomemakeover.mixin;
 
+import net.minecraft.core.Holder;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -12,7 +13,6 @@ import net.minecraft.world.entity.monster.Witch;
 import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Final;
@@ -40,17 +40,17 @@ public abstract class WitchMixin_Antidote extends Raider
     @Shadow @Final private static AttributeModifier SPEED_MODIFIER_DRINKING;
 
     @ModifyVariable(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/monster/Witch;setItemSlot(Lnet/minecraft/world/entity/EquipmentSlot;Lnet/minecraft/world/item/ItemStack;)V", ordinal = 1), method = "aiStep")
-    public Potion changePotion(Potion potion)
+    public Holder changePotion(Holder value)
     {
         if(random.nextFloat() < 0.10)
         {
             for(MobEffectInstance effect : getActiveEffects())
-                if(effect.getEffect().getCategory() == MobEffectCategory.HARMFUL)
+                if(effect.getEffect().value().getCategory() == MobEffectCategory.HARMFUL)
                 {
                     return BMPotions.ANTIDOTE_POT.get();
                 }
         }
-        return potion;
+        return value;
     }
 
     @Inject(at = @At("TAIL"), method = "aiStep")
@@ -62,7 +62,7 @@ public abstract class WitchMixin_Antidote extends Raider
             {
                 boolean found = false;
                 for(MobEffectInstance effect : getActiveEffects())
-                    if(effect.getEffect().getCategory() == MobEffectCategory.HARMFUL)
+                    if(effect.getEffect().value().getCategory() == MobEffectCategory.HARMFUL)
                     {
                         found = true;
                         break;

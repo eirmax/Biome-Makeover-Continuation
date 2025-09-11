@@ -19,8 +19,8 @@ import party.lemons.taniwha.util.ItemUtil;
 @Mixin(Pillager.class)
 public abstract class PillagerMixin extends AbstractIllager
 {
-	private static ResourceLocation ADDITIONAL_LOOT_LEADER = new ResourceLocation(Constants.MOD_ID, "entities/pillager_leader_additional");
-	private static ResourceLocation ADDITIONAL_LOOT = new ResourceLocation(Constants.MOD_ID, "entities/pillager_additional");
+	private static ResourceLocation ADDITIONAL_LOOT_LEADER = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "entities/pillager_leader_additional");
+	private static ResourceLocation ADDITIONAL_LOOT =  ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "entities/pillager_additional");
 
 	@Override
 	protected void dropFromLootTable(DamageSource damageSource, boolean causedByPlayer)
