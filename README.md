@@ -9,8 +9,6 @@ Curseforge ([Forge](https://www.curseforge.com/minecraft/mc-mods/biome-makeover-
 
 ## What is this?
 
-
-## Contributing  
 This is a port of Biome-MakeOver to new versions of Fabric and NeoForge.
 Biome-MakeOver is archived and will no longer be developed. This is the same continuation (I hope) of its development. All actions are legal in accordance with the MIT license
 
