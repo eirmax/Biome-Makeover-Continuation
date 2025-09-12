@@ -1,7 +1,3 @@
-> [!IMPORTANT]  
-> This project and repository is now archived.
-> There are no further updates or fixes planned.
-
 # Biome Makeover
 [Official Documentation](https://biomemakeover.laserknights.com/)  
 [Discord](https://discord.gg/D5bNnw7)  
@@ -11,7 +7,12 @@
 Curseforge ([Forge](https://www.curseforge.com/minecraft/mc-mods/biome-makeover-forge), [Fabric](https://www.curseforge.com/minecraft/mc-mods/biome-makeover))  
 [Modrinth](https://modrinth.com/mod/biome-makeover)
 
+## What is this?
+
+
 ## Contributing  
+This is a port of Biome-MakeOver to new versions of Fabric and NeoForge.
+Biome-MakeOver is archived and will no longer be developed. This is the same continuation (I hope) of its development. All actions are legal in accordance with the MIT license
 
 ### Code
 We do accept contributions for bug fixes, but will likely reject any feature contribution.  
