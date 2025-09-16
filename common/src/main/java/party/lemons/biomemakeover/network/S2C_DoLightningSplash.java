@@ -11,6 +11,7 @@ import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
@@ -47,10 +48,9 @@ public class S2C_DoLightningSplash extends BaseS2CMessage
     }
 
     @Override
-    public void write(FriendlyByteBuf buf)
-    {
-        buf.writeBoolean(doBottle);
-        buf.writeBlockPos(pos);
+    public void write(RegistryFriendlyByteBuf registryFriendlyByteBuf) {
+        registryFriendlyByteBuf.writeBoolean(doBottle);
+        registryFriendlyByteBuf.writeBlockPos(pos);
     }
 
     @Override

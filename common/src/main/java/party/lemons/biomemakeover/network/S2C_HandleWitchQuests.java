@@ -4,7 +4,7 @@ import dev.architectury.networking.NetworkManager;
 import dev.architectury.networking.simple.BaseS2CMessage;
 import dev.architectury.networking.simple.MessageType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import party.lemons.biomemakeover.crafting.witch.WitchQuestList;
 import party.lemons.biomemakeover.crafting.witch.menu.WitchMenu;
@@ -21,16 +21,10 @@ public class S2C_HandleWitchQuests extends BaseS2CMessage {
         this.quests = quests;
     }
 
-    public S2C_HandleWitchQuests(FriendlyByteBuf buf)
+    public S2C_HandleWitchQuests(RegistryFriendlyByteBuf buf)
     {
         index = buf.readInt();
         quests = new WitchQuestList(buf);
-    }
-
-    @Override
-    public void write(FriendlyByteBuf buf) {
-        buf.writeInt(index);
-        quests.toPacket(buf);
     }
 
     @Override
@@ -46,5 +40,11 @@ public class S2C_HandleWitchQuests extends BaseS2CMessage {
     @Override
     public MessageType getType() {
         return BMNetwork.WITCH_QUESTS;
+    }
+
+    @Override
+    public void write(RegistryFriendlyByteBuf registryFriendlyByteBuf) {
+        registryFriendlyByteBuf.writeInt(index);
+        quests.toPacket(registryFriendlyByteBuf);
     }
 }

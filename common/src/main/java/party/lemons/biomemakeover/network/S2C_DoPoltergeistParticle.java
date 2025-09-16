@@ -5,6 +5,7 @@ import dev.architectury.networking.simple.BaseS2CMessage;
 import dev.architectury.networking.simple.MessageType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.util.RandomSource;
 import party.lemons.biomemakeover.init.BMEffects;
 import party.lemons.biomemakeover.init.BMNetwork;
@@ -31,9 +32,8 @@ public class S2C_DoPoltergeistParticle extends BaseS2CMessage {
     }
 
     @Override
-    public void write(FriendlyByteBuf buf)
-    {
-        buf.writeBlockPos(pos);
+    public void write(RegistryFriendlyByteBuf registryFriendlyByteBuf) {
+        registryFriendlyByteBuf.writeBlockPos(pos);
     }
 
     @Override

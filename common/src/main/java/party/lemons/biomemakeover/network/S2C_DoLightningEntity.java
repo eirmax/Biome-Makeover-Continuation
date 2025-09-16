@@ -9,6 +9,7 @@ import net.minecraft.client.particle.Particle;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -42,9 +43,9 @@ public class S2C_DoLightningEntity extends BaseS2CMessage
     }
 
     @Override
-    public void write(FriendlyByteBuf buf) {
-        buf.writeInt(entityID);
-        buf.writeInt(count);
+    public void write(RegistryFriendlyByteBuf registryFriendlyByteBuf) {
+        registryFriendlyByteBuf.writeInt(entityID);
+        registryFriendlyByteBuf.writeInt(count);
 
     }
 
