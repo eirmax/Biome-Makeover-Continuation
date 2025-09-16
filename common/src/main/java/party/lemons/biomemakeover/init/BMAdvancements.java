@@ -4,6 +4,7 @@ import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import party.lemons.biomemakeover.BiomeMakeover;
+import party.lemons.biomemakeover.Constants;
 import party.lemons.biomemakeover.util.FieldConsumer;
 import party.lemons.taniwha.data.criterion.SimpleCriterion;
 
@@ -19,6 +20,7 @@ public class BMAdvancements
 
     public static void init()
     {
-        FieldConsumer.run(BMAdvancements.class, SimpleCriterionTrigger.class, (t)-> CriteriaTriggers.register((CriterionTrigger)t));
+        FieldConsumer.run(BMAdvancements.class, SimpleCriterionTrigger.class,
+                t -> CriteriaTriggers.register(Constants.MOD_ID, t));
     }
 }
