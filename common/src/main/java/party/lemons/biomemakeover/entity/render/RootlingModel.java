@@ -70,9 +70,9 @@ public class RootlingModel extends EntityModel<RootlingEntity> implements Headed
     }
 
     @Override
-    public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        body.render(poseStack, buffer, packedLight, packedOverlay);
-        head.render(poseStack, buffer, packedLight, packedOverlay);
+    public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int i, int j, int k) {
+        body.render(poseStack, vertexConsumer, i, j);
+        head.render(poseStack, vertexConsumer, i, j);
     }
 
     @Override
