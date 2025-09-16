@@ -119,7 +119,7 @@ public class ToadModel extends EntityModel<ToadEntity>
     }
 
     @Override
-    public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, int k) {
         bone.render(poseStack, buffer, packedLight, packedOverlay);
     }
 }
