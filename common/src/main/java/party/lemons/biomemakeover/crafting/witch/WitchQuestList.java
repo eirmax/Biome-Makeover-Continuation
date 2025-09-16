@@ -1,9 +1,10 @@
 package party.lemons.biomemakeover.crafting.witch;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.util.RandomSource;
 import party.lemons.biomemakeover.crafting.witch.data.QuestCategories;
 
@@ -15,14 +16,14 @@ public class WitchQuestList extends ArrayList<WitchQuest>
     {
     }
 
-    public WitchQuestList(CompoundTag tags)
+    public WitchQuestList(CompoundTag tags, HolderLookup.Provider registryAccess)
     {
         ListTag questsTag = tags.getList("Quests", Tag.TAG_COMPOUND);
         for(int i = 0; i < questsTag.size(); i++)
-            add(new WitchQuest(questsTag.getCompound(i)));
+            add(new WitchQuest(questsTag.getCompound(i), registryAccess));
     }
 
-    public WitchQuestList(FriendlyByteBuf buffer)
+    public WitchQuestList(RegistryFriendlyByteBuf buffer)
     {
         int size = buffer.readByte() & 255;
         for(int i = 0; i < size; i++)
@@ -43,7 +44,7 @@ public class WitchQuestList extends ArrayList<WitchQuest>
         }
     }
 
-    public void toPacket(FriendlyByteBuf buffer)
+    public void toPacket(RegistryFriendlyByteBuf buffer)
     {
         buffer.writeByte((byte) (this.size() & 255));
         for(int i = 0; i < this.size(); i++)
@@ -52,7 +53,7 @@ public class WitchQuestList extends ArrayList<WitchQuest>
         }
     }
 
-    public CompoundTag toTag()
+    public CompoundTag toTag(HolderLookup.Provider registryAccess)
     {
         CompoundTag compoundTag = new CompoundTag();
         ListTag listTag = new ListTag();
@@ -60,7 +61,7 @@ public class WitchQuestList extends ArrayList<WitchQuest>
         for(int i = 0; i < this.size(); i++)
         {
             WitchQuest quest = get(i);
-            listTag.add(quest.toTag());
+            listTag.add(quest.toTag(registryAccess));
         }
 
         compoundTag.put("Quests", listTag);
