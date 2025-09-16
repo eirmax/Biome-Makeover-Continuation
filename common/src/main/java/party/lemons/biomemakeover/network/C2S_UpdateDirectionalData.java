@@ -5,6 +5,7 @@ import dev.architectury.networking.simple.BaseC2SMessage;
 import dev.architectury.networking.simple.MessageType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.level.Level;
 import party.lemons.biomemakeover.block.blockentity.DirectionalDataBlockEntity;
 import party.lemons.biomemakeover.init.BMNetwork;
@@ -31,8 +32,7 @@ public class C2S_UpdateDirectionalData extends BaseC2SMessage
     }
 
     @Override
-    public void write(FriendlyByteBuf buf)
-    {
+    public void write(RegistryFriendlyByteBuf buf) {
         buf.writeBlockPos(pos);
         buf.writeUtf(value);
     }
