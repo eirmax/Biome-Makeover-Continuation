@@ -1,8 +1,10 @@
 package party.lemons.biomemakeover.block;
 
 import com.google.common.collect.Maps;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.level.block.BaseEntityBlock;
 import party.lemons.biomemakeover.BiomeMakeover;
 
 import java.util.Map;
@@ -25,5 +27,10 @@ public class ColorTapestryBlock extends AbstractTapestryBlock
     @Override
     public ResourceLocation getRenderTexture() {
         return TEXTURES.get(color);
+    }
+
+    @Override
+    protected MapCodec<? extends BaseEntityBlock> codec() {
+        return null;
     }
 }
