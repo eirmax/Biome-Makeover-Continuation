@@ -160,8 +160,8 @@ public class HelmitCrabModel extends EntityModel<HelmitCrabEntity> implements He
 	}
 
 	@Override
-	public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-		body.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
+	public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, int k) {
+		body.render(poseStack, vertexConsumer, packedLight, packedOverlay, k);
 	}
 
 	@Override

@@ -2,6 +2,12 @@ package party.lemons.biomemakeover.entity;
 
 import com.google.common.collect.Lists;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -26,16 +32,17 @@ import net.minecraft.world.entity.animal.FlyingAnimal;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.AbstractSkullBlock;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import party.lemons.biomemakeover.entity.ai.PredicateTemptGoal;
@@ -47,6 +54,7 @@ import party.lemons.biomemakeover.item.HatItem;
 
 import java.util.EnumSet;
 import java.util.List;
+import java.util.stream.Stream;
 
 /*
     🦀🦀🦀🦀🦀🦀🦀🦀🦀🦀🦀🦀🦀🦀🦀🦀🦀🦀🦀🦀🦀🦀🦀🦀🦀🦀🦀🦀🦀🦀🦀🦀🦀🦀
@@ -61,8 +69,8 @@ public class HelmitCrabEntity extends Animal
 	public HelmitCrabEntity(EntityType<? extends Animal> entityType, Level level) {
 		super(entityType, level);
 
-		setPathfindingMalus(BlockPathTypes.WATER, 0);
-		setPathfindingMalus(BlockPathTypes.WATER_BORDER, 0);
+		setPathfindingMalus(PathType.WATER, 0);
+		setPathfindingMalus(PathType.WATER_BORDER, 0);
 		getNavigation().setCanFloat(true);
 		armorDropChances[0] = 0.0F;
 	}
@@ -91,11 +99,11 @@ public class HelmitCrabEntity extends Animal
 	}
 
 	@Override
-	protected void defineSynchedData()
+	protected void defineSynchedData(SynchedEntityData.Builder builder)
 	{
-		getEntityData().define(SHELL_ITEM, ItemStack.EMPTY);
-		getEntityData().define(HIDING, false);
-		super.defineSynchedData();
+		getEntityData().set(SHELL_ITEM, ItemStack.EMPTY);
+		getEntityData().set(HIDING, false);
+		super.defineSynchedData(builder);
 	}
 
 	public static boolean checkSpawnRules(EntityType<HelmitCrabEntity> type, ServerLevelAccessor level, MobSpawnType mobSpawnType, BlockPos pos, RandomSource random)
@@ -104,10 +112,10 @@ public class HelmitCrabEntity extends Animal
 	}
 
 	@Override
-	public SpawnGroupData finalizeSpawn(ServerLevelAccessor serverLevelAccessor, DifficultyInstance difficultyInstance, MobSpawnType mobSpawnType, @Nullable SpawnGroupData spawnGroupData, @Nullable CompoundTag compoundTag)
+	public SpawnGroupData finalizeSpawn(ServerLevelAccessor serverLevelAccessor, DifficultyInstance difficultyInstance, MobSpawnType mobSpawnType, @Nullable SpawnGroupData spawnGroupData)
 	{
 		if(isBaby())
-			return super.finalizeSpawn(serverLevelAccessor, difficultyInstance, mobSpawnType, spawnGroupData, compoundTag);
+			return super.finalizeSpawn(serverLevelAccessor, difficultyInstance, mobSpawnType, spawnGroupData);
 
 		if (this.random.nextFloat() < 0.6F)
 		{
@@ -127,7 +135,7 @@ public class HelmitCrabEntity extends Animal
 				default -> new ItemStack(Items.NAUTILUS_SHELL);
 			};
 			if(random.nextFloat() < 0.05F)
-				EnchantmentHelper.enchantItem(this.random, itemStack, (int)(5.0F + (float)this.random.nextInt(10)), false);
+				EnchantmentHelper.enchantItem(this.random, itemStack, (int)(5.0F + (float)this.random.nextInt(10)), Stream.<Holder<Enchantment>>builder().build());
 
 			if(itemStack.isDamageableItem())
 				itemStack.setDamageValue(itemStack.getMaxDamage() - this.random.nextInt(1 + this.random.nextInt(Math.max(itemStack.getMaxDamage() - 3, 1))));
@@ -135,7 +143,7 @@ public class HelmitCrabEntity extends Animal
 			getEntityData().set(SHELL_ITEM, itemStack); //Not using setShell as that sets cool down and plays sound.
 		}
 
-		return super.finalizeSpawn(serverLevelAccessor, difficultyInstance, mobSpawnType, spawnGroupData, compoundTag);
+		return super.finalizeSpawn(serverLevelAccessor, difficultyInstance, mobSpawnType, spawnGroupData);
 	}
 
 	public void updateSwimming() {
@@ -191,13 +199,15 @@ public class HelmitCrabEntity extends Animal
 	}
 
 	@Override
-	protected void dropCustomDeathLoot(DamageSource damageSource, int i, boolean bl) {
-		super.dropCustomDeathLoot(damageSource, i, bl);
+	protected void dropCustomDeathLoot(ServerLevel serverLevel, DamageSource damageSource, boolean i) {
+		super.dropCustomDeathLoot(serverLevel, damageSource, i);
 
-		if(!EnchantmentHelper.hasVanishingCurse(getShellItemStack()))
+		if(!EnchantmentHelper.hasAnyEnchantments(getShellItemStack()))
 			spawnAtLocation(getShellItemStack());
 		setShellItem(ItemStack.EMPTY);
 	}
+
+
 
 	@Override
 	public boolean isFood(ItemStack stack)
@@ -211,7 +221,7 @@ public class HelmitCrabEntity extends Animal
 			return false;
 
 		ItemStack currentShell = getShellItemStack();
-		if (EnchantmentHelper.hasBindingCurse(currentShell))   //If our shell has binding, we can't switch
+		if (EnchantmentHelper.hasAnyEnchantments(currentShell))   //If our shell has binding, we can't switch
 		{
 			return false;
 		}
@@ -255,35 +265,62 @@ public class HelmitCrabEntity extends Animal
 		return false;
 	}
 
-	public boolean prefersNewDamageableItem(ItemStack newStack, ItemStack oldStack) {
-		if (newStack.getDamageValue() >= oldStack.getDamageValue() && (!newStack.hasTag() || oldStack.hasTag())) {
-			if (newStack.hasTag() && oldStack.hasTag()) {
-				return newStack.getTag().getAllKeys().stream().anyMatch((string) -> !string.equals("Damage"))
-						&& !oldStack.getTag().getAllKeys().stream().anyMatch((string) -> !string.equals("Damage"));
+		public boolean prefersNewDamageableItem(ItemStack newStack, ItemStack oldStack) {
+
+			int newDamage = newStack.getDamageValue();
+			int oldDamage = oldStack.getDamageValue();
+
+			boolean newHasExtraComponents = hasNonDamageComponents(newStack);
+			boolean oldHasExtraComponents = hasNonDamageComponents(oldStack);
+
+			if (newDamage >= oldDamage && (!newHasExtraComponents || oldHasExtraComponents)) {
+				if (newHasExtraComponents && oldHasExtraComponents) {
+
+					return true;
+				} else {
+					return false;
+				}
 			} else {
-				return false;
+				return true;
 			}
-		} else {
-			return true;
 		}
+
+
+	private boolean hasNonDamageComponents(ItemStack stack) {
+		DataComponentMap components = stack.getComponents();
+		for (DataComponentType<?> componentType : components.keySet()) {
+
+			if (componentType != DataComponents.DAMAGE &&
+					componentType != DataComponents.MAX_DAMAGE &&
+					componentType != DataComponents.MAX_STACK_SIZE &&
+					componentType != DataComponents.RARITY) {
+				return true;
+			}
+		}
+		return false;
 	}
 
+
 	@Override
-	public void readAdditionalSaveData(CompoundTag tag)
-	{
+	public void readAdditionalSaveData(CompoundTag tag) {
 		super.readAdditionalSaveData(tag);
-		if(tag.contains("Shell"))
-			getEntityData().set(SHELL_ITEM, ItemStack.of(tag.getCompound("Shell")));
+
+		if (tag.contains("Shell")) {
+			ItemStack shellItem = ItemStack.parseOptional(this.registryAccess(), tag.getCompound("Shell"));
+			getEntityData().set(SHELL_ITEM, shellItem);
+		}
 
 		hideTime = tag.getInt("HideTime");
 		shellChangeCooldown = tag.getInt("ShellCooldown");
 	}
 
 	@Override
-	public void addAdditionalSaveData(CompoundTag tag)
-	{
+	public void addAdditionalSaveData(CompoundTag tag) {
 		super.addAdditionalSaveData(tag);
-		tag.put("Shell", getEntityData().get(SHELL_ITEM).save(new CompoundTag()));
+
+		CompoundTag shellTag = (CompoundTag) getEntityData().get(SHELL_ITEM).save(this.registryAccess());
+		tag.put("Shell", shellTag);
+
 		tag.putInt("HideTime", hideTime);
 		tag.putInt("ShellCooldown", shellChangeCooldown);
 	}
@@ -341,12 +378,6 @@ public class HelmitCrabEntity extends Animal
 		return BMEntities.HELMIT_CRAB.get().create(serverLevel);
 	}
 
-
-	@Override
-	public boolean canBreatheUnderwater()
-	{
-		return true;
-	}
 
 	public boolean canHide()
 	{
@@ -421,10 +452,12 @@ public class HelmitCrabEntity extends Animal
 				double e = this.getY();
 				float f = this.isSprinting() ? 0.9f : this.getWaterSlowDown();
 				float g = 0.02f;
-				float h = EnchantmentHelper.getDepthStrider(this);
-				if (h > 3.0f) {
-					h = 3.0f;
-				}
+
+				Holder<Enchantment> depthStriderHolder = this.level().registryAccess()
+						.registryOrThrow(Registries.ENCHANTMENT)
+						.getHolderOrThrow(Enchantments.DEPTH_STRIDER);
+				int depthStriderLevel = EnchantmentHelper.getEnchantmentLevel(depthStriderHolder, this);
+				float h = Math.min(depthStriderLevel, 3.0f);
 				if (!this.onGround()) {
 					h *= 0.5f;
 				}
@@ -526,12 +559,6 @@ public class HelmitCrabEntity extends Animal
 			}
 		}
 		this.calculateEntityAnimation(this instanceof FlyingAnimal);
-	}
-
-	@Override
-	public MobType getMobType()
-	{
-		return MobType.ARTHROPOD;
 	}
 
 	public void setTargetingUnderwater(boolean targetingUnderwater) {
