@@ -21,7 +21,7 @@ public class WillowingBranchDecorator extends TreeDecorator {
 
     @Override
     protected TreeDecoratorType<?> type() {
-        return BMFeatures.WILLOWING_BRANCH_DECORATOR.get();
+        return BMFeatures.WILLOWING_BRANCH_DECORATOR.value();
     }
 
     @Override
