@@ -21,8 +21,8 @@ public class MothRender extends MobRenderer<MothEntity, MothModel> {
     }
 
     @Override
-    protected void setupRotations(MothEntity livingEntity, PoseStack poseStack, float f, float g, float h) {
-        super.setupRotations(livingEntity, poseStack, f, g, h);
+    protected void setupRotations(MothEntity livingEntity, PoseStack poseStack, float f, float g, float h, float i) {
+        super.setupRotations(livingEntity, poseStack, f, g, h, i);
         poseStack.translate(0, 0.25F, 0);
     }
 

@@ -5,6 +5,7 @@ import dev.architectury.networking.simple.BaseS2CMessage;
 import dev.architectury.networking.simple.MessageType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import party.lemons.biomemakeover.init.BMNetwork;
 import party.lemons.biomemakeover.util.effect.BiomeMakeoverEffect;
 
@@ -30,7 +31,7 @@ public class S2C_BMEffect extends BaseS2CMessage {
     }
 
     @Override
-    public void write(FriendlyByteBuf buf) {
+    public void write(RegistryFriendlyByteBuf buf) {
         buf.writeInt(effect);
         buf.writeBlockPos(pos);
     }

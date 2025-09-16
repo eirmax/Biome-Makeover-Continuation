@@ -22,6 +22,8 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.resources.ResourceLocation;
@@ -29,6 +31,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.armortrim.ArmorTrim;
+import net.minecraft.world.item.component.ResolvableProfile;
 import net.minecraft.world.level.block.AbstractSkullBlock;
 import net.minecraft.world.level.block.SkullBlock;
 import party.lemons.biomemakeover.BiomeMakeover;
@@ -49,12 +52,12 @@ public class HelmitCrabRender extends MobRenderer<HelmitCrabEntity, HelmitCrabMo
 	}
 
 	@Override
-	protected void setupRotations(HelmitCrabEntity livingEntity, PoseStack poseStack, float f, float g, float h)
+	protected void setupRotations(HelmitCrabEntity livingEntity, PoseStack poseStack, float f, float g, float h, float i)
 	{
 		if(livingEntity.isHiding())
 			poseStack.translate(0, -0.05F, 0);
 
-		super.setupRotations(livingEntity, poseStack, f, g, h);
+		super.setupRotations(livingEntity, poseStack, f, g, h, i);
 	}
 
 	@Override
@@ -80,10 +83,10 @@ public class HelmitCrabRender extends MobRenderer<HelmitCrabEntity, HelmitCrabMo
 		return TEXTURE;
 	}
 
-	public static void renderTrim(ArmorMaterial arg, PoseStack arg2, MultiBufferSource arg3, int i, ArmorTrim arg4, Model arg5, boolean bl) {
+	public static void renderTrim(Holder<ArmorMaterial> arg, PoseStack arg2, MultiBufferSource arg3, int i, ArmorTrim arg4, Model arg5, boolean bl) {
 		TextureAtlasSprite textureatlassprite = Minecraft.getInstance().getModelManager().getAtlas(Sheets.ARMOR_TRIMS_SHEET).getSprite(bl ? arg4.innerTexture(arg) : arg4.outerTexture(arg));
-		VertexConsumer vertexconsumer = textureatlassprite.wrap(arg3.getBuffer(Sheets.armorTrimsSheet()));
-		arg5.renderToBuffer(arg2, vertexconsumer, i, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
+		VertexConsumer vertexconsumer = textureatlassprite.wrap(arg3.getBuffer(Sheets.armorTrimsSheet(true)));
+		arg5.renderToBuffer(arg2, vertexconsumer, i, OverlayTexture.NO_OVERLAY);
 	}
 
 	private class HelmitCrabShellRenderLayer extends RenderLayer<HelmitCrabEntity, HelmitCrabModel>
@@ -161,9 +164,9 @@ public class HelmitCrabRender extends MobRenderer<HelmitCrabEntity, HelmitCrabMo
 			poseStack.translate(0, -1.4F, 0.1F);
 
 			CompoundTag compoundTag;
-			GameProfile gameProfile = null;
-			if (shell.hasTag() && (compoundTag = shell.getTag()).contains("SkullOwner", 10)) {
-				gameProfile = NbtUtils.readGameProfile(compoundTag.getCompound("SkullOwner"));
+			ResolvableProfile gameProfile = null;
+			if (shell.has(DataComponents.PROFILE)) {
+				gameProfile = shell.get(DataComponents.PROFILE);
 			}
 			poseStack.translate(-0.5, 0.0, -0.5);
 			SkullBlock.Type type = ((AbstractSkullBlock)((BlockItem)shell.getItem()).getBlock()).getType();
@@ -174,7 +177,7 @@ public class HelmitCrabRender extends MobRenderer<HelmitCrabEntity, HelmitCrabMo
 
 		private void renderSpecialShell(ResourceLocation texture, HelmitCrabEntity crab, PoseStack poseStack, MultiBufferSource mbSource, int light, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch)
 		{
-			coloredCutoutModelCopyLayerRender(this.getParentModel(), CRAB_MODEL, texture, poseStack, mbSource, light, crab, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch, 1.0F, 1.0F, 1.0F);
+			coloredCutoutModelCopyLayerRender(this.getParentModel(), CRAB_MODEL, texture, poseStack, mbSource, light, crab, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch, (int) 1.0F);
 		}
 
 		public Model getHatModel(ItemStack stack)

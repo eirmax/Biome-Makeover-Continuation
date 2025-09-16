@@ -6,23 +6,21 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
-import net.minecraft.world.level.block.grower.AbstractTreeGrower;
-import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.grower.TreeGrower;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import org.jetbrains.annotations.Nullable;
+import party.lemons.biomemakeover.level.generate.foliage.WillowSaplingGenerator;
 import party.lemons.taniwha.block.types.TSaplingBlock;
-
-import java.util.Random;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
 
 public class WaterSaplingBlock extends TSaplingBlock implements SimpleWaterloggedBlock {
     private final int maxDepth;
 
-    public WaterSaplingBlock(AbstractTreeGrower abstractTreeGrower, int maxDepth, Properties settings)
+    public WaterSaplingBlock(TreeGrower abstractTreeGrower, int maxDepth, Properties settings)
     {
         super(abstractTreeGrower, settings);
         this.maxDepth = maxDepth;

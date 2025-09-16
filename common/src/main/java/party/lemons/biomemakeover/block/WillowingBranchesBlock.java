@@ -15,6 +15,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -160,8 +161,8 @@ public class WillowingBranchesBlock extends TBlock implements SimpleWaterloggedB
     }
 
     @Override
-    public boolean isPathfindable(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, PathComputationType pathComputationType) {
-        return pathComputationType == PathComputationType.AIR && !this.hasCollision || super.isPathfindable(blockState, blockGetter, blockPos, pathComputationType);
+    public boolean isPathfindable(BlockState blockState, PathComputationType pathComputationType) {
+        return pathComputationType == PathComputationType.AIR && !this.hasCollision || super.isPathfindable(blockState, pathComputationType);
     }
 
     @Override
@@ -180,9 +181,9 @@ public class WillowingBranchesBlock extends TBlock implements SimpleWaterloggedB
         return true;
     }
 
+
     @Override
-    public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult)
-    {
+    protected ItemInteractionResult useItemOn(ItemStack itemStack, BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
         ItemStack stack = player.getItemInHand(interactionHand);
         if(stack.is(Items.SHEARS) && blockState.getValue(STAGE) == MAX_GROWTH_STAGES)  //TOOD: look into tool tags/interactions
         {
@@ -193,13 +194,13 @@ public class WillowingBranchesBlock extends TBlock implements SimpleWaterloggedB
                 BlockState newState = blockState.setValue(STAGE, MAX_STAGES);
                 level.setBlockAndUpdate(blockPos, newState);
                 level.gameEvent(GameEvent.BLOCK_CHANGE, blockPos, GameEvent.Context.of(player, newState));
-                stack.hurtAndBreak(1, player, playerx -> playerx.broadcastBreakEvent(interactionHand));
+                stack.hurtAndBreak(1, player, player.getEquipmentSlotForItem(stack));
 
                 level.blockEvent(blockPos, this, 0, 0);
             }
-            return InteractionResult.SUCCESS;
+            return ItemInteractionResult.SUCCESS;
         }
-        return super.use(blockState, level, blockPos, player, interactionHand, blockHitResult);
+        return super.useItemOn(itemStack, blockState, level, blockPos, player, interactionHand, blockHitResult);
     }
 
     @Nullable
@@ -236,7 +237,7 @@ public class WillowingBranchesBlock extends TBlock implements SimpleWaterloggedB
     }
 
     @Override
-    public boolean isValidBonemealTarget(LevelReader levelReader, BlockPos blockPos, BlockState blockState, boolean bl)
+    public boolean isValidBonemealTarget(LevelReader levelReader, BlockPos blockPos, BlockState blockState)
     {
         Optional<BlockPos> headPos = findHead(blockState, blockPos, levelReader);
         if(headPos.isEmpty())

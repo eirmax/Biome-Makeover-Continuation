@@ -6,12 +6,14 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
@@ -87,10 +89,10 @@ public class RootlingEntity extends Animal implements Shearable, EntityEventBroa
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        getEntityData().define(HAS_FLOWER, true);
-        getEntityData().define(FLOWER_TYPE, 0);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        getEntityData().set(HAS_FLOWER, true);
+        getEntityData().set(FLOWER_TYPE, 0);
     }
 
     @Override
@@ -127,7 +129,7 @@ public class RootlingEntity extends Animal implements Shearable, EntityEventBroa
             if(!this.level().isClientSide() && this.readyForShearing())
             {
                 this.shear(SoundSource.PLAYERS);
-                itemStack.hurtAndBreak(1, player, (p)->p.broadcastBreakEvent(hand));
+                itemStack.hurtAndBreak(1, player, player.getEquipmentSlotForItem(itemStack));
                 return InteractionResult.SUCCESS;
             }else
             {
@@ -187,8 +189,13 @@ public class RootlingEntity extends Animal implements Shearable, EntityEventBroa
     }
 
     @Override
-    protected float getStandingEyeHeight(Pose pose, EntityDimensions entityDimensions) {
-        return getDimensions(getPose()).height * 0.6F;
+    public boolean isFood(ItemStack itemStack) {
+        return false;
+    }
+
+    @Override
+    public double getEyeY() {
+        return super.getEyeY() * 0.6F;
     }
 
     public boolean hasFlower()
@@ -207,7 +214,7 @@ public class RootlingEntity extends Animal implements Shearable, EntityEventBroa
                 randomizeFlower();
             }else
             {
-                EntityUtil.dropFromLootTable(this, PETAL_LOOT_TABLES[getEntityData().get(FLOWER_TYPE)]);
+                EntityUtil.dropFromLootTable(this, ResourceKey.create(Registries.LOOT_TABLE, PETAL_LOOT_TABLES[getEntityData().get(FLOWER_TYPE)]));
             }
         }
     }
@@ -246,8 +253,8 @@ public class RootlingEntity extends Animal implements Shearable, EntityEventBroa
     }
 
     @Override
-    public SpawnGroupData finalizeSpawn(ServerLevelAccessor serverLevelAccessor, DifficultyInstance difficultyInstance, MobSpawnType mobSpawnType, @Nullable SpawnGroupData spawnGroupData, @Nullable CompoundTag compoundTag) {
-        SpawnGroupData data =  super.finalizeSpawn(serverLevelAccessor, difficultyInstance, mobSpawnType, spawnGroupData, compoundTag);
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor serverLevelAccessor, DifficultyInstance difficultyInstance, MobSpawnType mobSpawnType, @Nullable SpawnGroupData spawnGroupData) {
+        SpawnGroupData data =  super.finalizeSpawn(serverLevelAccessor, difficultyInstance, mobSpawnType, spawnGroupData);
         randomizeFlower();
         return data;
     }

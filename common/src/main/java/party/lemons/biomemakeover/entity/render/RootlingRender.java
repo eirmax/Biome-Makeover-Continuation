@@ -37,7 +37,7 @@ public class RootlingRender extends MobRenderer<RootlingEntity, RootlingModel> {
         public void render(PoseStack poseStack, MultiBufferSource multiBufferSource, int i, RootlingEntity entity, float f, float g, float h, float j, float k, float l) {
             if(entity.hasFlower())
             {
-                coloredCutoutModelCopyLayerRender(this.getParentModel(), this.model, TEXTURES[entity.getFlowerIndex()], poseStack, multiBufferSource, i, entity, f, g, j, k, l, h, 1.0F, 1.0F, 1.0F);
+                coloredCutoutModelCopyLayerRender(this.getParentModel(), this.model, TEXTURES[entity.getFlowerIndex()], poseStack, multiBufferSource, i, entity, f, g, j, k, l, h, (int) 1.0F);
             }
         }
     }

@@ -43,8 +43,8 @@ import net.minecraft.world.item.ShieldItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ServerLevelAccessor;
-import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.level.pathfinder.Path;
+import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import party.lemons.biomemakeover.init.BMEffects;
@@ -68,7 +68,7 @@ public class DecayedEntity extends Zombie
         super(entityType, level);
 
         this.moveControl = new DecayedMoveControl(this);
-        this.setPathfindingMalus(BlockPathTypes.WATER, 0.0F);
+        this.setPathfindingMalus(PathType.WATER, 0.0F);
         this.waterNavigation = new WaterBoundPathNavigation(this, level);
         this.landNavigation = new GroundPathNavigation(this, level);
     }
@@ -104,9 +104,9 @@ public class DecayedEntity extends Zombie
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        getEntityData().define(SHIELD_DOWN, false);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        getEntityData().set(SHIELD_DOWN, false);
     }
 
     @Override
@@ -153,8 +153,8 @@ public class DecayedEntity extends Zombie
 
     @Nullable
     @Override
-    public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType spawnReason, @Nullable SpawnGroupData spawnGroupData, @Nullable CompoundTag compoundTag) {
-        spawnGroupData = super.finalizeSpawn(level, difficulty, spawnReason, spawnGroupData, compoundTag);
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType spawnReason, @Nullable SpawnGroupData spawnGroupData) {
+        spawnGroupData = super.finalizeSpawn(level, difficulty, spawnReason, spawnGroupData);
 
         setLeftHanded(random.nextBoolean());
         if(this.random.nextFloat() < 0.15F * (difficulty.getSpecialMultiplier() + 1))
@@ -183,7 +183,7 @@ public class DecayedEntity extends Zombie
             for(int j = 0; j < length; ++j)
             {
                 EquipmentSlot equipmentSlot = slots[j];
-                if(equipmentSlot.getType() == EquipmentSlot.Type.ARMOR)
+                if(equipmentSlot.getType() == EquipmentSlot.Type.HUMANOID_ARMOR)
                 {
                     ItemStack itemStack = this.getItemBySlot(equipmentSlot);
                     if(!stop && this.random.nextFloat() < stopChance)
@@ -199,7 +199,7 @@ public class DecayedEntity extends Zombie
                         {
                             ItemStack stack = new ItemStack(item);
 
-                            stack.enchant(BMEnchantments.DECAY_CURSE.get(), 1 + random.nextInt(4));
+                            stack.enchant(BMEnchantments.DECAY_CURSE, 1 + random.nextInt(4));
                             this.setItemSlot(equipmentSlot, stack);
                         }
                     }
@@ -207,8 +207,10 @@ public class DecayedEntity extends Zombie
             }
         }
 
+
+
         ItemStack shield = new ItemStack(Items.SHIELD);
-        shield.enchant(BMEnchantments.DECAY_CURSE.get(), 1 + random.nextInt(4));
+        shield.enchant(BMEnchantments.DECAY_CURSE, 1 + random.nextInt(4));
         this.setItemSlot(EquipmentSlot.OFFHAND, shield);
         return spawnGroupData;
     }

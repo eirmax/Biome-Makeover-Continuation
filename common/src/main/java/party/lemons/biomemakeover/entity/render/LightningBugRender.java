@@ -75,7 +75,7 @@ public class LightningBugRender extends MobRenderer<LightningBugEntity, Lightnin
                 Vector3f color = this.color ? getColor(entity, delta) : new Vector3f(1, 1, 1);
                 VertexConsumer vertexConsumer = multiBufferSource.getBuffer(RenderType.entityTranslucent(getTextureLocation(entity)));
 
-                model.renderToBuffer(poseStack, vertexConsumer, i, LivingEntityRenderer.getOverlayCoords(entity, 0), color.x(), color.y(), color.z(), 1.0F);
+                model.renderToBuffer(poseStack, vertexConsumer, i, LivingEntityRenderer.getOverlayCoords(entity, 0));
             }
         }
 

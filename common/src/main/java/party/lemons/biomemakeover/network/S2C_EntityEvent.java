@@ -4,6 +4,7 @@ import dev.architectury.networking.NetworkManager;
 import dev.architectury.networking.simple.BaseS2CMessage;
 import dev.architectury.networking.simple.MessageType;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
 import party.lemons.biomemakeover.entity.event.EntityEvent;
 import party.lemons.biomemakeover.entity.event.EntityEventBroadcaster;
@@ -35,7 +36,7 @@ public class S2C_EntityEvent extends BaseS2CMessage {
     }
 
     @Override
-    public void write(FriendlyByteBuf buf) {
+    public void write(RegistryFriendlyByteBuf buf) {
         buf.writeInt(entityID);
         buf.writeInt(event);
     }

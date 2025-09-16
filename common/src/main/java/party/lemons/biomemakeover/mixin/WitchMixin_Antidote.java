@@ -13,7 +13,7 @@ import net.minecraft.world.entity.monster.Witch;
 import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -47,7 +47,7 @@ public abstract class WitchMixin_Antidote extends Raider
             for(MobEffectInstance effect : getActiveEffects())
                 if(effect.getEffect().value().getCategory() == MobEffectCategory.HARMFUL)
                 {
-                    return BMPotions.ANTIDOTE_POT.get();
+                    return BMPotions.ANTIDOTE_POT;
                 }
         }
         return value;
@@ -70,8 +70,8 @@ public abstract class WitchMixin_Antidote extends Raider
 
                 if(found)
                 {
-                    this.setItemSlot(EquipmentSlot.MAINHAND, PotionUtils.setPotion(new ItemStack(Items.POTION), BMPotions.ANTIDOTE_POT.get()));
-                    this.usingTime = this.getMainHandItem().getUseDuration();
+                    this.setItemSlot(EquipmentSlot.MAINHAND, PotionContents.createItemStack(new ItemStack(Items.POTION).getItem(), BMPotions.ANTIDOTE_POT));
+                    this.usingTime = this.getMainHandItem().getUseDuration(this);
                     this.setUsingItem(true);
                     if(!this.isSilent())
                     {

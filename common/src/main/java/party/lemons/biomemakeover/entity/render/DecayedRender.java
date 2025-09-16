@@ -37,13 +37,13 @@ public class DecayedRender extends AbstractZombieRenderer<DecayedEntity, Decayed
     }
 
     @Override
-    protected void setupRotations(DecayedEntity decayed, PoseStack poseStack, float f, float g, float h) {
-        super.setupRotations(decayed, poseStack, f, g, h);
+    protected void setupRotations(DecayedEntity decayed, PoseStack poseStack, float f, float g, float h, float i) {
+        super.setupRotations(decayed, poseStack, f, g, h, i);
 
-        float i = decayed.getSwimAmount(h);
-        if(i > 0.0F)
+        float k = decayed.getSwimAmount(h);
+        if(k > 0.0F)
         {
-            poseStack.mulPose(Axis.XP.rotationDegrees(Mth.lerp(i, decayed.getXRot(), -10.0F - decayed.getXRot())));
+            poseStack.mulPose(Axis.XP.rotationDegrees(Mth.lerp(k, decayed.getXRot(), -10.0F - decayed.getXRot())));
         }
     }
 
@@ -64,7 +64,7 @@ public class DecayedRender extends AbstractZombieRenderer<DecayedEntity, Decayed
 
         @Override
         public void render(PoseStack poseStack, MultiBufferSource multiBufferSource, int i, DecayedEntity drowned, float f, float g, float h, float j, float k, float l) {
-            coloredCutoutModelCopyLayerRender(this.getParentModel(), this.model, TEXTURE, poseStack, multiBufferSource, i, drowned, f, g, j, k, l, h, 1.0f, 1.0f, 1.0f);
+            coloredCutoutModelCopyLayerRender(this.getParentModel(), this.model, TEXTURE, poseStack, multiBufferSource, i, drowned, f, g, j, k, l, h, (int) 1.0);
         }
     }
 

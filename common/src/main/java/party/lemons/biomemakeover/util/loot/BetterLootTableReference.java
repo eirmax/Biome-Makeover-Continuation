@@ -10,18 +10,18 @@ import net.minecraft.world.level.storage.loot.*;
 import net.minecraft.world.level.storage.loot.entries.LootPoolEntries;
 import net.minecraft.world.level.storage.loot.entries.LootPoolEntryType;
 import net.minecraft.world.level.storage.loot.entries.LootPoolSingletonContainer;
-import net.minecraft.world.level.storage.loot.entries.LootTableReference;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import party.lemons.biomemakeover.init.BMItems;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 public class BetterLootTableReference extends LootPoolSingletonContainer {
     final ResourceLocation name;
 
     BetterLootTableReference(ResourceLocation resourceLocation, int i, int j, LootItemCondition[] lootItemConditions, LootItemFunction[] lootItemFunctions) {
-        super(i, j, lootItemConditions, lootItemFunctions);
+        super(i, j, List.of(lootItemConditions), List.of(lootItemFunctions));
         this.name = resourceLocation;
     }
 
@@ -30,7 +30,7 @@ public class BetterLootTableReference extends LootPoolSingletonContainer {
     }
 
     public void createItemStack(Consumer<ItemStack> consumer, LootContext lootContext) {
-        LootTable lootTable = lootContext.getResolver().getLootTable(this.name);
+        LootTable lootTable = lootContext.getResolver().lookupOrThrow(this.name);
         lootTable.getRandomItems(lootContext, consumer);
     }
 

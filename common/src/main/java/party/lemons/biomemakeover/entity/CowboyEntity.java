@@ -2,15 +2,19 @@ package party.lemons.biomemakeover.entity;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.Advancement;
+import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementProgress;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.util.Unit;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -23,12 +27,15 @@ import net.minecraft.world.entity.raid.Raid;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.entity.BannerPattern;
 import net.minecraft.world.level.block.entity.BannerPatterns;
 import org.jetbrains.annotations.Nullable;
+import party.lemons.biomemakeover.BiomeMakeover;
+import party.lemons.biomemakeover.Constants;
 import party.lemons.biomemakeover.init.BMItems;
 
 import java.util.Iterator;
@@ -107,7 +114,7 @@ public class CowboyEntity extends Pillager {
      */
     private void grantAdvancement(ServerPlayer player)
     {
-        Advancement advancement = player.level().getServer().getAdvancements().getAdvancement(new ResourceLocation("adventure/voluntary_exile"));
+        AdvancementHolder advancement = player.level().getServer().getAdvancements().get(ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "adventure/voluntary_exile"));
         if(advancement != null)
         {
             AdvancementProgress advancementProgress = player.getAdvancements().getOrStartProgress(advancement);
@@ -121,8 +128,8 @@ public class CowboyEntity extends Pillager {
 
     @Nullable
     @Override
-    public SpawnGroupData finalizeSpawn(ServerLevelAccessor serverLevelAccessor, DifficultyInstance difficultyInstance, MobSpawnType mobSpawnType, @Nullable SpawnGroupData spawnGroupData, @Nullable CompoundTag compoundTag) {
-        SpawnGroupData data = super.finalizeSpawn(serverLevelAccessor, difficultyInstance, mobSpawnType, spawnGroupData, compoundTag);
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor serverLevelAccessor, DifficultyInstance difficultyInstance, MobSpawnType mobSpawnType, @Nullable SpawnGroupData spawnGroupData) {
+        SpawnGroupData data = super.finalizeSpawn(serverLevelAccessor, difficultyInstance, mobSpawnType, spawnGroupData);
         if(isPatrolLeader())
         {
             this.setItemSlot(EquipmentSlot.HEAD, getOminousBanner());
@@ -134,11 +141,32 @@ public class CowboyEntity extends Pillager {
     public static ItemStack getOminousBanner()
     {
         ItemStack itemStack = new ItemStack(Items.WHITE_BANNER);
-        CompoundTag compoundTag = itemStack.getOrCreateTagElement("BlockEntityTag");
-        ListTag listTag = (new BannerPattern.Builder()).addPattern(BannerPatterns.RHOMBUS_MIDDLE, DyeColor.CYAN).addPattern(BannerPatterns.STRIPE_BOTTOM, DyeColor.RED).addPattern(BannerPatterns.HALF_HORIZONTAL, DyeColor.BROWN).addPattern(BannerPatterns.TRIANGLES_TOP, DyeColor.BLACK).addPattern(BannerPatterns.BORDER, DyeColor.BLACK).addPattern(BannerPatterns.CIRCLE_MIDDLE, DyeColor.LIGHT_GRAY).addPattern(BannerPatterns.STRIPE_MIDDLE, DyeColor.BROWN).toListTag();
-        compoundTag.put("Patterns", listTag);
-        itemStack.hideTooltipPart(ItemStack.TooltipPart.ADDITIONAL);
-        itemStack.setHoverName((Component.translatable("block.minecraft.ominous_banner")).withStyle((ChatFormatting.GOLD)));
+
+        CompoundTag blockEntityTag = new CompoundTag();
+        ListTag patterns = new ListTag();
+
+        patterns.add(createPatternTag(BannerPatterns.RHOMBUS_MIDDLE, DyeColor.CYAN));
+        patterns.add(createPatternTag(BannerPatterns.STRIPE_BOTTOM, DyeColor.RED));
+        patterns.add(createPatternTag(BannerPatterns.HALF_HORIZONTAL, DyeColor.BROWN));
+        patterns.add(createPatternTag(BannerPatterns.TRIANGLES_TOP, DyeColor.BLACK));
+        patterns.add(createPatternTag(BannerPatterns.BORDER, DyeColor.BLACK));
+        patterns.add(createPatternTag(BannerPatterns.CIRCLE_MIDDLE, DyeColor.LIGHT_GRAY));
+        patterns.add(createPatternTag(BannerPatterns.STRIPE_MIDDLE, DyeColor.BROWN));
+
+        blockEntityTag.put("patterns", patterns);
+        itemStack.set(DataComponents.BLOCK_ENTITY_DATA, CustomData.of(blockEntityTag));
+
+        itemStack.set(DataComponents.CUSTOM_NAME, Component.translatable("block.minecraft.ominous_banner").withStyle(ChatFormatting.GOLD));
+
+        itemStack.set(DataComponents.HIDE_ADDITIONAL_TOOLTIP, Unit.INSTANCE);
+
         return itemStack;
+    }
+
+    private static CompoundTag createPatternTag(ResourceKey<BannerPattern> pattern, DyeColor color) {
+        CompoundTag patternTag = new CompoundTag();
+        patternTag.putString("pattern", pattern.location().toString());
+        patternTag.putInt("color", color.getId());
+        return patternTag;
     }
 }

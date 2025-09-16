@@ -5,6 +5,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerEntity;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -55,13 +57,13 @@ public class EntityPart<T extends LivingEntity & MultiPartEntity> extends Entity
     }
 
     @Override
-    public boolean hurt(DamageSource damageSource, float amount) {
-        return !this.isInvulnerableTo(damageSource) && this.owner.damagePart(this, damageSource, amount);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+
     }
 
     @Override
-    public void setItemSlot(EquipmentSlot equipmentSlot, ItemStack itemStack) {
-        owner.setItemSlot(equipmentSlot, itemStack);
+    public boolean hurt(DamageSource damageSource, float amount) {
+        return !this.isInvulnerableTo(damageSource) && this.owner.damagePart(this, damageSource, amount);
     }
 
     @Override
@@ -94,11 +96,6 @@ public class EntityPart<T extends LivingEntity & MultiPartEntity> extends Entity
         return true;
     }
 
-    @Override
-    protected void defineSynchedData() {
-
-    }
-
 
     @Override
     protected void readAdditionalSaveData(CompoundTag compoundTag) {
@@ -111,8 +108,7 @@ public class EntityPart<T extends LivingEntity & MultiPartEntity> extends Entity
     }
 
     @Override
-    public Packet<ClientGamePacketListener> getAddEntityPacket()
-    {
-        return NetworkManager.createAddEntityPacket(this);
+    public Packet<ClientGamePacketListener> getAddEntityPacket(ServerEntity serverEntity) {
+        return NetworkManager.createAddEntityPacket(this, serverEntity);
     }
 }

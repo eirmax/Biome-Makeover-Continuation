@@ -105,10 +105,9 @@ public class MothModel extends EntityModel<MothEntity> implements HeadedModel
         }
 
     }
-
     @Override
-    public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        body.render(poseStack, buffer, packedLight, packedOverlay);
+    public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int i, int j, int k) {
+        body.render(poseStack, vertexConsumer, i, j);
     }
 
     @Override

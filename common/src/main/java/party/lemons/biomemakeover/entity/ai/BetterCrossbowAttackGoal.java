@@ -63,7 +63,7 @@ public class BetterCrossbowAttackGoal<T extends Mob & CrossbowAttackMob>
         if (this.mob.isUsingItem()) {
             this.mob.stopUsingItem();
             this.mob.setChargingCrossbow(false);
-            CrossbowItem.setCharged(this.mob.getUseItem(), false);
+            CrossbowItem.isCharged(this.mob.getUseItem());
         }
     }
 
@@ -111,7 +111,7 @@ public class BetterCrossbowAttackGoal<T extends Mob & CrossbowAttackMob>
             if (!this.mob.isUsingItem()) {
                 this.crossbowState = CrossbowState.UNCHARGED;
             }
-            if ((i = this.mob.getTicksUsingItem()) >= CrossbowItem.getChargeDuration(itemStack = this.mob.getUseItem())) {
+            if ((i = this.mob.getTicksUsingItem()) >= CrossbowItem.getChargeDuration(itemStack = this.mob.getUseItem(), livingEntity)) {
                 this.mob.releaseUsingItem();
                 this.crossbowState = CrossbowState.CHARGED;
                 this.attackDelay = 20 + this.mob.getRandom().nextInt(20);
@@ -125,7 +125,7 @@ public class BetterCrossbowAttackGoal<T extends Mob & CrossbowAttackMob>
         } else if (this.crossbowState == CrossbowState.READY_TO_ATTACK && bl) {
             this.mob.performRangedAttack(livingEntity, 1.0f);
             ItemStack itemStack2 = this.mob.getItemInHand(ProjectileUtil.getWeaponHoldingHand(this.mob, Items.CROSSBOW));
-            CrossbowItem.setCharged(itemStack2, false);
+            CrossbowItem.isCharged(itemStack2);
             this.crossbowState = CrossbowState.UNCHARGED;
         }
     }

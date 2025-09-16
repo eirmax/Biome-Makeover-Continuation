@@ -1,9 +1,10 @@
 package party.lemons.biomemakeover.crafting.witch;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
@@ -15,6 +16,7 @@ public class WitchQuest
 {
     private final ItemStack[] requiredItems;
     private float rarityPoints;
+    private ItemStack itemStack;
 
     public WitchQuest(RandomSource random, List<QuestItem> items)
     {
@@ -27,17 +29,20 @@ public class WitchQuest
         }
     }
 
-    public WitchQuest(CompoundTag tag)
+    public WitchQuest(CompoundTag tag, HolderLookup.Provider registryAccess)
     {
         rarityPoints = tag.getFloat("Points");
         ListTag items = tag.getList("Items", Tag.TAG_COMPOUND);
 
         requiredItems = new ItemStack[items.size()];
         for(int i = 0; i < items.size(); i++)
-            requiredItems[i] = ItemStack.of(items.getCompound(i));
+        {
+            CompoundTag itemTag = items.getCompound(i);
+            requiredItems[i] = ItemStack.parseOptional(registryAccess, itemTag);
+        }
     }
 
-    public WitchQuest(FriendlyByteBuf buffer)
+    public WitchQuest(RegistryFriendlyByteBuf buffer)
     {
         rarityPoints = buffer.readFloat();
         int length = buffer.readByte() & 255;
@@ -45,7 +50,7 @@ public class WitchQuest
 
         for(int i = 0; i < length; i++)
         {
-            requiredItems[i] = buffer.readItem();
+            requiredItems[i] = ItemStack.STREAM_CODEC.decode(buffer);
         }
     }
 
@@ -103,16 +108,16 @@ public class WitchQuest
     @Override
     public String toString()
     {
-        String s = "WQ | ";
+        StringBuilder s = new StringBuilder("WQ | ");
         for(ItemStack st : requiredItems)
         {
-            s += st.toString();
+            s.append(st.toString());
         }
-        s += " | " + QuestRarity.getRarityFromPoints(rarityPoints);
-        return s;
+        s.append(" | ").append(QuestRarity.getRarityFromPoints(rarityPoints));
+        return s.toString();
     }
 
-    public CompoundTag toTag()
+    public CompoundTag toTag(HolderLookup.Provider registryAccess)
     {
         CompoundTag tag = new CompoundTag();
         tag.putFloat("Points", rarityPoints);
@@ -120,13 +125,15 @@ public class WitchQuest
         ListTag items = new ListTag();
         for(int i = 0; i < requiredItems.length; i++)
         {
-            items.add(requiredItems[i].save(new CompoundTag()));
+            CompoundTag itemTag = new CompoundTag();
+            requiredItems[i].save(registryAccess, itemTag);
+            items.add(itemTag);
         }
         tag.put("Items", items);
         return tag;
     }
 
-    public void toPacket(FriendlyByteBuf buffer)
+    public void toPacket(RegistryFriendlyByteBuf buffer)
     {
         buffer.writeFloat(rarityPoints);
 
@@ -135,8 +142,7 @@ public class WitchQuest
 
         for(int i = 0; i < length; i++)
         {
-            buffer.writeItem(requiredItems[i]);
+            ItemStack.STREAM_CODEC.encode(buffer, requiredItems[i]);
         }
     }
-
 }

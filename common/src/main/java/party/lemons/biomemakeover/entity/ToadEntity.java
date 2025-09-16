@@ -22,7 +22,6 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.animal.Animal;
-import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -31,12 +30,11 @@ import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.level.pathfinder.PathType;
 import org.jetbrains.annotations.Nullable;
 import party.lemons.biomemakeover.init.BMBlocks;
 import party.lemons.biomemakeover.init.BMEffects;
 import party.lemons.biomemakeover.init.BMEntities;
-import party.lemons.biomemakeover.init.BMItems;
 import party.lemons.biomemakeover.util.RandomUtil;
 import party.lemons.taniwha.util.MathUtils;
 
@@ -47,7 +45,7 @@ import java.util.UUID;
 public class ToadEntity extends Animal {
 
     private static final UUID JUMP_SPEED_BOOST = UUID.fromString("0fa7caca-4f09-11eb-ae93-0242ac130002");
-    private static final AttributeModifier JUMP_SPEED_BOOST_MOD = new AttributeModifier(JUMP_SPEED_BOOST, "Jump Speed Boost", 0.6F, AttributeModifier.Operation.ADDITION);
+    private static final AttributeModifier JUMP_SPEED_BOOST_MOD = new AttributeModifier(JUMP_SPEED_BOOST, "Jump Speed Boost", 0.6F, AttributeModifier.Operation.ADD_VALUE);
 
     private static final EntityDataAccessor<Integer> TONGUE_ENTITY = SynchedEntityData.defineId(ToadEntity.class, EntityDataSerializers.INT);
 
@@ -62,13 +60,13 @@ public class ToadEntity extends Animal {
     public ToadEntity(EntityType<? extends Animal> entityType, Level level) {
         super(entityType, level);
 
-        setPathfindingMalus(BlockPathTypes.WATER, 0.0F);
+        setPathfindingMalus(PathType.WATER, 0.0F);
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        getEntityData().define(TONGUE_ENTITY, -1);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        getEntityData().set(TONGUE_ENTITY, -1);
     }
 
     @Override

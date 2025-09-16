@@ -1,6 +1,7 @@
 package party.lemons.biomemakeover.entity.adjudicator.phase;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
@@ -14,6 +15,7 @@ import net.minecraft.world.entity.animal.AbstractGolem;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import party.lemons.biomemakeover.entity.StoneGolemEntity;
 import party.lemons.biomemakeover.entity.adjudicator.AdjudicatorEntity;
@@ -62,7 +64,7 @@ public class StoneGolemPhase extends AttackingPhase
         adjudicator.clearArea(golem);
 
         ItemStack stack = new ItemStack(Items.BOW);
-        stack.enchant(Enchantments.PUNCH_ARROWS, 1);
+        stack.enchant((Holder<Enchantment>) Enchantments.PUNCH, 1);
         adjudicator.setItemInHand(InteractionHand.MAIN_HAND, stack);
 
         adjudicator.playSound(BMEffects.ADJUDICATOR_SPELL_GRUNT.get(), 1F, 1F);

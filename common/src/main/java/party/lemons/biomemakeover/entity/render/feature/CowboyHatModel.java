@@ -38,7 +38,7 @@ public class CowboyHatModel<T extends Entity> extends EntityModel<T> implements 
 
 
     @Override
-    public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, int j) {
         poseStack.pushPose();
         poseStack.scale(1.05F, 1.05F, 1.05F);
         head.render(poseStack, buffer, packedLight, packedOverlay);

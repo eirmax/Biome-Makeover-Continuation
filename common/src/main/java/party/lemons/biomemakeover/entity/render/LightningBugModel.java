@@ -32,8 +32,9 @@ public class LightningBugModel extends EntityModel<LightningBugEntity>
     }
 
     @Override
-    public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, int k) {
     }
+
 
     public static class LightningBugInner extends EntityModel<LightningBugEntity>
     {
@@ -58,8 +59,8 @@ public class LightningBugModel extends EntityModel<LightningBugEntity>
         }
 
         @Override
-        public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-            main.render(poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+        public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, int j) {
+            main.render(poseStack, buffer, packedLight, packedOverlay, j);
         }
     }
 
@@ -86,8 +87,8 @@ public class LightningBugModel extends EntityModel<LightningBugEntity>
         }
 
         @Override
-        public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-            main.render(poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+        public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, int k) {
+            main.render(poseStack, buffer, packedLight, packedOverlay, k);
         }
     }
 }

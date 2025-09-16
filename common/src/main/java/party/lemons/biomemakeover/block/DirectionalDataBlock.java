@@ -1,5 +1,6 @@
 package party.lemons.biomemakeover.block;
 
+import com.mojang.serialization.MapCodec;
 import dev.architectury.registry.menu.MenuRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
@@ -23,7 +24,6 @@ public class DirectionalDataBlock extends DirectionalBlock implements EntityBloc
         super(properties);
     }
 
-    @Override
     public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
         if(!level.isClientSide() && player.isCreative())
         {
@@ -83,5 +83,10 @@ public class DirectionalDataBlock extends DirectionalBlock implements EntityBloc
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
         builder.add(FACING);
+    }
+
+    @Override
+    protected MapCodec<? extends DirectionalBlock> codec() {
+        return null;
     }
 }

@@ -1,6 +1,7 @@
 package party.lemons.biomemakeover.entity.ai;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.protocol.common.custom.PathfindingDebugPayload;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -10,7 +11,9 @@ import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.level.pathfinder.Path;
+import net.minecraft.world.level.pathfinder.PathType;
+import net.minecraft.world.level.pathfinder.PathfindingContext;
 import net.minecraft.world.level.pathfinder.WalkNodeEvaluator;
 import party.lemons.biomemakeover.util.RandomUtil;
 
@@ -90,15 +93,15 @@ public class BetterFollowOwnerGoal extends Goal
     public void start()
     {
         this.updateCountdownTicks = 0;
-        this.oldWaterPathfindingPenalty = this.tameable.getPathfindingMalus(BlockPathTypes.WATER);
-        this.tameable.setPathfindingMalus(BlockPathTypes.WATER, 0.0F);
+        this.oldWaterPathfindingPenalty = this.tameable.getPathfindingMalus(PathType.WATER);
+        this.tameable.setPathfindingMalus(PathType.WATER, 0.0F);
     }
 
     public void stop()
     {
         this.owner = null;
         this.navigation.stop();
-        this.tameable.setPathfindingMalus(BlockPathTypes.WATER, this.oldWaterPathfindingPenalty);
+        this.tameable.setPathfindingMalus(PathType.WATER, this.oldWaterPathfindingPenalty);
     }
 
     public void tick()
@@ -165,8 +168,9 @@ public class BetterFollowOwnerGoal extends Goal
 
     protected boolean canTeleportTo(BlockPos pos)
     {
-        BlockPathTypes pathNodeType = WalkNodeEvaluator.getBlockPathTypeStatic(this.level, pos.mutable());
-        if(pathNodeType != BlockPathTypes.WALKABLE)
+        PathfindingContext context = new PathfindingContext(this.level, this.tameable);
+        PathType pathNodeType = WalkNodeEvaluator.getPathTypeStatic(context, pos.mutable());
+        if(pathNodeType != PathType.WALKABLE)
         {
             return false;
         }

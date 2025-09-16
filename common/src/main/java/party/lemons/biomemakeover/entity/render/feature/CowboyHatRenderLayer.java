@@ -34,7 +34,7 @@ public abstract class CowboyHatRenderLayer<T extends LivingEntity, M extends Ent
         poseStack.pushPose();
         setup(poseStack);
 
-        model.renderToBuffer(poseStack, multiBufferSource.getBuffer(model.renderType(((HatItem)BMItems.COWBOY_HAT.get()).getHatTexture())), i, OverlayTexture.NO_OVERLAY, 1F, 1F, 1F, 1F);
+        model.renderToBuffer(poseStack, multiBufferSource.getBuffer(model.renderType(((HatItem)BMItems.COWBOY_HAT.get()).getHatTexture())), i, OverlayTexture.NO_OVERLAY);
 
         poseStack.popPose();
     }
