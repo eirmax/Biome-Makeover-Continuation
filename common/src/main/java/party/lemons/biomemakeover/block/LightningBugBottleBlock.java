@@ -65,9 +65,10 @@ public class LightningBugBottleBlock extends TBlock implements EntityBlock, Simp
     }
 
     @Override
-    public boolean isPathfindable(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, PathComputationType pathComputationType) {
+    public boolean isPathfindable(BlockState blockState, PathComputationType pathComputationType) {
         return false;
     }
+
 
     @Nullable
     @Override
