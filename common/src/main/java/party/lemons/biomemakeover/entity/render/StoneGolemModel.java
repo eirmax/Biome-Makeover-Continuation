@@ -107,7 +107,7 @@ public class StoneGolemModel extends EntityModel<StoneGolemEntity> implements He
         modelPart.yRot = rightArmed ? -0.8F : 0.8F;
         modelPart.xRot = -0.97079635F;
         pullArm.xRot = modelPart.xRot;
-        float f = (float) CrossbowItem.getChargeDuration(actor.getUseItem());
+        float f = (float) CrossbowItem.getChargeDuration(actor.getUseItem(), actor);
         float g = Mth.clamp((float)actor.getTicksUsingItem(), 0.0F, f);
         float h = g / f;
         pullArm.yRot = Mth.lerp(h, 0.2F, 0.4F) * (float)(rightArmed ? 1 : -1);
@@ -115,7 +115,7 @@ public class StoneGolemModel extends EntityModel<StoneGolemEntity> implements He
     }
 
     @Override
-    public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, int k) {
         body.render(poseStack, buffer, packedLight, packedOverlay);
     }
 

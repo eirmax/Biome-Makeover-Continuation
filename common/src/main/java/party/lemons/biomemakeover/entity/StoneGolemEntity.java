@@ -8,7 +8,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -37,7 +36,6 @@ import net.minecraft.world.entity.monster.CrossbowAttackMob;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ProjectileWeaponItem;
@@ -50,7 +48,6 @@ import party.lemons.biomemakeover.entity.ai.EmptyMobNavigation;
 import party.lemons.biomemakeover.entity.mutipart.EntityPart;
 import party.lemons.biomemakeover.entity.mutipart.MultiPartEntity;
 import party.lemons.biomemakeover.init.BMAdvancements;
-import party.lemons.biomemakeover.init.BMBlocks;
 import party.lemons.biomemakeover.init.BMEffects;
 import party.lemons.biomemakeover.init.BMItems;
 import party.lemons.biomemakeover.util.sound.StoneGolemTurnSoundInstance;
@@ -104,10 +101,10 @@ public class StoneGolemEntity extends AbstractGolem implements CrossbowAttackMob
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        getEntityData().define(CHARGING, false);
-        getEntityData().define(PLAYER_CREATED, false);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        getEntityData().set(CHARGING, false);
+        getEntityData().set(PLAYER_CREATED, false);
     }
 
     @Override
@@ -192,7 +189,7 @@ public class StoneGolemEntity extends AbstractGolem implements CrossbowAttackMob
 
     @Nullable
     @Override
-    public SpawnGroupData finalizeSpawn(ServerLevelAccessor serverLevelAccessor, DifficultyInstance difficultyInstance, MobSpawnType mobSpawnType, @Nullable SpawnGroupData spawnGroupData, @Nullable CompoundTag compoundTag) {
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor serverLevelAccessor, DifficultyInstance difficultyInstance, MobSpawnType mobSpawnType, @Nullable SpawnGroupData spawnGroupData) {
 
         RandomSource randomSource = serverLevelAccessor.getRandom();
 
@@ -201,12 +198,12 @@ public class StoneGolemEntity extends AbstractGolem implements CrossbowAttackMob
             setPlayerCreated(true);
         else {
             this.populateDefaultEquipmentSlots(randomSource, difficultyInstance);
-            this.populateDefaultEquipmentEnchantments(randomSource, difficultyInstance);
+            this.populateDefaultEquipmentEnchantments(serverLevelAccessor, randomSource, difficultyInstance);
         }
 
 
 
-        return super.finalizeSpawn(serverLevelAccessor, difficultyInstance, mobSpawnType, spawnGroupData, compoundTag);
+        return super.finalizeSpawn(serverLevelAccessor, difficultyInstance, mobSpawnType, spawnGroupData);
     }
 
 
@@ -330,10 +327,6 @@ public class StoneGolemEntity extends AbstractGolem implements CrossbowAttackMob
         return getEntityData().get(CHARGING);
     }
 
-    @Override
-    public void shootCrossbowProjectile(LivingEntity livingEntity, ItemStack itemStack, Projectile projectile, float f) {
-        this.shootCrossbowProjectile(this, livingEntity, projectile, f,1.6F);
-    }
 
     @Override
     public void aiStep() {
@@ -390,8 +383,8 @@ public class StoneGolemEntity extends AbstractGolem implements CrossbowAttackMob
     }
 
     @Override
-    protected float getStandingEyeHeight(Pose pose, EntityDimensions entityDimensions) {
-        return 2F;
+    public double getEyeY() {
+        return 0.6;
     }
 
     @Override
@@ -428,23 +421,29 @@ public class StoneGolemEntity extends AbstractGolem implements CrossbowAttackMob
 
     private Object turnSound = null;
 
-    public IronGolem.Crackiness getCrack() {
-        return IronGolem.Crackiness.byFraction(this.getHealth() / this.getMaxHealth());
+    public enum Crackiness {
+        NONE, LOW, MEDIUM, HIGH;
+        
+        public static Crackiness byFraction(float healthFraction) {
+            if (healthFraction >= 0.75f) return NONE;
+            if (healthFraction >= 0.5f) return LOW;
+            if (healthFraction >= 0.25f) return MEDIUM;
+            return HIGH;
+        }
+    }
+    
+    public Crackiness getCrack() {
+        return Crackiness.byFraction(this.getHealth() / this.getMaxHealth());
     }
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
-        IronGolem.Crackiness crack = this.getCrack();
+        Crackiness crack = this.getCrack();
         boolean bl = super.hurt(source, amount);
         if (bl && this.getCrack() != crack) {
             this.playSound(SoundEvents.IRON_GOLEM_DAMAGE, 1.0F, 1.0F);
         }
         return bl;
-    }
-
-    @Override
-    public double getPassengersRidingOffset() {
-        return 2F;
     }
 
     @Override

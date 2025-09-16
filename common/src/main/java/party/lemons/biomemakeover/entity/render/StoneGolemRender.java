@@ -14,6 +14,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Crackiness;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.item.ItemDisplayContext;
@@ -67,11 +68,11 @@ public class StoneGolemRender extends MobRenderer<StoneGolemEntity, StoneGolemMo
     }
 
     private static class StoneGolemCrackLayer extends RenderLayer<StoneGolemEntity, StoneGolemModel> {
-        private static final Map<IronGolem.Crackiness, ResourceLocation> DAMAGE_TO_TEXTURE;
+        private static final Map<Crackiness, ResourceLocation> DAMAGE_TO_TEXTURE;
         static {
-            DAMAGE_TO_TEXTURE = ImmutableMap.of(IronGolem.Crackiness.LOW, BiomeMakeover.ID("textures/entity/stone_golem/stone_golem_damaged_light.png"),
-                    IronGolem.Crackiness.MEDIUM, BiomeMakeover.ID("textures/entity/stone_golem/stone_golem_damaged_medium.png"),
-                    IronGolem.Crackiness.HIGH, BiomeMakeover.ID("textures/entity/stone_golem/stone_golem_damaged_high.png"));
+            DAMAGE_TO_TEXTURE = ImmutableMap.of(Crackiness.GOLEM, BiomeMakeover.ID("textures/entity/stone_golem/stone_golem_damaged_light.png"),
+                    Crackiness.GOLEM, BiomeMakeover.ID("textures/entity/stone_golem/stone_golem_damaged_medium.png"),
+                    Crackiness.GOLEM, BiomeMakeover.ID("textures/entity/stone_golem/stone_golem_damaged_high.png"));
         }
 
         public StoneGolemCrackLayer(StoneGolemRender stoneGolemRender) {
@@ -81,10 +82,10 @@ public class StoneGolemRender extends MobRenderer<StoneGolemEntity, StoneGolemMo
         @Override
         public void render(PoseStack poseStack, MultiBufferSource multiBufferSource, int i, StoneGolemEntity entity, float f, float g, float h, float j, float k, float l) {
             if (!entity.isInvisible()) {
-                IronGolem.Crackiness crack = entity.getCrack();
-                if (crack != IronGolem.Crackiness.NONE) {
+                StoneGolemEntity.Crackiness crack = entity.getCrack();
+                if (crack != StoneGolemEntity.Crackiness.NONE) {
                     ResourceLocation identifier = DAMAGE_TO_TEXTURE.get(crack);
-                    renderColoredCutoutModel(this.getParentModel(), identifier, poseStack, multiBufferSource, i, entity, 1.0F, 1.0F, 1.0F);
+                    renderColoredCutoutModel(this.getParentModel(), identifier, poseStack, multiBufferSource, i, entity, (int) 1.0F);
                 }
             }
         }
