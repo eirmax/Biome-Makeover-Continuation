@@ -4,6 +4,7 @@ import dev.architectury.networking.NetworkManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.server.level.ServerEntity;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
@@ -55,8 +56,7 @@ public class LightningBottleEntity extends ThrowableItemProjectile
     }
 
     @Override
-    protected float getGravity()
-    {
+    protected double getDefaultGravity() {
         return 0.07F;
     }
 
@@ -103,10 +103,10 @@ public class LightningBottleEntity extends ThrowableItemProjectile
                     if (distance < 16.0D) {
                         NetworkUtil.doLightningEntity(level(), e, 100);
 
-                        if (!e.hasEffect(BMPotions.SHOCKED.get())) {
-                            e.addEffect(new MobEffectInstance(BMPotions.SHOCKED.get(), 1000, 0));
+                        if (!e.hasEffect(BMPotions.SHOCKED)) {
+                            e.addEffect(new MobEffectInstance(BMPotions.SHOCKED, 1000, 0));
                         } else {
-                            e.addEffect(new MobEffectInstance(BMPotions.SHOCKED.get(), 1000, Math.min(3, e.getEffect(BMPotions.SHOCKED.get()).getAmplifier() + 1)));
+                            e.addEffect(new MobEffectInstance(BMPotions.SHOCKED, 1000, Math.min(3, e.getEffect(BMPotions.SHOCKED).getAmplifier() + 1)));
                         }
                         e.hurt(level().damageSources().indirectMagic(this, this.getOwner()), 0);
                         if (getOwner() instanceof LivingEntity) {
@@ -134,8 +134,7 @@ public class LightningBottleEntity extends ThrowableItemProjectile
     }
 
     @Override
-    public Packet<ClientGamePacketListener> getAddEntityPacket()
-    {
-        return NetworkManager.createAddEntityPacket(this);
+    public Packet<ClientGamePacketListener> getAddEntityPacket(ServerEntity serverEntity) {
+        return super.getAddEntityPacket(serverEntity);
     }
 }
