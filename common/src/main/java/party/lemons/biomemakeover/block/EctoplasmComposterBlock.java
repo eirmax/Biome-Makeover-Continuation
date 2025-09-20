@@ -5,10 +5,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.SimpleContainer;
-import net.minecraft.world.WorldlyContainer;
+import net.minecraft.world.*;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -40,33 +37,32 @@ public class EctoplasmComposterBlock extends ComposterBlock
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult blockHitResult)
-    {
-        int currentLevel = state.getValue(LEVEL);
-        ItemStack itemStack = player.getItemInHand(hand);
+    protected ItemInteractionResult useItemOn(ItemStack itemStack, BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
+        int currentLevel = blockState.getValue(LEVEL);
+        ItemStack itemStack1 = player.getItemInHand(interactionHand);
 
-        if(currentLevel < 8 && COMPOSTABLES.containsKey(itemStack.getItem()))
+        if(currentLevel < 8 && COMPOSTABLES.containsKey(itemStack1.getItem()))
         {
             if(currentLevel < 7 && !level.isClientSide())
             {
-                BlockState blockState = addItem(state, level, pos, itemStack);
-                level.levelEvent(1500, pos, state != blockState ? 1 : 0);
+                BlockState blockState1 = addItem(blockState, level, blockPos, itemStack1);
+                level.levelEvent(1500, blockPos, blockState1 != blockState ? 1 : 0);
                 if(!player.isCreative())
                 {
                     itemStack.shrink(1);
                 }
             }
-            return InteractionResult.sidedSuccess(level.isClientSide());
+            return ItemInteractionResult.sidedSuccess(level.isClientSide());
         }else if(currentLevel == 8)
         {
-            emptyFullComposter(level, pos, new ItemStack(Blocks.SOUL_SOIL));
+            emptyFullComposter(level, blockPos, new ItemStack(Blocks.SOUL_SOIL));
             if(!level.isClientSide())
                 BMAdvancements.ECTOPLASM_COMPOST.trigger((ServerPlayer) player);
 
-            return InteractionResult.sidedSuccess(level.isClientSide());
+            return ItemInteractionResult.sidedSuccess(level.isClientSide());
         }else
         {
-            return InteractionResult.PASS;
+            return ItemInteractionResult.FAIL;
         }
     }
 

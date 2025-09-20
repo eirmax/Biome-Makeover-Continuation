@@ -25,9 +25,10 @@ public class ItchingIvyBlock extends IvyBlock implements BonemealableBlock {
         return true;
     }
 
+
     @Override
-    public boolean isValidBonemealTarget(LevelReader blockGetter, BlockPos blockPos, BlockState state, boolean bl) {
-        return state.getValue(IvyShapedBlock.getPropertyForDirection(Direction.DOWN));
+    public boolean isValidBonemealTarget(LevelReader levelReader, BlockPos blockPos, BlockState blockState) {
+        return blockState.getValue(IvyShapedBlock.getPropertyForDirection(Direction.DOWN));
     }
 
     @Override

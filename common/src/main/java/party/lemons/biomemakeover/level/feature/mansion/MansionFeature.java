@@ -143,7 +143,7 @@ public class MansionFeature extends Structure
         private final MansionDetails details;
 
         public Piece(MansionDetails details, StructureTemplateManager structureManager, String string, BlockPos blockPos, Rotation rotation, boolean needsGroundAdjustment, boolean isWall) {
-            super(BMStructures.MANSION_PIECE.get(), 0, structureManager, new ResourceLocation(string), string, makeSettings(rotation, isWall), blockPos);
+            super(BMStructures.MANSION_PIECE.get(), 0, structureManager, ResourceLocation.withDefaultNamespace(string), string, makeSettings(rotation, isWall), blockPos);
             this.ground = needsGroundAdjustment;
             this.isWall = isWall;
             this.details = details;
@@ -168,7 +168,7 @@ public class MansionFeature extends Structure
         }
 
         private static StructurePlaceSettings makeSettings(Rotation rotation, boolean isWall) {
-            return new StructurePlaceSettings().setIgnoreEntities(true).setKeepLiquids(false).setRotation(rotation).setMirror(Mirror.NONE).addProcessor(isWall ? IGNORE_AIR_AND_STRUCTURE_BLOCKS : IGNORE_STRUCTURE_BLOCKS);
+            return new StructurePlaceSettings().setIgnoreEntities(true).setRotation(rotation).setMirror(Mirror.NONE).addProcessor(isWall ? IGNORE_AIR_AND_STRUCTURE_BLOCKS : IGNORE_STRUCTURE_BLOCKS);
         }
 
         @Override
@@ -178,7 +178,7 @@ public class MansionFeature extends Structure
             compoundTag.putBoolean("Ground", ground);
             compoundTag.putBoolean("IsWall", isWall);
             if(this.details != null) {
-                Either<Tag, DataResult.PartialResult<Tag>> detailsEncode = MansionDetails.CODEC.encodeStart(NbtOps.INSTANCE, details).get();
+                Either<Tag, DataResult<Tag>> detailsEncode = MansionDetails.CODEC.encodeStart(NbtOps.INSTANCE, details).get();
                 if(detailsEncode.left().isPresent())
                     compoundTag.put("Details", detailsEncode.left().get());
             }
@@ -202,7 +202,7 @@ public class MansionFeature extends Structure
             AdjudicatorEntity boss = BMEntities.ADJUDICATOR.get().create(level.getLevel());
             boss.setPersistenceRequired();
             boss.moveTo(pos, 0.0F, 0.0F);
-            boss.finalizeSpawn(level, level.getCurrentDifficultyAt(pos), MobSpawnType.STRUCTURE, null, null);
+            boss.finalizeSpawn(level, level.getCurrentDifficultyAt(pos), MobSpawnType.STRUCTURE, null);
             level.addFreshEntityWithPassengers(boss);
             level.setBlock(pos, Blocks.AIR.defaultBlockState(), 2);
         }
@@ -270,7 +270,7 @@ public class MansionFeature extends Structure
                     StringBuilder name = new StringBuilder();
                     for(int i = 3; i < splits.length; i++)
                         name.append(splits[i]).append("_");
-                    setState = world.registryAccess().registry(Registries.BLOCK).get().get(new ResourceLocation(name.substring(0, name.length() - 1))).defaultBlockState();
+                    setState = world.registryAccess().registry(Registries.BLOCK).get().get(ResourceLocation.withDefaultNamespace(name.substring(0, name.length() - 1))).defaultBlockState();
                 }
 
                 if(random.nextInt(100) <= chance)
@@ -359,7 +359,7 @@ public class MansionFeature extends Structure
                 e.moveTo(pos, 0, 0);
                 if(e instanceof Mob mob)
                 {
-                    mob.finalizeSpawn(world, world.getCurrentDifficultyAt(pos), MobSpawnType.STRUCTURE, null, null);
+                    mob.finalizeSpawn(world, world.getCurrentDifficultyAt(pos), MobSpawnType.STRUCTURE, null);
                     mob.setPersistenceRequired();
                 }
                 world.addFreshEntityWithPassengers(e);
@@ -369,7 +369,7 @@ public class MansionFeature extends Structure
         private void doBonemealEffect(WorldGenLevel level, BlockPos pos, Random random)
         {
             BlockPos blockPos = pos.above();
-            BlockState blockState = Blocks.GRASS.defaultBlockState();
+            BlockState blockState = Blocks.GRASS_BLOCK.defaultBlockState();
 
                 ///this broke at some point, so we just dont :^)
         }
