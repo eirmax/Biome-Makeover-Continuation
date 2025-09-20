@@ -4,7 +4,9 @@ import com.google.common.collect.Lists;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.FluidTags;
@@ -29,6 +31,7 @@ import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSeriali
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePiecesBuilder;
 import net.minecraft.world.level.levelgen.structure.templatesystem.*;
 import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.storage.loot.LootTable;
 import party.lemons.biomemakeover.BiomeMakeover;
 import party.lemons.biomemakeover.init.BMStructures;
 import party.lemons.biomemakeover.util.RandomUtil;
@@ -52,7 +55,7 @@ public class SunkenRuinFeature extends Structure
     private static final ResourceLocation[] SMALL_PIECES = new ResourceLocation[]{BiomeMakeover.ID("sunken_ruins/sunken_small_1"), BiomeMakeover.ID("sunken_ruins/sunken_small_2"), BiomeMakeover.ID("sunken_ruins/sunken_small_3"), BiomeMakeover.ID("sunken_ruins/sunken_small_4"), BiomeMakeover.ID("sunken_ruins/sunken_small_5"), BiomeMakeover.ID("sunken_ruins/sunken_small_6")};
 
 
-    private static final ResourceLocation LOOT = BiomeMakeover.ID("sunken_ruin");
+    private static final ResourceKey<LootTable> LOOT = ResourceKey.create(Registries.LOOT_TABLE, BiomeMakeover.ID("sunken_ruin"));
 
     public SunkenRuinFeature(StructureSettings settings, float largeProbability, float clusterProbability)
     {
@@ -189,7 +192,7 @@ public class SunkenRuinFeature extends Structure
                     Witch witch = EntityType.WITCH.create(level.getLevel());
                     witch.setPersistenceRequired();
                     witch.moveTo(pos, 0.0F, 0.0F);
-                    witch.finalizeSpawn(level, level.getCurrentDifficultyAt(pos), MobSpawnType.STRUCTURE, null, null);
+                    witch.finalizeSpawn(level, level.getCurrentDifficultyAt(pos), MobSpawnType.STRUCTURE, null);
                     level.addFreshEntityWithPassengers(witch);
                     if(pos.getY() >= level.getSeaLevel())
                     {

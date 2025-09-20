@@ -110,7 +110,7 @@ public class SummonPhase extends TimedPhase
 
         LivingEntity entity = entities[random.nextInt(entities.length)].create(level);
         if(entity instanceof Mob)
-            ((Mob) entity).finalizeSpawn((ServerLevelAccessor) level, level.getCurrentDifficultyAt(spawnPos), MobSpawnType.EVENT, null, null);
+            ((Mob) entity).finalizeSpawn((ServerLevelAccessor) level, level.getCurrentDifficultyAt(spawnPos), MobSpawnType.EVENT, null);
 
         ((LootBlocker)entity).setLootBlocked(true);
         entity.moveTo((double)spawnPos.getX() + 0.5D, (double)spawnPos.getY(), (double)spawnPos.getZ() + 0.5D, 0.0F, 0.0F);

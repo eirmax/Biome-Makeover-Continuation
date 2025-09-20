@@ -2,6 +2,8 @@ package party.lemons.biomemakeover.crafting;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffect;
@@ -9,20 +11,24 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.SuspiciousStewItem;
+import net.minecraft.world.item.component.SuspiciousStewEffects;
+import net.minecraft.world.item.trading.ItemCost;
 import net.minecraft.world.item.trading.MerchantOffer;
 import org.jetbrains.annotations.Nullable;
 import party.lemons.biomemakeover.init.BMItems;
 import party.lemons.taniwha.data.trade.listing.TItemListing;
 import party.lemons.taniwha.data.trade.listing.TradeTypes;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class SuspiciousStewListing extends TItemListing
 {
 	public static final Codec<SuspiciousStewListing> CODEC = RecordCodecBuilder.create(instance ->
 			instance.group(
-							ItemStack.CODEC.fieldOf("item1").forGetter(i->i.item1),
-							ItemStack.CODEC.optionalFieldOf("item2", ItemStack.EMPTY).forGetter(i->i.item2),
+							ItemCost.CODEC.fieldOf("item1").forGetter(i-> i.item1),
+							ItemCost.CODEC.fieldOf("item2").forGetter(i-> i.item2),
 							EffectDuration.CODEC.listOf().fieldOf("effects").forGetter(i->i.effects),
 							Codec.INT.optionalFieldOf("uses", 0).forGetter(i->i.uses),
 							Codec.INT.fieldOf("max_uses").forGetter(i->i.maxUses),
@@ -32,8 +38,8 @@ public class SuspiciousStewListing extends TItemListing
 					)
 					.apply(instance, SuspiciousStewListing::new));
 
-	private final ItemStack item1;
-	private final ItemStack item2;
+	private final ItemCost item1;
+	private final ItemCost item2;
 	private final List<EffectDuration> effects;
 	private final int uses;
 	private final int maxUses;
@@ -41,7 +47,7 @@ public class SuspiciousStewListing extends TItemListing
 	private final float priceMultiplier;
 	private final int demand;
 
-	public SuspiciousStewListing(ItemStack item1, ItemStack item2, List<EffectDuration> effects, int uses, int maxUses, int xp, float priceMultiplier, int demand)
+	public SuspiciousStewListing(ItemCost item1, ItemCost item2, List<EffectDuration> effects, int uses, int maxUses, int xp, float priceMultiplier, int demand)
 	{
 		this.item1 = item1;
 		this.item2 = item2;
@@ -59,15 +65,27 @@ public class SuspiciousStewListing extends TItemListing
 		return BMItems.SUSPICIOUS_STEW_TRADE.get();
 	}
 
-	@Nullable
 	@Override
-	public MerchantOffer getOffer(Entity entity, RandomSource randomSource)
-	{
+	public MerchantOffer getOffer(Entity entity, RandomSource randomSource) {
 		ItemStack result = new ItemStack(Items.SUSPICIOUS_STEW);
 		EffectDuration effect = effects.get(randomSource.nextInt(effects.size()));
-		SuspiciousStewItem.saveMobEffect(result, effect.effect(), effect.duration());
 
-		return new MerchantOffer(item1, item2, result, uses, maxUses, xp, priceMultiplier, demand);
+		SuspiciousStewEffects.Entry newEffect = new SuspiciousStewEffects.Entry(
+				Holder.direct(effect.effect()),
+				effect.duration()
+		);
+
+		SuspiciousStewEffects stewEffects = result.get(DataComponents.SUSPICIOUS_STEW_EFFECTS);
+		if (stewEffects == null) {
+			stewEffects = SuspiciousStewEffects.EMPTY;
+		}
+
+		List<SuspiciousStewEffects.Entry> effectList = new ArrayList<>(stewEffects.effects());
+		effectList.add(newEffect);
+
+		result.set(DataComponents.SUSPICIOUS_STEW_EFFECTS, new SuspiciousStewEffects(effectList));
+
+		return new MerchantOffer(item1, Optional.ofNullable(item2), result, uses, maxUses, xp, priceMultiplier, demand);
 	}
 
 	private record EffectDuration(MobEffect effect, int duration)
