@@ -17,7 +17,7 @@ import party.lemons.biomemakeover.block.blockentity.AltarBlockEntity;
 
 public class AltarRenderer implements BlockEntityRenderer<AltarBlockEntity>
 {
-    public static final Material BOOK_LOCATION = new Material(TextureAtlas.LOCATION_BLOCKS, new ResourceLocation("entity/enchanting_table_book"));
+    public static final Material BOOK_LOCATION = new Material(TextureAtlas.LOCATION_BLOCKS, ResourceLocation.withDefaultNamespace("entity/enchanting_table_book"));
     private final BookModel bookModel;
 
     public AltarRenderer(BlockEntityRendererProvider.Context context)
@@ -46,7 +46,7 @@ public class AltarRenderer implements BlockEntityRenderer<AltarBlockEntity>
         float o = Mth.lerp(delta, blockEntity.pageTurningSpeed, blockEntity.nextPageTurningSpeed);
         this.bookModel.setupAnim(g, Mth.clamp(m, 0.0f, 1.0f), Mth.clamp(n, 0.0f, 1.0f), o);
         VertexConsumer vertexConsumer = BOOK_LOCATION.buffer(multiBufferSource, RenderType::entitySolid);
-        this.bookModel.render(poseStack, vertexConsumer, i, j, 1.0f, 1.0f, 1.0f, 1.0f);
+        this.bookModel.render(poseStack, vertexConsumer, i, j, 1);
         poseStack.popPose();
     }
 }

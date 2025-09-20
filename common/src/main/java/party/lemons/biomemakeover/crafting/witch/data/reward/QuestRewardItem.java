@@ -3,6 +3,7 @@ package party.lemons.biomemakeover.crafting.witch.data.reward;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.Lifecycle;
+import com.mojang.serialization.MapCodec;
 import dev.architectury.registry.registries.DeferredRegister;
 import dev.architectury.registry.registries.Registrar;
 import dev.architectury.registry.registries.RegistrarManager;
@@ -18,14 +19,14 @@ import party.lemons.biomemakeover.Constants;
 
 import java.util.Optional;
 
-public abstract class QuestRewardItem
-{
+public abstract class QuestRewardItem {
+
 	public static final ResourceKey<Registry<RewardItemType<?>>> KEY = ResourceKey.createRegistryKey(BiomeMakeover.ID("quest_reward_item_type"));
 	public static final Registrar<RewardItemType<?>> REGISTRY = RegistrarManager.get(Constants.MOD_ID).builder(KEY.location(), new RewardItemType<?>[0]).build();
 	public static final DeferredRegister<RewardItemType<?>> REWARD_TYPES = DeferredRegister.create(Constants.MOD_ID, KEY);
 
-	public static final RegistrySupplier<RewardItemType<?>> ITEM = REWARD_TYPES.register(BiomeMakeover.ID("item"), ()->new RewardItemType<>(ItemQuestRewardItem.CODEC));
-	public static final RegistrySupplier<RewardItemType<?>> POTION = REWARD_TYPES.register(BiomeMakeover.ID("potion"), ()->new RewardItemType<>(PotionQuestRewardItem.CODEC));
+	public static final RegistrySupplier<RewardItemType<ItemQuestRewardItem>> ITEM = REWARD_TYPES.register(BiomeMakeover.ID("item"), () -> new RewardItemType<>(ItemQuestRewardItem.CODEC.fieldOf("item")));
+	public static final RegistrySupplier<RewardItemType<PotionQuestRewardItem>> POTION = REWARD_TYPES.register(BiomeMakeover.ID("potion"), () -> new RewardItemType<>(PotionQuestRewardItem.CODEC.fieldOf("potion")));
 
 	public static Codec<RewardItemType<?>> byNameCodec() {
 		Codec<RewardItemType<?>> codec = ResourceLocation.CODEC
@@ -39,20 +40,22 @@ public abstract class QuestRewardItem
 								.orElseGet(() -> DataResult.error(() -> "Unknown registry element in " + REGISTRY.key() + ":" + object))
 				);
 		Codec<RewardItemType<?>> codec2 = ExtraCodecs.idResolverCodec(object -> REGISTRY.getKey(object).isPresent() ? REGISTRY.getRawId(object) : -1, REGISTRY::byRawId, -1);
-		return ExtraCodecs.overrideLifecycle(ExtraCodecs.orCompressed(codec, codec2), (e)->Lifecycle.stable(),  (e)->Lifecycle.stable());
+		return ExtraCodecs.overrideLifecycle(ExtraCodecs.orCompressed(codec, codec2), (e) -> Lifecycle.stable(), (e) -> Lifecycle.stable());
 	}
 
-	public static final Codec<QuestRewardItem> CODEC = byNameCodec().dispatch(QuestRewardItem::type, RewardItemType::codec);
+	public static final Codec<QuestRewardItem> CODEC = byNameCodec().dispatch(QuestRewardItem::type, RewardItemType::mapCodec);
 
-	public static void init()
-	{
+	public static void init() {
 		REWARD_TYPES.register();
 	}
 
 	abstract RewardItemType<?> type();
+
 	public abstract ItemStack getReward(RandomSource randomSource);
 
-	public record RewardItemType<T extends QuestRewardItem>(Codec<T> codec)
-	{
+	public record RewardItemType<T extends QuestRewardItem>(MapCodec<T> mapCodec) {
+		public static <T extends QuestRewardItem> RewardItemType<T> of(String fieldName, Codec<T> codec) {
+			return new RewardItemType<>(codec.fieldOf(fieldName));
+		}
 	}
 }

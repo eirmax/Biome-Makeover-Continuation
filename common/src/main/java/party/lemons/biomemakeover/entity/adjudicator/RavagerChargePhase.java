@@ -1,6 +1,7 @@
 package party.lemons.biomemakeover.entity.adjudicator;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
@@ -14,6 +15,7 @@ import net.minecraft.world.entity.monster.Ravager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import party.lemons.biomemakeover.entity.adjudicator.phase.AdjudicatorPhase;
 import party.lemons.biomemakeover.entity.ai.MountedCrossbowAttackGoal;
@@ -51,7 +53,7 @@ public class RavagerChargePhase extends AdjudicatorPhase
         adjudicator.startRiding(ravager, true);
 
         ItemStack stack = new ItemStack(Items.CROSSBOW);
-        stack.enchant(Enchantments.MULTISHOT, 3);
+        stack.enchant((Holder<Enchantment>) Enchantments.MULTISHOT, 3);
         adjudicator.setItemInHand(InteractionHand.MAIN_HAND, stack);
 
         adjudicator.playSound(BMEffects.ADJUDICATOR_SPELL_GRUNT.get(), 1F, 1F);

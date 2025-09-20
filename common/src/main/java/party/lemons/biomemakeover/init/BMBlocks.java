@@ -22,7 +22,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.BrushableBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.grower.AbstractTreeGrower;
+import net.minecraft.world.level.block.grower.TreeGrower;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
@@ -273,7 +273,7 @@ public class BMBlocks
         return register("potted_" + base_name, ()->new TFlowerPotBlock(baseBlock.get(), properties(0).mapColor(MapColor.NONE).lightLevel(s->light).instabreak().noOcclusion().pushReaction(PushReaction.DESTROY)).modifiers(RTypeModifier.CUTOUT));
     }
 
-    private static RegistrySupplier<Block> sapling(String name, AbstractTreeGrower grower, MapColor color)
+    private static RegistrySupplier<Block> sapling(String name, TreeGrower grower, MapColor color)
     {
         RegistrySupplier<Block> sapling = registerBlockItem(name, ()->new TSaplingBlock(grower, BlockBehaviour.Properties.of().noCollission().mapColor(color).randomTicks().instabreak().sound(SoundType.GRASS).pushReaction(PushReaction.DESTROY)).modifiers(RTypeModifier.CUTOUT));
         pottedPlant(name, sapling);

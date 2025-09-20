@@ -52,7 +52,7 @@ public class QuestCategoryReloadListener extends SimpleJsonResourceReloadListene
 					float points = requestObject.get("points").getAsFloat();
 					int maxCount = requestObject.get("max_count").getAsInt();
 
-					ResourceLocation itemLocation = new ResourceLocation(itemName);
+					ResourceLocation itemLocation =  ResourceLocation.withDefaultNamespace(itemName);
 					Item item = BuiltInRegistries.ITEM.get(itemLocation);
 					if(item == Items.AIR)
 						Constants.LOG.warn("Air or Unknown item found in witch category: " + location + " | " + itemLocation);

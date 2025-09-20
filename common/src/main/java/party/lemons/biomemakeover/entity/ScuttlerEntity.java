@@ -2,6 +2,7 @@ package party.lemons.biomemakeover.entity;
 
 import com.google.common.collect.Lists;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -20,6 +21,7 @@ import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -89,11 +91,11 @@ public class ScuttlerEntity extends Animal {
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        entityData.define(RATTLING, false);
-        entityData.define(EATING, false);
-        entityData.define(PASSIVE, false);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        entityData.set(RATTLING, false);
+        entityData.set(EATING, false);
+        entityData.set(PASSIVE, false);
     }
 
     @Override
@@ -125,32 +127,26 @@ public class ScuttlerEntity extends Animal {
     @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
         ItemStack itemStack = player.getItemInHand(hand);
-        Item item = itemStack.getItem();
-        if(this.level().isClientSide())
-        {
-            if(this.isFood(itemStack))
-            {
+
+        if (this.level().isClientSide()) {
+            if (this.isFood(itemStack)) {
                 return InteractionResult.SUCCESS;
             }
-        }else
-        {
-            if(entityData.get(PASSIVE))
-            {
-                if(item.getFoodProperties() != null && this.isFood(itemStack) && this.getHealth() < this.getMaxHealth())
-                {
+        } else {
+            FoodProperties foodComponent = itemStack.get(DataComponents.FOOD);
+
+            if (entityData.get(PASSIVE)) {
+                if (foodComponent != null && this.getHealth() < this.getMaxHealth()) {
                     this.eat(level(), itemStack);
-                    this.heal((float) item.getFoodProperties().getNutrition());
+                    this.heal((float) foodComponent.nutrition());
                     return InteractionResult.CONSUME;
                 }
-            }else if(this.isFood(itemStack))
-            {
+            } else if (foodComponent != null) {
                 this.eat(level(), itemStack);
-                if(this.random.nextInt(3) == 0)
-                {
+                if (this.random.nextInt(3) == 0) {
                     entityData.set(PASSIVE, true);
                     this.level().broadcastEntityEvent(this, (byte) 7);
-                }else
-                {
+                } else {
                     this.level().broadcastEntityEvent(this, (byte) 6);
                 }
                 this.setPersistenceRequired();
@@ -159,7 +155,6 @@ public class ScuttlerEntity extends Animal {
         }
         return super.mobInteract(player, hand);
     }
-
     @Override
     public boolean isInvulnerableTo(DamageSource damageSource) {
         if(damageSource.is(BMEntities.SCUTTLER_IMMUNE_DAMAGE))
@@ -174,8 +169,8 @@ public class ScuttlerEntity extends Animal {
     }
 
     @Override
-    public boolean canBeLeashed(Player player) {
-        return super.canBeLeashed(player) && isPassive();
+    public boolean canBeLeashed() {
+        return super.canBeLeashed() && isPassive();
     }
 
     @Override
@@ -245,7 +240,7 @@ public class ScuttlerEntity extends Animal {
     }
 
     @Override
-    protected float getStandingEyeHeight(Pose pose, EntityDimensions entityDimensions) {
+    public double getEyeY() {
         return 0.2F;
     }
 

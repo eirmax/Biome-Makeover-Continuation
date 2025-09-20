@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -13,7 +14,7 @@ import net.minecraft.world.level.block.WaterlilyBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
-import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 import party.lemons.biomemakeover.init.BMBlocks;
@@ -32,23 +33,23 @@ public class SmallLilyPadBlock extends WaterlilyBlock implements BlockWithModifi
         registerDefaultState(getStateDefinition().any().setValue(PADS, 0));
     }
 
+
     @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos blockPos, Player player, InteractionHand hand, BlockHitResult blockHitResult)
-    {
-        ItemStack stack = player.getItemInHand(hand);
+    protected ItemInteractionResult useItemOn(ItemStack itemStack, BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
+        ItemStack stack = player.getItemInHand(interactionHand);
         BlockPos pos = blockHitResult.getBlockPos();
 
-        if(level.mayInteract(player, pos) && state.getValue(PADS) < 3 && !stack.isEmpty() && stack.getItem() == BMBlocks.SMALL_LILY_PAD.get().asItem())
+        if(level.mayInteract(player, pos) && blockState.getValue(PADS) < 3 && !stack.isEmpty() && stack.getItem() == BMBlocks.SMALL_LILY_PAD.get().asItem())
         {
-            level.setBlock(pos, state.setValue(PADS, state.getValue(PADS) + 1), 3);
+            level.setBlock(pos, blockState.setValue(PADS, blockState.getValue(PADS) + 1), 3);
             if(!player.isCreative()) stack.shrink(1);
 
-            SoundType blockSoundGroup = state.getSoundType();
+            SoundType blockSoundGroup = blockState.getSoundType();
             level.playSound(player, pos, blockSoundGroup.getPlaceSound(), SoundSource.BLOCKS, (blockSoundGroup.getVolume() + 1.0F) / 2.0F, blockSoundGroup.getPitch() * 0.8F);
 
-            return InteractionResult.SUCCESS;
+            return ItemInteractionResult.SUCCESS;
         }
-        return super.use(state, level, blockPos, player, hand, blockHitResult);
+        return super.useItemOn(itemStack, blockState, level, blockPos, player, interactionHand, blockHitResult);
     }
 
     @Override
@@ -73,8 +74,8 @@ public class SmallLilyPadBlock extends WaterlilyBlock implements BlockWithModifi
     }
 
     @Override
-    public BlockPathTypes getNodePathType()
+    public PathType getNodePathType()
     {
-        return BlockPathTypes.DANGER_OTHER;
+        return PathType.DANGER_OTHER;
     }
 }

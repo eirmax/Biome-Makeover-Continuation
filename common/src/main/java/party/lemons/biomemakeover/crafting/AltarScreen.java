@@ -21,6 +21,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import org.joml.Matrix4f;
 import party.lemons.biomemakeover.BiomeMakeover;
+import party.lemons.biomemakeover.Constants;
 import party.lemons.biomemakeover.block.blockentity.AltarBlockEntity;
 
 import java.util.Random;
@@ -28,7 +29,7 @@ import java.util.Random;
 public class AltarScreen extends AbstractContainerScreen<AltarMenu> {
     private static final ResourceLocation TEXTURE = BiomeMakeover.ID("textures/gui/altar.png");
     private static final int[] GYLPH_PROGRESS = new int[]{0, 6, 11, 16, 20, 24, 29, 35, 42, 49, 54, 54, 54};
-    private static final ResourceLocation BOOK_TEXTURE = new ResourceLocation("textures/entity/enchanting_table_book.png");
+    private static final ResourceLocation BOOK_TEXTURE =  ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID,"textures/entity/enchanting_table_book.png");
     private BookModel bookModel;
     private final Random random = new Random();
 
@@ -114,10 +115,9 @@ public class AltarScreen extends AbstractContainerScreen<AltarMenu> {
             p = 1.0f;
         }
         this.bookModel.setupAnim(0.0f, o, p, h);
-        MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
-        VertexConsumer vertexConsumer = bufferSource.getBuffer(this.bookModel.renderType(BOOK_TEXTURE));
-        this.bookModel.renderToBuffer(g.pose(), vertexConsumer, 0xF000F0, OverlayTexture.NO_OVERLAY, 1.0f, 1.0f, 1.0f, 1.0f);
-        bufferSource.endBatch();
+        VertexConsumer vertexConsumer = this.minecraft.renderBuffers().bufferSource().getBuffer(this.bookModel.renderType(BOOK_TEXTURE));
+        this.bookModel.renderToBuffer(g.pose(), vertexConsumer, 0xF000F0, OverlayTexture.NO_OVERLAY);
+        this.minecraft.renderBuffers().bufferSource().endBatch();
         g.pose().popPose();
         RenderSystem.viewport(0, 0, this.minecraft.getWindow().getWidth(), this.minecraft.getWindow().getHeight());
         RenderSystem.restoreProjectionMatrix();
@@ -127,7 +127,7 @@ public class AltarScreen extends AbstractContainerScreen<AltarMenu> {
 
     @Override
     public void render(GuiGraphics matrices, int mouseX, int mouseY, float delta) {
-        this.renderBackground(matrices);
+        this.renderBackground(matrices, mouseX, mouseY, delta);
         super.render(matrices, mouseX, mouseY, delta);
         this.renderTooltip(matrices, mouseX, mouseY);
     }
@@ -141,7 +141,7 @@ public class AltarScreen extends AbstractContainerScreen<AltarMenu> {
     public void doTick()
     {
         ItemStack itemStack = this.getMenu().getSlot(0).getItem();
-        if(!ItemStack.isSameItemSameTags(itemStack, this.stack))
+        if(!ItemStack.isSameItemSameComponents(itemStack, this.stack))
         {
             this.stack = itemStack;
 

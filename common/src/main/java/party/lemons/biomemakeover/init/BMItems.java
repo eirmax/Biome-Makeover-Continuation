@@ -22,6 +22,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.block.entity.DecoratedPotPattern;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.storage.loot.entries.LootPoolEntryType;
 import party.lemons.biomemakeover.BiomeMakeover;
@@ -47,7 +48,7 @@ public class BMItems
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(Constants.MOD_ID, Registries.ITEM);
     public static final DeferredRegister<LootPoolEntryType> LOOT_POOL_ENTRIES = DeferredRegister.create(Constants.MOD_ID, Registries.LOOT_POOL_ENTRY_TYPE);
     public static final DeferredRegister<TradeTypes.TradeType<?>> TRADE_TYPES = DeferredRegister.create(Constants.MOD_ID, TradeTypes.KEY);
-    public static final DeferredRegister<String> DECORATED_POT_PATTERNS = DeferredRegister.create(Constants.MOD_ID, Registries.DECORATED_POT_PATTERNS);
+    public static final DeferredRegister<DecoratedPotPattern> DECORATED_POT_PATTERNS = DeferredRegister.create(Constants.MOD_ID, Registries.DECORATED_POT_PATTERN);
 
     public static final TagKey<Item> CURSE_FUEL = TagKey.create(Registries.ITEM, BiomeMakeover.ID("curse_fuel"));
     public static final TagKey<Item> ADDITIONAL_CAMEL_FOOD = TagKey.create(Registries.ITEM, BiomeMakeover.ID("additional_camel_food"));
@@ -57,16 +58,16 @@ public class BMItems
     public static final TagKey<Item> SCUTTLER_FOOD = TagKey.create(Registries.ITEM, BiomeMakeover.ID("scuttler_food"));
     public static final TagKey<Item> HEALS_STONE_GOLEM = TagKey.create(Registries.ITEM, BiomeMakeover.ID("heals_stone_golem"));
 
-    public static final FoodProperties GLOWSHROOM_SOUP_FOOD = new FoodProperties.Builder().alwaysEat().saturationMod(0.6F).nutrition(5).effect(new MobEffectInstance(MobEffects.NIGHT_VISION, 1200, 0), 1).effect(new MobEffectInstance(MobEffects.GLOWING, 1200, 0), 1).build();
-    public static final FoodProperties GLOWFISH_FOOD = new FoodProperties.Builder().alwaysEat().saturationMod(0.1F).nutrition(1).effect(new MobEffectInstance(MobEffects.NIGHT_VISION, 200, 0), 0.5F).effect(new MobEffectInstance(MobEffects.GLOWING, 200, 0), 0.5F).build();
-    public static final FoodProperties COOKED_GLOWFISH_FOOD = new FoodProperties.Builder().alwaysEat().saturationMod(0.6F).nutrition(5).effect(new MobEffectInstance(MobEffects.NIGHT_VISION, 200, 0), 0.5F).effect(new MobEffectInstance(MobEffects.GLOWING, 200, 0), 0.5F).build();
-    public static final FoodProperties COOKED_TOAD_FOOD = new FoodProperties.Builder().nutrition(6).saturationMod(0.6F).meat().build();
-    public static final FoodProperties RAW_TOAD_FOOD = new FoodProperties.Builder().nutrition(3).saturationMod(0.3F).meat().build();
-    public static final FoodProperties RAW_BULBUS_ROOT_FOOD = new FoodProperties.Builder().nutrition(2).saturationMod(0.6F).build();
-    public static final FoodProperties BULBUS_ROOT_FOOD = new FoodProperties.Builder().nutrition(5).saturationMod(0.8F).build();
-    public static final FoodProperties RAW_CRAB_FOOD = new FoodProperties.Builder().nutrition(2).saturationMod(0.1F).build();
-    public static final FoodProperties COOKED_CRAB_FOOD = new FoodProperties.Builder().nutrition(5).saturationMod(0.6F).build();
-    public static final FoodProperties CRAB_CHOWDER_FOOD = new FoodProperties.Builder().nutrition(11).saturationMod(0.9F).build();
+    public static final FoodProperties GLOWSHROOM_SOUP_FOOD = new FoodProperties.Builder().alwaysEdible().saturationModifier(0.6F).nutrition(5).effect(new MobEffectInstance(MobEffects.NIGHT_VISION, 1200, 0), 1).effect(new MobEffectInstance(MobEffects.GLOWING, 1200, 0), 1).build();
+    public static final FoodProperties GLOWFISH_FOOD = new FoodProperties.Builder().alwaysEdible().saturationModifier(0.1F).nutrition(1).effect(new MobEffectInstance(MobEffects.NIGHT_VISION, 200, 0), 0.5F).effect(new MobEffectInstance(MobEffects.GLOWING, 200, 0), 0.5F).build();
+    public static final FoodProperties COOKED_GLOWFISH_FOOD = new FoodProperties.Builder().alwaysEdible().saturationModifier(0.6F).nutrition(5).effect(new MobEffectInstance(MobEffects.NIGHT_VISION, 200, 0), 0.5F).effect(new MobEffectInstance(MobEffects.GLOWING, 200, 0), 0.5F).build();
+    public static final FoodProperties COOKED_TOAD_FOOD = new FoodProperties.Builder().nutrition(6).saturationModifier(0.6F).build();
+    public static final FoodProperties RAW_TOAD_FOOD = new FoodProperties.Builder().nutrition(3).saturationModifier(0.3F).build();
+    public static final FoodProperties RAW_BULBUS_ROOT_FOOD = new FoodProperties.Builder().nutrition(2).saturationModifier(0.6F).build();
+    public static final FoodProperties BULBUS_ROOT_FOOD = new FoodProperties.Builder().nutrition(5).saturationModifier(0.8F).build();
+    public static final FoodProperties RAW_CRAB_FOOD = new FoodProperties.Builder().nutrition(2).saturationModifier(0.1F).build();
+    public static final FoodProperties COOKED_CRAB_FOOD = new FoodProperties.Builder().nutrition(5).saturationModifier(0.6F).build();
+    public static final FoodProperties CRAB_CHOWDER_FOOD = new FoodProperties.Builder().nutrition(11).saturationModifier(0.9F).build();
 
     public static final ArmorMaterial CLADDED_MATERIAL = new CladdedArmorMaterial();
 
@@ -157,7 +158,7 @@ public class BMItems
     public static void init() {
 
         BMEntities.ATT_PROJECTILE_RESISTANCE.listen(a->{
-            ArmorBuilder CLADDED_ARMOR_BUILDER = ArmorBuilder.create(CLADDED_MATERIAL).attribute("Armor Proj Res", BMEntities.ATT_PROJECTILE_RESISTANCE.get(), 1.5, AttributeModifier.Operation.ADDITION);
+            ArmorBuilder CLADDED_ARMOR_BUILDER = ArmorBuilder.create(CLADDED_MATERIAL).attribute(ResourceLocation.parse("Armor Proj Res"), BMEntities.ATT_PROJECTILE_RESISTANCE.get(), 1.5, AttributeModifier.Operation.ADD_VALUE);
             Supplier<Item> CLADDED_HELMET = registerItem("cladded_helmet", CLADDED_ARMOR_BUILDER.build(ArmorItem.Type.HELMET, properties()));
             Supplier<Item> CLADDED_CHESTPLATE = registerItem("cladded_chestplate", CLADDED_ARMOR_BUILDER.build(ArmorItem.Type.CHESTPLATE, properties()));
             Supplier<Item> CLADDED_LEGGINGS = registerItem("cladded_leggings",CLADDED_ARMOR_BUILDER.build(ArmorItem.Type.LEGGINGS, properties()));
@@ -282,7 +283,7 @@ public class BMItems
                 Component.translatable(
                         Util.makeDescriptionId("item",  BiomeMakeover.ID("smithing_template.cladding_upgrade.additions_slot_description"))
                 ),
-                List.of(new ResourceLocation("item/empty_armor_slot_helmet"), new ResourceLocation("item/empty_armor_slot_chestplate"), new ResourceLocation("item/empty_armor_slot_leggings"), new ResourceLocation("item/empty_armor_slot_boots")),
+                List.of(ResourceLocation.withDefaultNamespace("item/empty_armor_slot_helmet"), ResourceLocation.withDefaultNamespace("item/empty_armor_slot_chestplate"), ResourceLocation.withDefaultNamespace("item/empty_armor_slot_leggings"), ResourceLocation.withDefaultNamespace("item/empty_armor_slot_boots")),
                 List.of(BiomeMakeover.ID("item/empty_slot_crude_cladding"))
         );
     }

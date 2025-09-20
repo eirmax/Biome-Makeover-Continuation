@@ -1,14 +1,15 @@
 package party.lemons.biomemakeover.item.enchantment;
 
 import com.google.common.collect.Maps;
+import net.minecraft.core.Holder;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentCategory;
+import net.minecraft.world.item.Rarity;
 import party.lemons.biomemakeover.BMConfig;
 import party.lemons.taniwha.util.MathUtils;
 
@@ -20,9 +21,9 @@ public class TickableAttributeEnchantment extends BMEnchantment
 {
     private final Map<Attribute, AttributeModifier> attributeModifiers = Maps.newHashMap();
 
-    public TickableAttributeEnchantment(Supplier<BMConfig.EnchantConfig> config, boolean isCurse, Rarity weight, EnchantmentCategory type, EquipmentSlot[] slotTypes)
+    public TickableAttributeEnchantment(Supplier<BMConfig.EnchantConfig> config, boolean isCurse, Rarity weight, EquipmentSlot[] slotTypes)
     {
-        super(config, isCurse, weight, type, slotTypes);
+        super(config, isCurse, weight, slotTypes);
 
         initAttributes();
     }
@@ -50,12 +51,12 @@ public class TickableAttributeEnchantment extends BMEnchantment
         for(Map.Entry<Attribute, AttributeModifier> attributeEntry : this.attributeModifiers.entrySet())
         {
             UUID id = MathUtils.uuidFromString(slot.toString());
-            AttributeInstance entityAttributeInstance = entity.getAttributes().getInstance(attributeEntry.getKey());
+            AttributeInstance entityAttributeInstance = entity.getAttributes().getInstance((Holder<Attribute>) attributeEntry.getKey());
             if(entityAttributeInstance != null)
             {
                 AttributeModifier mod = attributeEntry.getValue();
                 entityAttributeInstance.removeModifier(mod);
-                entityAttributeInstance.addTransientModifier(new AttributeModifier(id, this.getDescriptionId() + " " + level, this.adjustModifierAmount(level, mod), mod.getOperation()));
+                entityAttributeInstance.addTransientModifier(new AttributeModifier(ResourceLocation.parse(String.valueOf(id)),  this.adjustModifierAmount(level, mod), mod.operation()));
 
             }
         }
@@ -64,7 +65,7 @@ public class TickableAttributeEnchantment extends BMEnchantment
 
     public double adjustModifierAmount(int amplifier, AttributeModifier modifier)
     {
-        return modifier.getAmount() * (double) (amplifier);
+        return modifier.amount() * (double) (amplifier);
     }
 
     public void removeAttributes(LivingEntity entity, EquipmentSlot slot)
@@ -72,14 +73,14 @@ public class TickableAttributeEnchantment extends BMEnchantment
         for(Map.Entry<Attribute, AttributeModifier> attributeEntry : this.attributeModifiers.entrySet())
         {
             UUID slotID = MathUtils.uuidFromString(slot.toString());
-            AttributeInstance entityAttributeInstance = entity.getAttributes().getInstance(attributeEntry.getKey());
+            AttributeInstance entityAttributeInstance = entity.getAttributes().getInstance((Holder<Attribute>) attributeEntry.getKey());
             if(entityAttributeInstance != null)
             {
-                AttributeModifier mod = entityAttributeInstance.getModifier(slotID);
+                AttributeModifier mod = entityAttributeInstance.getModifier(ResourceLocation.parse(String.valueOf(slotID)));
                 if(mod != null)
                     entityAttributeInstance.removeModifier(mod);
                 else
-                    System.out.println("ERROR REMOVING MODIFIER: DOESNT EXIST??? : " + entityAttributeInstance.getAttribute().getDescriptionId());
+                    System.out.println("ERROR REMOVING MODIFIER: DOESNT EXIST??? : " );
             }
         }
     }

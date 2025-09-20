@@ -11,14 +11,15 @@ public class PossessedEffect extends TMobEffect
         super(MobEffectCategory.HARMFUL, 0x20c09e);
     }
 
-    public void applyEffectTick(LivingEntity livingEntity, int effectLevel) {
+    public boolean applyEffectTick(LivingEntity livingEntity, int effectLevel) {
         if(livingEntity.level().isClientSide())
-            return;
+            return false;
 
         for(int i = 0; i < Math.min(effectLevel + 1, 20); i++)
         {
             PoltergeistHandler.doPoltergeist(livingEntity.level(), livingEntity, livingEntity.blockPosition(), 4);
         }
+        return false;
     }
 
     public boolean isDurationEffectTick(int time, int level) {

@@ -6,7 +6,6 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
-import net.minecraft.world.level.block.grower.TreeGrower;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.material.FluidState;
@@ -20,7 +19,7 @@ import static net.minecraft.world.level.block.state.properties.BlockStatePropert
 public class WaterSaplingBlock extends TSaplingBlock implements SimpleWaterloggedBlock {
     private final int maxDepth;
 
-    public WaterSaplingBlock(TreeGrower abstractTreeGrower, int maxDepth, Properties settings)
+    public WaterSaplingBlock(WillowSaplingGenerator abstractTreeGrower, int maxDepth, Properties settings)
     {
         super(abstractTreeGrower, settings);
         this.maxDepth = maxDepth;

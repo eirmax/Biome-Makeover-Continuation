@@ -19,8 +19,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
-import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -176,7 +176,7 @@ public class SaguaroCactusBlock extends TBlock implements BonemealableBlock
 
     @Override
     public void randomTick(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, RandomSource random) {
-        if(isValidBonemealTarget(serverLevel, blockPos, blockState, serverLevel.isClientSide) && random.nextInt(10) == 0)
+        if(isValidBonemealTarget(serverLevel, blockPos, blockState) && random.nextInt(10) == 0)
             performBonemeal(serverLevel, random, blockPos, blockState);
     }
 
@@ -186,13 +186,13 @@ public class SaguaroCactusBlock extends TBlock implements BonemealableBlock
     }
 
     @Override
-    public boolean isPathfindable(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, PathComputationType pathComputationType) {
+    protected boolean isPathfindable(BlockState blockState, PathComputationType pathComputationType) {
         return false;
     }
 
     @Override
-    public boolean isValidBonemealTarget(LevelReader blockGetter, BlockPos blockPos, BlockState blockState, boolean isClient) {
-        return blockState.equals(defaultBlockState()) && isGrowBlock(blockGetter.getBlockState(blockPos.below())) && blockGetter.getBlockState(blockPos.above()).isAir();
+    public boolean isValidBonemealTarget(LevelReader levelReader, BlockPos blockPos, BlockState blockState) {
+        return blockState.equals(defaultBlockState()) && isGrowBlock(levelReader.getBlockState(blockPos.below())) && levelReader.getBlockState(blockPos.above()).isAir();
     }
 
     @Override
@@ -206,9 +206,9 @@ public class SaguaroCactusBlock extends TBlock implements BonemealableBlock
     }
 
     @Override
-    public BlockPathTypes getNodePathType()
+    public PathType getNodePathType()
     {
-        return BlockPathTypes.DAMAGE_OTHER;
+        return PathType.DAMAGE_OTHER;
     }
 
     private final static Direction[] NORTH_SOUTH = {Direction.NORTH, Direction.SOUTH};

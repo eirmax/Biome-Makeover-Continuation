@@ -36,28 +36,28 @@ public class OwlRender extends MobRenderer<OwlEntity, OwlModel>
     }
 
     @Override
-    protected void renderNameTag(OwlEntity entity, Component component, PoseStack poseStack, MultiBufferSource multiBufferSource, int i)
-    {
+    protected void renderNameTag(OwlEntity entity, Component component, PoseStack poseStack, MultiBufferSource multiBufferSource, int i, float f) {
         poseStack.pushPose();
         if(entity.isBaby())
             poseStack.translate(0, 0.5F, 0);
 
-        super.renderNameTag(entity, component, poseStack, multiBufferSource, i);
+        super.renderNameTag(entity, component, poseStack, multiBufferSource, i, f);
 
         poseStack.popPose();
     }
 
+
     @Override
-    protected void setupRotations(OwlEntity owl, PoseStack poseStack, float f, float g, float h) {
-        super.setupRotations(owl, poseStack, f, g, h);
-        if(owl.isInSittingPose()) poseStack.translate(0, -0.1F, 0);
+    protected void setupRotations(OwlEntity livingEntity, PoseStack poseStack, float f, float g, float h, float i) {
+        super.setupRotations(livingEntity, poseStack, f, g, h, i);
+        if(livingEntity.isInSittingPose()) poseStack.translate(0, -0.1F, 0);
 
-        float i = owl.getSwimAmount(h);
+        float n = livingEntity.getSwimAmount(h);
 
-        poseStack.translate(0, (i / 7F) / 2F, (i / 7F) / 2F);
-        if(i > 0.0F)
+        poseStack.translate(0, (n / 7F) / 2F, (n / 7F) / 2F);
+        if(n > 0.0F)
         {
-            poseStack.mulPose(Axis.XP.rotationDegrees(Mth.lerp(i, 0, -7.0F)));
+            poseStack.mulPose(Axis.XP.rotationDegrees(Mth.lerp(n, 0, -7.0F)));
         }
         poseStack.scale(0.75F, 0.75F, 0.75F);
     }

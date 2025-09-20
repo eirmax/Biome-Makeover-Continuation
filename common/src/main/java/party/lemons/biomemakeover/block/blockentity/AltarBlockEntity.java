@@ -2,6 +2,7 @@ package party.lemons.biomemakeover.block.blockentity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -309,16 +310,17 @@ public class AltarBlockEntity extends RandomizableContainerBlockEntity implement
     }
 
     @Override
-    protected void saveAdditional(CompoundTag compoundTag) {
-        super.saveAdditional(compoundTag);
-        ContainerHelper.saveAllItems(compoundTag, this.inventory);
+    protected void saveAdditional(CompoundTag compoundTag, HolderLookup.Provider provider) {
+        super.saveAdditional(compoundTag, provider);
+        ContainerHelper.saveAllItems(compoundTag, this.inventory, provider);
         compoundTag.putInt("Progress", progress);
     }
 
+
     @Override
-    public void load(CompoundTag compoundTag) {
-        super.load(compoundTag);
-        ContainerHelper.loadAllItems(compoundTag, this.inventory);
+    protected void loadAdditional(CompoundTag compoundTag, HolderLookup.Provider provider) {
+        super.loadAdditional(compoundTag, provider);
+        ContainerHelper.loadAllItems(compoundTag, this.inventory, provider);
         progress = compoundTag.getInt("Progress");
     }
 

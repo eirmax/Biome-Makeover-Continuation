@@ -13,18 +13,18 @@ public class NocturnalMobEffect extends MobEffect
     }
 
     @Override
-    public void applyEffectTick(LivingEntity livingEntity, int i) {
+    public boolean applyEffectTick(LivingEntity livingEntity, int i) {
         super.applyEffectTick(livingEntity, i);
 
         if(!livingEntity.level().isClientSide() && livingEntity instanceof Player player)
         {
             player.resetStat(Stats.CUSTOM.get(Stats.TIME_SINCE_REST));
         }
+        return false;
     }
 
     @Override
-    public boolean isDurationEffectTick(int i, int j)
-    {
+    public boolean shouldApplyEffectTickThisTick(int i, int j) {
         return i % 20 == 0;
     }
 }

@@ -1,10 +1,11 @@
+
 package party.lemons.biomemakeover.util.loot;
 
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonSerializationContext;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.*;
 import net.minecraft.world.level.storage.loot.entries.LootPoolEntries;
@@ -18,11 +19,17 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class BetterLootTableReference extends LootPoolSingletonContainer {
+    public static final MapCodec<BetterLootTableReference> CODEC = RecordCodecBuilder.mapCodec(instance ->
+            instance.group(
+                    ResourceLocation.CODEC.fieldOf("name").forGetter(ref -> ref.name)
+            ).and(singletonFields(instance)).apply(instance, BetterLootTableReference::new)
+    );
+
     final ResourceLocation name;
 
-    BetterLootTableReference(ResourceLocation resourceLocation, int i, int j, LootItemCondition[] lootItemConditions, LootItemFunction[] lootItemFunctions) {
-        super(i, j, List.of(lootItemConditions), List.of(lootItemFunctions));
-        this.name = resourceLocation;
+    BetterLootTableReference(ResourceLocation name, int weight, int quality, List<LootItemCondition> conditions, List<LootItemFunction> functions) {
+        super(weight, quality, conditions, functions);
+        this.name = name;
     }
 
     public LootPoolEntryType getType() {
@@ -30,18 +37,20 @@ public class BetterLootTableReference extends LootPoolSingletonContainer {
     }
 
     public void createItemStack(Consumer<ItemStack> consumer, LootContext lootContext) {
-        LootTable lootTable = lootContext.getResolver().lookupOrThrow(this.name);
-        lootTable.getRandomItems(lootContext, consumer);
+        ResourceKey<LootTable> lootTableKey = ResourceKey.create(LootDataType.TABLE.registryKey(), this.name);
+        lootContext.getResolver().get(LootDataType.TABLE, this.name).ifPresent(lootTable -> {
+            lootTable.getRandomItems(lootContext, consumer);
+        });
     }
 
     public void validate(ValidationContext validationContext) {
-        LootDataId<LootTable> lootDataId = new LootDataId(LootDataType.TABLE, this.name);
-        if (validationContext.hasVisitedElement(lootDataId)) {
+        ResourceKey<LootTable> lootTableKey = ResourceKey.create(LootDataType.TABLE.registryKey(), this.name);
+        if (validationContext.hasVisitedElement(lootTableKey)) {
             validationContext.reportProblem("Table " + this.name + " is recursively called");
         } else {
             super.validate(validationContext);
-            validationContext.resolver().getElementOptional(lootDataId).ifPresentOrElse((lootTable) -> {
-                lootTable.validate(validationContext.enterElement("->{" + this.name + "}", lootDataId));
+            validationContext.resolver().get(LootDataType.TABLE, this.name).ifPresentOrElse((lootTable) -> {
+                lootTable.value(validationContext.enterElement("->{" + this.name + "}", lootTableKey));
             }, () -> {
                 validationContext.reportProblem("Unknown loot table called " + this.name);
             });
@@ -49,23 +58,8 @@ public class BetterLootTableReference extends LootPoolSingletonContainer {
     }
 
     public static LootPoolSingletonContainer.Builder<?> lootTableReference(ResourceLocation resourceLocation) {
-        return simpleBuilder((i, j, lootItemConditions, lootItemFunctions) -> {
-            return new BetterLootTableReference(resourceLocation, i, j, lootItemConditions, lootItemFunctions);
+        return simpleBuilder((weight, quality, conditions, functions) -> {
+            return new BetterLootTableReference(resourceLocation, weight, quality, conditions, functions);
         });
-    }
-
-    public static class Serializer extends LootPoolSingletonContainer.Serializer<BetterLootTableReference> {
-        public Serializer() {
-        }
-
-        public void serializeCustom(JsonObject jsonObject, BetterLootTableReference lootTableReference, JsonSerializationContext jsonSerializationContext) {
-            super.serializeCustom(jsonObject, lootTableReference, jsonSerializationContext);
-            jsonObject.addProperty("name", lootTableReference.name.toString());
-        }
-
-        protected BetterLootTableReference deserialize(JsonObject jsonObject, JsonDeserializationContext jsonDeserializationContext, int i, int j, LootItemCondition[] lootItemConditions, LootItemFunction[] lootItemFunctions) {
-            ResourceLocation resourceLocation = new ResourceLocation(GsonHelper.getAsString(jsonObject, "name"));
-            return new BetterLootTableReference(resourceLocation, i, j, lootItemConditions, lootItemFunctions);
-        }
     }
 }

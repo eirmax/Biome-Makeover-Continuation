@@ -11,14 +11,14 @@ import party.lemons.biomemakeover.entity.mutipart.MultiPartEntity;
 @Mixin(ServerLevel.EntityCallbacks.class)
 public class EntityCallbacksMixin
 {
-    @Inject(at = @At("HEAD"), method = "onTrackingEnd")
+    @Inject(at = @At("HEAD"), method = "onTrackingEnd*")
     public void onEndTracking(Entity e, CallbackInfo cbi)
     {
         if(e instanceof MultiPartEntity mpe)
             MultiPartEntity.unload(mpe);
     }
 
-    @Inject(at = @At("TAIL"), method = "onTrackingStart")
+    @Inject(at = @At("TAIL"), method = "onTrackingStart*")
     public void onStartTracking(Entity e, CallbackInfo cbi)
     {
         if(e instanceof MultiPartEntity<?> mpe)

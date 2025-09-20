@@ -5,7 +5,7 @@ import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.level.pathfinder.WalkNodeEvaluator;
 import party.lemons.biomemakeover.entity.OwlEntity;
 
@@ -22,8 +22,8 @@ public class FlyingFollowOwnerGoal extends BetterFollowOwnerGoal {
 
     @Override
     protected boolean canTeleportTo(BlockPos pos) {
-        BlockPathTypes pathNodeType = WalkNodeEvaluator.getBlockPathTypeStatic(this.level, pos.mutable());
-        if(pathNodeType != BlockPathTypes.WALKABLE && pathNodeType != BlockPathTypes.OPEN)
+        PathType pathNodeType = WalkNodeEvaluator.getPathTypeStatic(this.tameable, pos.mutable());
+        if(pathNodeType != PathType.WALKABLE && pathNodeType != PathType.OPEN)
         {
             return false;
         }

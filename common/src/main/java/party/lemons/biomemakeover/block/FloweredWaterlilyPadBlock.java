@@ -2,7 +2,7 @@ package party.lemons.biomemakeover.block;
 
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.WaterlilyBlock;
-import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.level.pathfinder.PathType;
 import org.jetbrains.annotations.Nullable;
 import party.lemons.taniwha.block.TBlockExtension;
 import party.lemons.taniwha.block.modifier.BlockModifier;
@@ -31,8 +31,8 @@ public class FloweredWaterlilyPadBlock extends WaterlilyBlock implements BlockWi
     }
 
     @Override
-    public BlockPathTypes getNodePathType()
+    public PathType getNodePathType()
     {
-        return BlockPathTypes.DANGER_OTHER;
+        return PathType.DANGER_OTHER;
     }
 }

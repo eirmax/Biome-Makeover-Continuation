@@ -24,7 +24,7 @@ public abstract class MyceliumBlockMixin extends Block implements BonemealableBl
     }
 
     @Override
-    public boolean isValidBonemealTarget(LevelReader blockGetter, BlockPos blockPos, BlockState blockState, boolean bl) {
+    public boolean isValidBonemealTarget(LevelReader blockGetter, BlockPos blockPos, BlockState blockState) {
         return true;
     }
 

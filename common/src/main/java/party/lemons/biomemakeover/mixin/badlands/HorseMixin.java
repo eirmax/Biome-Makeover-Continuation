@@ -8,16 +8,20 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.animal.horse.Horse;
 import net.minecraft.world.entity.monster.PatrollingMonster;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import party.lemons.biomemakeover.util.extension.HorseHat;
 
 @Mixin(Horse.class)
-public class HorseMixin extends AbstractHorse implements HorseHat
+public abstract class HorseMixin extends AbstractHorse implements HorseHat
 {
+    @Shadow public abstract boolean isBodyArmorItem(ItemStack itemStack);
+
     private static final EntityDataAccessor<Boolean> HAS_HAT = SynchedEntityData.defineId(Horse.class, EntityDataSerializers.BOOLEAN);
     private boolean cowboySpawned = false;
 

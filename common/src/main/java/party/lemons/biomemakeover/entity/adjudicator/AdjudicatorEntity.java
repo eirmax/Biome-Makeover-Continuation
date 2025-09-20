@@ -3,6 +3,7 @@ package party.lemons.biomemakeover.entity.adjudicator;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -118,11 +119,11 @@ public class AdjudicatorEntity extends Monster implements PowerableMob, Adjudica
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        getEntityData().define(STATE, 0);
-        getEntityData().define(CHARGING, false);
-        getEntityData().define(INVULNERABLE, false);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        getEntityData().set(STATE, 0);
+        getEntityData().set(CHARGING, false);
+        getEntityData().set(INVULNERABLE, false);
     }
 
     @Override
@@ -206,8 +207,8 @@ public class AdjudicatorEntity extends Monster implements PowerableMob, Adjudica
             float angle = this.yBodyRot * 0.017453292F + Mth.cos((float)this.tickCount * 0.6662F) * 0.25F;
             float xOffset = Mth.cos(angle);
             float zOffset = Mth.sin(angle);
-            this.level().addParticle(ParticleTypes.ENTITY_EFFECT, this.getX() + (double)xOffset * 0.6D, this.getY() + 1.8D, this.getZ() + (double)zOffset * 0.6D, r, g, b);
-            this.level().addParticle(ParticleTypes.ENTITY_EFFECT, this.getX() - (double)xOffset * 0.6D, this.getY() + 1.8D, this.getZ() - (double)zOffset * 0.6D, r, g, b);
+            this.level().addParticle((ParticleOptions) ParticleTypes.ENTITY_EFFECT, this.getX() + (double)xOffset * 0.6D, this.getY() + 1.8D, this.getZ() + (double)zOffset * 0.6D, r, g, b);
+            this.level().addParticle((ParticleOptions) ParticleTypes.ENTITY_EFFECT, this.getX() - (double)xOffset * 0.6D, this.getY() + 1.8D, this.getZ() - (double)zOffset * 0.6D, r, g, b);
         }
     }
 
@@ -302,7 +303,7 @@ public class AdjudicatorEntity extends Monster implements PowerableMob, Adjudica
     @Override
     protected void dropFromLootTable(DamageSource damageSource, boolean causedByPlayer)
     {
-        LootTable lootTable = level().getServer().getLootData().getLootTable(this.getLootTable());
+        LootTable lootTable = level().getServer().reloadableRegistries().getLootTable(this.getLootTable());
         LootParams.Builder context = new LootParams.Builder((ServerLevel)level());
         lootTable.getRandomItems(context.create(LootContextParamSets.EMPTY), (i) -> {
             ItemEntity item = spawnAtLocation(i);
@@ -366,7 +367,7 @@ public class AdjudicatorEntity extends Monster implements PowerableMob, Adjudica
         getNavigation().stop();
 
         //Copy AI from phase
-        goalSelector.getRunningGoals().forEach(WrappedGoal::stop);
+        goalSelector.getAvailableGoals().forEach(WrappedGoal::stop);
         GoalSelectorExtension.copy(goalSelector, phase.getGoalSelector());
         GoalSelectorExtension.copy(targetSelector, phase.getTargetSelector());
 
@@ -427,7 +428,7 @@ public class AdjudicatorEntity extends Monster implements PowerableMob, Adjudica
             }
         }
 
-        ResourceLocation phaseID = new ResourceLocation(tag.getString("Phase"));
+        ResourceLocation phaseID = ResourceLocation.withDefaultNamespace(tag.getString("Phase"));
         AdjudicatorPhase adjPhase = PHASES.get(phaseID);
         adjPhase.fromTag(tag.getCompound("PhaseData"));
         this.phase = adjPhase;
@@ -509,14 +510,15 @@ public class AdjudicatorEntity extends Monster implements PowerableMob, Adjudica
     /*
             Don't go through portals.
      */
+
     @Override
-    public boolean canChangeDimensions() {
+    public boolean canChangeDimensions(Level level, Level level2) {
         return false;
     }
 
     /*
-        Don't take fall damage
- */
+            Don't take fall damage
+     */
     @Override
     public boolean causeFallDamage(float f, float g, DamageSource damageSource) {
         return false;
@@ -530,10 +532,6 @@ public class AdjudicatorEntity extends Monster implements PowerableMob, Adjudica
         return active;
     }
 
-    @Override
-    public MobType getMobType() {
-        return MobType.ILLAGER;
-    }
 
     /*
     Finds one of the preset arena positions
@@ -647,9 +645,10 @@ public class AdjudicatorEntity extends Monster implements PowerableMob, Adjudica
         return getEntityData().get(CHARGING);
     }
 
+
     @Override
-    public void shootCrossbowProjectile(LivingEntity target, ItemStack itemStack, Projectile projectile, float multiShotSpray) {
-        this.shootCrossbowProjectile(this, target, projectile, multiShotSpray, 1.6F);
+    public void performCrossbowAttack(LivingEntity livingEntity, float f) {
+        CrossbowAttackMob.super.performCrossbowAttack(livingEntity, 1.6F);
     }
 
     @Override
@@ -684,7 +683,7 @@ public class AdjudicatorEntity extends Monster implements PowerableMob, Adjudica
         else    //Handle bow shoot
         {
             ItemStack arrowTypeStack = this.getProjectile(this.getItemInHand(ItemUtil.getHandPossiblyHolding(this, (i)->i.getItem() instanceof BowItem)));
-            AbstractArrow arrow = ProjectileUtil.getMobArrow(this, arrowTypeStack, pullProgress);
+            AbstractArrow arrow = ProjectileUtil.getMobArrow(this, arrowTypeStack, pullProgress, null);
 
             double distanceX = target.getX() - this.getX();
             double distanceY = target.getY(0.333F) - arrow.getY();
