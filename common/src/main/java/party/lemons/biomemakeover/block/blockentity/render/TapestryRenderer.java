@@ -26,7 +26,7 @@ import party.lemons.biomemakeover.block.blockentity.TapestryBlockEntity;
 
 public class TapestryRenderer implements BlockEntityRenderer<TapestryBlockEntity>
 {
-    public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(Constants.MOD_ID, "banner"), "main");
+    public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation( ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "banner"), "main");
 
     public static final String FLAG = "flag";
     private static final String POLE = "pole";
