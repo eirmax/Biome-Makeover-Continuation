@@ -79,21 +79,16 @@ public class GhostEntity extends Monster implements NeutralMob
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
 
-        this.getEntityData().define(IsCharging, false);
+        this.getEntityData().set(IsCharging, false);
     }
 
     @Override
     public void move(MoverType moverType, Vec3 vec3) {
         super.move(moverType, vec3);
         this.checkInsideBlocks();
-    }
-
-    @Override
-    public MobType getMobType() {
-        return MobType.UNDEAD;
     }
 
     @Override
