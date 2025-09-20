@@ -34,7 +34,7 @@ public class WitchHatModel<T extends Entity> extends EntityModel<T> implements H
 
 
     @Override
-    public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, int k) {
         head.render(poseStack, buffer, packedLight, packedOverlay);
     }
 

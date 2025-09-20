@@ -98,7 +98,7 @@ public class WitchScreen extends AbstractContainerScreen<WitchMenu>
 
     @Override
     public void render(GuiGraphics matrices, int mouseX, int mouseY, float delta) {
-        this.renderBackground(matrices);
+        this.renderBackground(matrices, mouseX, mouseY, delta);
         super.render(matrices, mouseX, mouseY, delta);
         this.renderTooltip(matrices, mouseX, mouseY);
 
