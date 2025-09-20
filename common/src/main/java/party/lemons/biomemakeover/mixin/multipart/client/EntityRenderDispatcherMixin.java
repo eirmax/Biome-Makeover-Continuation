@@ -1,3 +1,4 @@
+
 package party.lemons.biomemakeover.mixin.multipart.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -28,32 +29,28 @@ public class EntityRenderDispatcherMixin
     }
 
     @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/LevelRenderer;renderLineBox(Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;Lnet/minecraft/world/phys/AABB;FFFF)V", ordinal = 0), method = "renderHitbox")
-    private static void onRenderHitBox(PoseStack matrices, VertexConsumer vertices, Entity entity, float tickDelta, CallbackInfo cbi)
+    private static void onRenderHitBox(PoseStack poseStack, VertexConsumer vertexConsumer, Entity entity, float partialTick, float g, float h, float i, CallbackInfo ci)
     {
         if (entity instanceof MultiPartEntity) {
-
-
-            double rX = -Mth.lerp(tickDelta, entity.xOld, entity.getX());
-            double rY = -Mth.lerp(tickDelta, entity.yOld, entity.getY());
-            double rZ = -Mth.lerp(tickDelta, entity.zOld, entity.getZ());
+            double rX = -Mth.lerp(partialTick, entity.xOld, entity.getX());
+            double rY = -Mth.lerp(partialTick, entity.yOld, entity.getY());
+            double rZ = -Mth.lerp(partialTick, entity.zOld, entity.getZ());
             List<EntityPart<?>> parts = ((MultiPartEntity)entity).getParts();
-            LevelRenderer.renderLineBox(matrices, vertices, entity.getBoundingBoxForCulling().move(-entity.getX(), -entity.getY(), -entity.getZ()), 0.5F, 0F, 0.5F, 0.5f);
+            LevelRenderer.renderLineBox(poseStack, vertexConsumer, entity.getBoundingBoxForCulling().move(-entity.getX(), -entity.getY(), -entity.getZ()), 0.5F, 0F, 0.5F, 0.5f);
 
             for (EntityPart<?> part : parts) {
-                matrices.pushPose();
-                double x = rX + Mth.lerp(tickDelta, part.xOld, part.getX());
-                double y = rY + Mth.lerp(tickDelta, part.yOld, part.getY());
-                double z = rZ + Mth.lerp(tickDelta, part.zOld, part.getZ());
-                matrices.translate(x, y, z);
+                poseStack.pushPose();
+                double x = rX + Mth.lerp(partialTick, part.xOld, part.getX());
+                double y = rY + Mth.lerp(partialTick, part.yOld, part.getY());
+                double z = rZ + Mth.lerp(partialTick, part.zOld, part.getZ());
+                poseStack.translate(x, y, z);
 
                 float r = (Mth.sin(0.3F * entity.tickCount + 0) * 127F + 128F) / 255F;
-                float g = (Mth.sin(0.3F * entity.tickCount + 2) * 127F + 128F) / 255F;
+                float gb = (Mth.sin(0.3F * entity.tickCount + 2) * 127F + 128F) / 255F;
                 float b = (Mth.sin(0.3F * entity.tickCount + 4) * 127F + 128F) / 255F;
 
-
-
-                LevelRenderer.renderLineBox(matrices, vertices, part.getBoundingBox().move(-part.getX(), -part.getY(), -part.getZ()), r, g, b, 1.0f);
-                matrices.popPose();
+                LevelRenderer.renderLineBox(poseStack, vertexConsumer, part.getBoundingBox().move(-part.getX(), -part.getY(), -part.getZ()), r, gb, b, 1.0f);
+                poseStack.popPose();
             }
         }
     }

@@ -27,7 +27,7 @@ public class ClientPacketListenerMixin
             MultiPartEntity.handleClientSpawn(packet, mpe);
 
             for(EntityPart<?> p : mpe.getParts())
-                this.level.putNonPlayerEntity(p.getId(), p);
+                this.level.tickNonPassenger(p);
         }
     }
 }
