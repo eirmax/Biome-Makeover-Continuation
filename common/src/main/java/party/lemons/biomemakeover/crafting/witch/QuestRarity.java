@@ -21,7 +21,7 @@ public enum QuestRarity
 
     public Component getTooltipText()
     {
-        return Component.translatable("tooltip." + name().toLowerCase(Locale.ROOT)).withStyle(vanillaRarity.color);
+        return Component.translatable("tooltip." + name().toLowerCase(Locale.ROOT)).withStyle(vanillaRarity.color());
     }
 
     public static QuestRarity getRarityFromPoints(float points)
