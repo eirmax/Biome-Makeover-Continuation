@@ -37,7 +37,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import party.lemons.biomemakeover.entity.ai.FlyingFollowOwnerGoal;
@@ -54,7 +54,7 @@ public class OwlEntity extends ShoulderRidingEntity
 {
     private static final EntityDataAccessor<Integer> STANDING_STATE = SynchedEntityData.defineId(OwlEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> OWL_STATE = SynchedEntityData.defineId(OwlEntity.class, EntityDataSerializers.INT);
-    private static final EntityDimensions FLYING_DIMENSION = new EntityDimensions(0.7F, 1.4F, false);
+    private static final EntityDimensions FLYING_DIMENSION =  EntityDimensions.fixed(0.7F, 1.4F);
     private static final Predicate<LivingEntity> IS_OWL_TARGET = e->e.getType().is(BMEntities.OWL_TARGETS);
 
     private float leaningPitch;
@@ -64,8 +64,8 @@ public class OwlEntity extends ShoulderRidingEntity
         super(entityType, level);
 
         this.moveControl = new FlyingMoveControl(this, 0, false);
-        this.setPathfindingMalus(BlockPathTypes.DAMAGE_FIRE, -1.0F);
-        this.setPathfindingMalus(BlockPathTypes.DANGER_FIRE, -1.0F);
+        this.setPathfindingMalus(PathType.DAMAGE_FIRE, -1.0F);
+        this.setPathfindingMalus(PathType.DANGER_FIRE, -1.0F);
     }
 
     public static boolean checkSpawnRules(EntityType<OwlEntity> owlEntityEntityType, ServerLevelAccessor level, MobSpawnType mobSpawnType, BlockPos pos, RandomSource randomSource)
@@ -111,7 +111,7 @@ public class OwlEntity extends ShoulderRidingEntity
         UUID uUID = this.getOwnerUUID();
         if (uUID != null) {
             owl.setOwnerUUID(uUID);
-            owl.setTame(true);
+            owl.setTame(true, true);
         }
         return owl;
     }
@@ -154,8 +154,8 @@ public class OwlEntity extends ShoulderRidingEntity
     }
 
     @Override
-    public void setTame(boolean tamed) {
-        super.setTame(tamed);
+    public void setTame(boolean tamed, boolean bl) {
+        super.setTame(tamed, bl);
 
         if(tamed)
         {
@@ -170,6 +170,7 @@ public class OwlEntity extends ShoulderRidingEntity
         }
 
     }
+
 
     @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
@@ -257,15 +258,15 @@ public class OwlEntity extends ShoulderRidingEntity
     }
 
     @Override
-    public EntityDimensions getDimensions(Pose pose) {
+    protected EntityDimensions getDefaultDimensions(Pose pose) {
         return getStandingState() == StandingState.STANDING ? super.getDimensions(pose) : FLYING_DIMENSION;
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        getEntityData().define(STANDING_STATE, 0);
-        getEntityData().define(OWL_STATE, 0);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        getEntityData().set(STANDING_STATE, 0);
+        getEntityData().set(OWL_STATE, 0);
     }
     @Override
     public boolean causeFallDamage(float f, float g, DamageSource damageSource) {
