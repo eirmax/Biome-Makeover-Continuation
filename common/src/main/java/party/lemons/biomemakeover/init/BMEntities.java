@@ -15,10 +15,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageType;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.MobCategory;
-import net.minecraft.world.entity.MobSpawnType;
-import net.minecraft.world.entity.SpawnPlacements;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.RangedAttribute;
 import net.minecraft.world.entity.animal.Animal;
@@ -129,43 +126,43 @@ public class BMEntities
     private static void initSpawns()
     {
         registerSpawn(BMFeatures.MUSHROOM_FIELD_BIOMES, GLOWFISH.get(), MobCategory.WATER_AMBIENT, 7, 2, 7);
-        SpawnPlacementsInvoker.callRegister(GLOWFISH.get(), SpawnPlacements.Type.IN_WATER, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, WaterAnimal::checkSurfaceWaterAnimalSpawnRules);
+        SpawnPlacementsInvoker.callRegister(GLOWFISH.get(), SpawnPlacementTypes.IN_WATER, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, WaterAnimal::checkSurfaceWaterAnimalSpawnRules);
 
         //registerSpawn(BMFeatures.MUSHROOM_FIELD_BIOMES, BLIGHTBAT.get(), MobCategory.AMBIENT, 5, 1, 1);
-        //SpawnPlacementsInvoker.callRegister(BLIGHTBAT.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, BlightBatEntity::checkSpawnRules);
-
+        //SpawnPlacementsInvoker.callRegister(BLIGHTBAT.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, BlightBatEntity::checkSpawnRules);
+        
         //registerSpawn(BMFeatures.MUSHROOM_FIELD_BIOMES, MUSHROOM_TRADER.get(), MobCategory.AMBIENT, 1, 1, 1);
 
         registerSpawn(BMFeatures.BADLANDS_BIOMES, SCUTTLER.get(), MobCategory.CREATURE, 4, 1, 2);
-        SpawnPlacementsInvoker.callRegister(SCUTTLER.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ScuttlerEntity::checkSpawnRules);
-        SpawnPlacementsInvoker.callRegister(GHOST.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, GhostEntity::checkGhostSpawnRules);
+        SpawnPlacementsInvoker.callRegister(SCUTTLER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ScuttlerEntity::checkSpawnRules);
+        SpawnPlacementsInvoker.callRegister(GHOST.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, GhostEntity::checkGhostSpawnRules);
 
         registerSpawn(BMFeatures.SWAMP_BIOMES, DECAYED.get(), MobCategory.MONSTER, 60, 1, 1);
-        SpawnPlacementsInvoker.callRegister(DECAYED.get(), SpawnPlacements.Type.IN_WATER, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, DecayedEntity::checkSpawnRules);
+        SpawnPlacementsInvoker.callRegister(DECAYED.get(), SpawnPlacementTypes.IN_WATER, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, DecayedEntity::checkSpawnRules);
 
         registerSpawn(BMFeatures.SWAMP_BIOMES, DRAGONFLY.get(), MobCategory.AMBIENT, 20, 3, 8);
-        SpawnPlacementsInvoker.callRegister(DRAGONFLY.get(), SpawnPlacements.Type.NO_RESTRICTIONS, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, DragonflyEntity::checkSpawnRules);
+        SpawnPlacementsInvoker.callRegister(DRAGONFLY.get(), SpawnPlacementTypes.NO_RESTRICTIONS, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, DragonflyEntity::checkSpawnRules);
 
         //registerSpawn(SWAMP_BIOMES, TOAD.get(), MobCategory.CREATURE, 20, 2, 4);
-        SpawnPlacementsInvoker.callRegister(TOAD.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Animal::checkAnimalSpawnRules);
+        SpawnPlacementsInvoker.callRegister(TOAD.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Animal::checkAnimalSpawnRules);
 
         registerSpawn(BMFeatures.SWAMP_BIOMES, LIGHTNING_BUG.get(), MobCategory.AMBIENT, 20, 1, 1);
-        SpawnPlacementsInvoker.callRegister(LIGHTNING_BUG.get(), SpawnPlacements.Type.NO_RESTRICTIONS, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, LightningBugEntity::checkSpawnRules);
+        SpawnPlacementsInvoker.callRegister(LIGHTNING_BUG.get(), SpawnPlacementTypes.NO_RESTRICTIONS, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, LightningBugEntity::checkSpawnRules);
 
         registerSpawn(BMFeatures.DARK_FOREST_BIOMES, OWL.get(), MobCategory.CREATURE, 20, 1, 4);
-        SpawnPlacementsInvoker.callRegister(OWL.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING, OwlEntity::checkSpawnRules);
+        SpawnPlacementsInvoker.callRegister(OWL.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING, OwlEntity::checkSpawnRules);
 
         registerSpawn(BMFeatures.DARK_FOREST_BIOMES, ROOTLING.get(), MobCategory.CREATURE, 40, 2, 6);
-        SpawnPlacementsInvoker.callRegister(ROOTLING.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, BMEntities::checkDFSpawnRules);
+        SpawnPlacementsInvoker.callRegister(ROOTLING.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, BMEntities::checkDFSpawnRules);
 
         registerSpawn(BMFeatures.DARK_FOREST_BIOMES, MOTH.get(), MobCategory.MONSTER, 90, 2, 3);
-        SpawnPlacementsInvoker.callRegister(MOTH.get(), SpawnPlacements.Type.NO_RESTRICTIONS, Heightmap.Types.MOTION_BLOCKING, MothEntity::checkSpawnRules);
+        SpawnPlacementsInvoker.callRegister(MOTH.get(), SpawnPlacementTypes.NO_RESTRICTIONS, Heightmap.Types.MOTION_BLOCKING, MothEntity::checkSpawnRules);
 
         registerSpawn(BMFeatures.DARK_FOREST_BIOMES, EntityType.FOX, MobCategory.CREATURE, 4, 2, 2);
         registerSpawn(BMFeatures.DARK_FOREST_BIOMES, EntityType.RABBIT, MobCategory.CREATURE, 4, 2, 3);
 
         registerSpawn(BMFeatures.BEACH_BIOMES, HELMIT_CRAB.get(), MobCategory.CREATURE, 6, 2, 5);
-        SpawnPlacementsInvoker.callRegister(HELMIT_CRAB.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING, HelmitCrabEntity::checkSpawnRules);
+        SpawnPlacementsInvoker.callRegister(HELMIT_CRAB.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING, HelmitCrabEntity::checkSpawnRules);
     }
 
     private static boolean checkDFSpawnRules(EntityType<?> type, ServerLevelAccessor level, MobSpawnType mobSpawnType, BlockPos pos, RandomSource randomSource)
