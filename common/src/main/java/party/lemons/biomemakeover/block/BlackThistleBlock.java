@@ -10,7 +10,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
-import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.level.pathfinder.PathType;
 import party.lemons.biomemakeover.init.BMEntities;
 import party.lemons.taniwha.block.TBlockExtension;
 import party.lemons.taniwha.block.types.TTallFlowerBlock;
@@ -31,8 +31,8 @@ public class BlackThistleBlock extends TTallFlowerBlock implements TBlockExtensi
     }
 
     @Override
-    public BlockPathTypes getNodePathType()
+    public PathType getNodePathType()
     {
-        return BlockPathTypes.DANGER_OTHER;
+        return PathType.DANGER_OTHER;
     }
 }
