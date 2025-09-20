@@ -2,7 +2,8 @@ package party.lemons.biomemakeover.level;
 
 import dev.architectury.event.events.common.TickEvent;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.BlockSource;
+
+import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.OptionalDispenseItemBehavior;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
@@ -34,10 +35,10 @@ public final class BMWorldEvents {
 
         DispenserBlock.registerBehavior(Items.CROSSBOW, new OptionalDispenseItemBehavior(){
             @Override
-            protected ItemStack execute(BlockSource block, ItemStack itemStack) {
+            protected ItemStack execute(net.minecraft.core.dispenser.BlockSource block, ItemStack itemStack) {
 
-                BlockPos blockPos = block.getPos().relative(block.getBlockState().getValue(DispenserBlock.FACING));
-                List<StoneGolemEntity> list = block.getLevel().getEntitiesOfClass(StoneGolemEntity.class, new AABB(blockPos), (golem)->!golem.isHolding(Items.CROSSBOW) && golem.isPlayerCreated() && golem.isAlive());
+                BlockPos blockPos = block.pos().relative(block.state().getValue(DispenserBlock.FACING));
+                List<StoneGolemEntity> list = block.level().getEntitiesOfClass(StoneGolemEntity.class, new AABB(blockPos), (golem)->!golem.isHolding(Items.CROSSBOW) && golem.isPlayerCreated() && golem.isAlive());
                 if(!list.isEmpty())
                 {
                     list.get(0).setItemSlot(EquipmentSlot.MAINHAND, itemStack.copy());
