@@ -51,13 +51,13 @@ public class BlightBatRender extends MobRenderer<BlightBatEntity, BlightBatRende
     }
 
     @Override
-    protected void setupRotations(BlightBatEntity bat, PoseStack poseStack, float f, float g, float h) {
+    protected void setupRotations(BlightBatEntity bat, PoseStack poseStack, float f, float g, float h, float k) {
         if (bat.isResting()) {
             poseStack.translate(0.0, -0.1f, 0.0);
         } else {
             poseStack.translate(0.0, Mth.cos(f * 0.3f) * 0.1f, 0.0);
         }
-        super.setupRotations(bat, poseStack, f, g, h);
+        super.setupRotations(bat, poseStack, f, g, h, k);
     }
 
     public static class BlightBatModel extends HierarchicalModel<BlightBatEntity>

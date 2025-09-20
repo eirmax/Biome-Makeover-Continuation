@@ -68,7 +68,7 @@ public class MountedCrossbowAttackGoal<T extends Monster & RangedAttackMob & Cro
         {
             this.actor.stopUsingItem();
             this.actor.setChargingCrossbow(false);
-            CrossbowItem.setCharged(this.actor.getUseItem(), false);
+            CrossbowItem.isCharged(this.actor.getUseItem());
         }
 
     }
@@ -115,7 +115,7 @@ public class MountedCrossbowAttackGoal<T extends Monster & RangedAttackMob & Cro
 
                 int changeTime = this.actor.getTicksUsingItem();
                 ItemStack itemStack = this.actor.getUseItem();
-                if (changeTime >= CrossbowItem.getChargeDuration(itemStack))
+                if (changeTime >= CrossbowItem.getChargeDuration(itemStack, livingEntity))
                 {
                     this.actor.stopUsingItem();
                     this.stage = Stage.CHARGED;
@@ -134,7 +134,7 @@ public class MountedCrossbowAttackGoal<T extends Monster & RangedAttackMob & Cro
             {
                 this.actor.performCrossbowAttack(this.actor, 1.0F);
                 ItemStack cbStack = this.actor.getItemInHand(ProjectileUtil.getWeaponHoldingHand(this.actor, Items.CROSSBOW));
-                CrossbowItem.setCharged(cbStack, false);
+                CrossbowItem.isCharged(cbStack);
                 this.stage = Stage.UNCHARGED;
             }
 

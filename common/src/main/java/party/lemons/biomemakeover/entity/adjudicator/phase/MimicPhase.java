@@ -50,7 +50,7 @@ public class MimicPhase extends BowAttackingPhase
 
             AdjudicatorMimicEntity mimic = BMEntities.ADJUDICATOR_MIMIC.get().create(level);
             ((LootBlocker)mimic).setLootBlocked(true);
-            mimic.finalizeSpawn((ServerLevelAccessor) level, level.getCurrentDifficultyAt(spawnPos), MobSpawnType.NATURAL, null, null);
+            mimic.finalizeSpawn((ServerLevelAccessor) level, level.getCurrentDifficultyAt(spawnPos), MobSpawnType.NATURAL, null);
             mimic.moveTo(spawnPos.getX() + 0.5F, spawnPos.getY(), spawnPos.getZ() + 0.5F, 0, 0);
             level.addFreshEntity(mimic);
             adjudicator.clearArea(mimic);

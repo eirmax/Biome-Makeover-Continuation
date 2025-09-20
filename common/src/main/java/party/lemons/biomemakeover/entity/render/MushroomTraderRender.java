@@ -69,7 +69,7 @@ public class MushroomTraderRender extends MobRenderer<MushroomVillagerEntity, Vi
         public void render(PoseStack arg, MultiBufferSource arg2, int i, MushroomVillagerEntity entity, float f, float g, float h, float j, float k, float l) {
             if (!entity.isInvisible()) {
                 model.setupAnim(entity, f, g, j, k, l);
-                renderColoredCutoutModel(model, TEXTURE, arg, arg2, i, entity, 1.0F, 1.0F, 1.0F);
+                renderColoredCutoutModel(model, TEXTURE, arg, arg2, i, entity, 1);
             }
         }
     }

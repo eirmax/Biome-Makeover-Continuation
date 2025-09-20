@@ -68,7 +68,7 @@ public class DirectionDataScreen extends AbstractContainerScreen<DirectionalData
 
     @Override
     protected void renderBg(GuiGraphics poseStack, float f, int i, int j) {
-        renderBackground(poseStack);
+        renderBackground(poseStack, (int) f, i, j);
 
     }
 
