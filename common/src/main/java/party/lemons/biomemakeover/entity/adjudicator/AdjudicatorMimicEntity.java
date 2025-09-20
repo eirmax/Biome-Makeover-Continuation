@@ -60,9 +60,9 @@ public class AdjudicatorMimicEntity extends Monster  implements AdjudicatorState
 
     @Nullable
     @Override
-    public SpawnGroupData finalizeSpawn(ServerLevelAccessor serverLevelAccessor, DifficultyInstance difficultyInstance, MobSpawnType mobSpawnType, @Nullable SpawnGroupData spawnGroupData, @Nullable CompoundTag compoundTag) {
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor serverLevelAccessor, DifficultyInstance difficultyInstance, MobSpawnType mobSpawnType, @Nullable SpawnGroupData spawnGroupData) {
         populateDefaultEquipmentSlots(serverLevelAccessor.getRandom(), difficultyInstance);
-        return super.finalizeSpawn(serverLevelAccessor, difficultyInstance, mobSpawnType, spawnGroupData, compoundTag);
+        return super.finalizeSpawn(serverLevelAccessor, difficultyInstance, mobSpawnType, spawnGroupData);
     }
     @Override
     protected SoundEvent getAmbientSound()
@@ -96,7 +96,7 @@ public class AdjudicatorMimicEntity extends Monster  implements AdjudicatorState
     @Override
     public void performRangedAttack(LivingEntity target, float pullProgress) {
         ItemStack itemStack = this.getProjectile(this.getItemInHand(ProjectileUtil.getWeaponHoldingHand(this, Items.BOW)));
-        AbstractArrow arrow = ProjectileUtil.getMobArrow(this, itemStack, pullProgress);
+        AbstractArrow arrow = ProjectileUtil.getMobArrow(this, itemStack, pullProgress, null);
         double d = target.getX() - this.getX();
         double e = target.getY(0.3333333333333333D) - arrow.getY();
         double f = target.getZ() - this.getZ();
