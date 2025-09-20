@@ -1,12 +1,15 @@
+
 package party.lemons.biomemakeover.crafting.witch.data.reward;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomData;
 import party.lemons.biomemakeover.util.RandomUtil;
 
 public class ItemQuestRewardItem extends QuestRewardItem
@@ -37,16 +40,16 @@ public class ItemQuestRewardItem extends QuestRewardItem
 		if(max > 1)
 			stack.setCount(RandomUtil.randomRange(min, max));
 		if(!tag.isEmpty())
-			stack.setTag(tag.copy());
+			stack.set(DataComponents.CUSTOM_DATA, CustomData.of(tag.copy()));
 		return stack;
 	}
 
 	public static final Codec<ItemQuestRewardItem> CODEC = RecordCodecBuilder.create(instance ->
 			instance.group(
-					BuiltInRegistries.ITEM.byNameCodec().fieldOf("item").forGetter(i->i.item),
-					CompoundTag.CODEC.optionalFieldOf("tag", new CompoundTag()).forGetter(i->i.tag),
-					Codec.INT.fieldOf("min").forGetter(i->i.min),
-					Codec.INT.fieldOf("max").forGetter(i->i.max)
-			)
-			.apply(instance, ItemQuestRewardItem::new));
+							BuiltInRegistries.ITEM.byNameCodec().fieldOf("item").forGetter(i->i.item),
+							CompoundTag.CODEC.optionalFieldOf("tag", new CompoundTag()).forGetter(i->i.tag),
+							Codec.INT.fieldOf("min").forGetter(i->i.min),
+							Codec.INT.fieldOf("max").forGetter(i->i.max)
+					)
+					.apply(instance, ItemQuestRewardItem::new));
 }
