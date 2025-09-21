@@ -13,6 +13,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
@@ -37,6 +38,7 @@ import net.minecraft.world.level.levelgen.structure.pieces.StructurePiecesBuilde
 import net.minecraft.world.level.levelgen.structure.templatesystem.BlockIgnoreProcessor;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
+import net.minecraft.world.level.storage.loot.LootTable;
 import party.lemons.biomemakeover.block.AbstractTapestryBlock;
 import party.lemons.biomemakeover.block.AbstractTapestryWallBlock;
 import party.lemons.biomemakeover.block.IvyBlock;
@@ -275,15 +277,15 @@ public class MansionFeature extends Structure
 
                 if(random.nextInt(100) <= chance)
                 {
-                    ResourceLocation tableID = null;
+                    ResourceKey<LootTable> tableID = null;
                     switch (table) {
-                        case "arrow" -> tableID = details.loot().arrow();
-                        case "dungeonjunk" -> tableID = details.loot().dungeon_junk();
-                        case "dungeon" -> tableID = details.loot().dungeon_standard();
-                        case "dungeongood" -> tableID = details.loot().dungeonGood();
-                        case "junk" -> tableID = details.loot().junk();
-                        case "standard", "common" -> tableID = details.loot().standard();
-                        case "loot_good", "good" -> tableID = details.loot().good();
+                        case "arrow" ->  details.loot().arrow();
+                        case "dungeonjunk" ->  details.loot().dungeon_junk();
+                        case "dungeon" -> details.loot().dungeon_standard();
+                        case "dungeongood" ->  details.loot().dungeonGood();
+                        case "junk" -> details.loot().junk();
+                        case "standard", "common" -> details.loot().standard();
+                        case "loot_good", "good" ->  details.loot().good();
                         default -> System.out.println(table);
                     }
 
