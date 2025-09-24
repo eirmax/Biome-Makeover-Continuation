@@ -1,6 +1,8 @@
 package party.lemons.biomemakeover.item.enchantment;
 
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.Rarity;
@@ -19,6 +21,6 @@ public class EnfeeblementCurseEnchantment extends TickableAttributeEnchantment
     @Override
     public void initAttributes()
     {
-        addAttributeModifier(Attributes.MAX_HEALTH, UUID.randomUUID().toString(), -2, AttributeModifier.Operation.ADDITION);
+        addAttributeModifier((Attribute) Attributes.MAX_HEALTH, ResourceLocation.parse(UUID.randomUUID().toString()), -2, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
     }
 }
