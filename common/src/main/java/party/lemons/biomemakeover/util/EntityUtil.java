@@ -16,6 +16,7 @@ import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import org.apache.commons.lang3.mutable.MutableFloat;
 import org.apache.commons.lang3.mutable.MutableInt;
 import party.lemons.biomemakeover.init.BMEntities;
 import party.lemons.biomemakeover.init.BMItems;
@@ -24,21 +25,22 @@ import java.util.Collection;
 
 public final class EntityUtil
 {
-    public static void applyProjectileResistance(Iterable<ItemStack> equipment, MutableInt resistance)
+
+    public static void applyProjectileResistance(Iterable<ItemStack> equipment, MutableFloat resistance)
     {
         MutableInt slotIndex = new MutableInt(0);
         equipment.forEach(e->{
             if(!e.isEmpty())
             {
                 EquipmentSlot slot = EquipmentSlot.values()[2 + slotIndex.getValue()];
-                if(e.getAttributeModifiers(slot).containsKey(BMEntities.ATT_PROJECTILE_RESISTANCE.get()))
-                {
-                    Collection<AttributeModifier> modifiers = e.getAttributeModifiers(slot).get(BMEntities.ATT_PROJECTILE_RESISTANCE.get());
-                    for(AttributeModifier mod : modifiers)
+
+
+                e.forEachModifier(slot, (attributeHolder, modifier) -> {
+                    if(attributeHolder.equals(BMEntities.ATT_PROJECTILE_RESISTANCE.get()))
                     {
-                        resistance.add(mod.getAmount());
+                        resistance.add((float) modifier.amount());
                     }
-                }
+                });
             }
             slotIndex.add(1);
         });
@@ -46,22 +48,23 @@ public final class EntityUtil
 
     public static double getProjectileResistance(LivingEntity e)
     {
-        double res = 0;
+        final double[] res = {0.0};
+
         for(EquipmentSlot slot : EquipmentSlot.values())
         {
             ItemStack st = e.getItemBySlot(slot);
-            if(!st.isEmpty() && st.getAttributeModifiers(slot).containsKey(BMEntities.ATT_PROJECTILE_RESISTANCE.get()))
+            if(!st.isEmpty())
             {
-                Collection<AttributeModifier> modifiers = st.getAttributeModifiers(slot).get(BMEntities.ATT_PROJECTILE_RESISTANCE.get());
-                for(AttributeModifier mod : modifiers)
-                {
-                    res += mod.getAmount();
-                }
+                st.forEachModifier(slot, (attributeHolder, modifier) -> {
+                    if(attributeHolder.equals(BMEntities.ATT_PROJECTILE_RESISTANCE.get()))
+                    {
+                        res[0] += modifier.amount();
+                    }
+                });
             }
         }
-        return res;
+        return res[0];
     }
-
     private EntityUtil()
     {
     }
