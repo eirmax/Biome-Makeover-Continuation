@@ -5,7 +5,9 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.util.RandomSource;
@@ -15,6 +17,7 @@ import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -29,6 +32,7 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
 import org.jetbrains.annotations.Nullable;
 import party.lemons.biomemakeover.init.BMStructures;
 import party.lemons.taniwha.util.MathUtils;
+
 
 public class FillBookshelvesProcessor extends StructureProcessor
 {
@@ -80,14 +84,36 @@ public class FillBookshelvesProcessor extends StructureProcessor
 			{
 				ItemStack book = new ItemStack(Items.BOOK);
 				if(randomSource.nextFloat() < enchant_chance)
-					book = EnchantmentHelper.enchantItem(randomSource, book, enchantment_level.sample(randomSource), true);
+				{
+					// Create an enchanted book instead of enchanting a regular book
+					book = new ItemStack(Items.ENCHANTED_BOOK);
+
+					// Get a random enchantment from the registry
+					var enchantmentRegistry = levelReader.registryAccess().registryOrThrow(Registries.ENCHANTMENT);
+					var enchantments = enchantmentRegistry.holders().toList();
+
+					if(!enchantments.isEmpty())
+					{
+						var randomEnchantment = enchantments.get(randomSource.nextInt(enchantments.size()));
+						int level = Math.min(enchantment_level.sample(randomSource), randomEnchantment.value().getMaxLevel());
+						level = Math.max(1, level); // Ensure level is at least 1
+
+						// Create enchantment collection
+						ItemEnchantments.Mutable mutableEnchantments = new ItemEnchantments.Mutable(ItemEnchantments.EMPTY);
+						mutableEnchantments.set(randomEnchantment, level);
+
+						book.set(DataComponents.STORED_ENCHANTMENTS, mutableEnchantments.toImmutable());
+					}
+				}
+
 				int index = randomSource.nextInt(items.size());
 				items.set(index, book);
 
 				blockState = blockState.setValue(ChiseledBookShelfBlock.SLOT_OCCUPIED_PROPERTIES.get(index), true);
 			}
+
 			CompoundTag tags = new CompoundTag();
-			ContainerHelper.saveAllItems(tags, items, true);
+			ContainerHelper.saveAllItems(tags, items, levelReader.registryAccess());
 
 			return new StructureTemplate.StructureBlockInfo(pos, blockState, tags);
 		}

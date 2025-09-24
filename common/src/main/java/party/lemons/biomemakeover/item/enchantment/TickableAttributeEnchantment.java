@@ -38,9 +38,9 @@ public class TickableAttributeEnchantment extends BMEnchantment
 
     }
 
-    protected void addAttributeModifier(Attribute attribute, String uuid, double amount, AttributeModifier.Operation operation)
+    protected void addAttributeModifier(Attribute attribute, ResourceLocation uuid, double amount, AttributeModifier.Operation operation)
     {
-        AttributeModifier entityAttributeModifier = new AttributeModifier(UUID.fromString(uuid), this::getDescriptionId, amount, operation);
+        AttributeModifier entityAttributeModifier = new AttributeModifier(uuid, amount, operation);
         this.attributeModifiers.put(attribute, entityAttributeModifier);
     }
 
