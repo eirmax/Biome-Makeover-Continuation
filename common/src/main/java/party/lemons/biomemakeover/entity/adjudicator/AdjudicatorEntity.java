@@ -422,9 +422,9 @@ public class AdjudicatorEntity extends Monster implements PowerableMob, Adjudica
         {
             ListTag arenaTags = tag.getList("ArenaPositions", Tag.TAG_COMPOUND);
             this.arenaPositions = Lists.newArrayList();
-            for(int i = 0; i < arenaTags.size(); i++)
-            {
-                arenaPositions.add(NbtUtils.readBlockPos(arenaTags.getCompound(i)));
+            for(int i = 0; i < arenaTags.size(); i++) {
+                CompoundTag c = arenaTags.getCompound(i);
+                NbtUtils.readBlockPos(c, "Pos").ifPresent(this.arenaPositions::add);
             }
         }
 
