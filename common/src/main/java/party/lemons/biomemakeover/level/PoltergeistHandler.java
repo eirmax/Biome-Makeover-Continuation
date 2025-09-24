@@ -56,7 +56,7 @@ public class PoltergeistHandler {
         {
             if(state.getValue(ButtonBlock.POWERED)) return false;
 
-            ((ButtonBlock) state.getBlock()).press(state, level, pos);
+            ((ButtonBlock) state.getBlock()).press(state, level, pos, null);
             level.playSound(null, pos, SoundEvents.WOODEN_BUTTON_CLICK_ON, SoundSource.BLOCKS, 0.3F, 0.6F);
             level.gameEvent(poltergeist, GameEvent.BLOCK_ACTIVATE, pos);
 
@@ -92,7 +92,7 @@ public class PoltergeistHandler {
         registerBehaviour(Blocks.LEVER, ((level, poltergeist, pos, state)->
         {
 
-            state = ((LeverBlock) state.getBlock()).pull(state, level, pos);
+           ((LeverBlock) state.getBlock()).pull(state, level, pos, null);
             float pitch = state.getValue(LeverBlock.POWERED) ? 0.6F : 0.5F;
             level.playSound(null, pos, SoundEvents.LEVER_CLICK, SoundSource.BLOCKS, 0.3F, pitch);
             level.gameEvent(poltergeist, state.getValue(LeverBlock.POWERED) ? GameEvent.BLOCK_ACTIVATE : GameEvent.BLOCK_DEACTIVATE, pos);

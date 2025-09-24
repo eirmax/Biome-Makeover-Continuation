@@ -2,6 +2,7 @@ package party.lemons.biomemakeover.entity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -9,6 +10,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
@@ -28,6 +30,7 @@ import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.ai.util.LandRandomPos;
 import net.minecraft.world.entity.animal.ShoulderRidingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -187,7 +190,8 @@ public class OwlEntity extends ShoulderRidingEntity
                         stack.shrink(1);
                     }
 
-                    this.heal((float) item.getFoodProperties().getNutrition());
+                    FoodProperties foodProperties = item.components().get(DataComponents.FOOD);
+                    this.heal((float) foodProperties.nutrition());
                 }
                 return InteractionResult.SUCCESS;
             }
@@ -238,8 +242,11 @@ public class OwlEntity extends ShoulderRidingEntity
 
     @Override
     public boolean isFood(ItemStack stack) {
-        Item item = stack.getItem();
-        return item.isEdible() && item.getFoodProperties().isMeat();
+        if (!stack.has(DataComponents.FOOD)) {
+            return false;
+        }
+        FoodProperties foodProperties = stack.get(DataComponents.FOOD);
+            return foodProperties.canAlwaysEat() && stack.is(ItemTags.MEAT);
     }
 
     @Override

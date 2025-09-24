@@ -2,7 +2,6 @@ package party.lemons.biomemakeover.init;
 
 import com.google.common.collect.Lists;
 import dev.architectury.core.item.ArchitecturyMobBucketItem;
-import dev.architectury.core.item.ArchitecturyRecordItem;
 import dev.architectury.core.item.ArchitecturySpawnEggItem;
 import dev.architectury.registry.CreativeTabRegistry;
 import dev.architectury.registry.fuel.FuelRegistry;
@@ -13,7 +12,6 @@ import net.minecraft.Util;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -21,7 +19,6 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.entity.DecoratedPotPattern;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.storage.loot.entries.LootPoolEntryType;
@@ -69,8 +66,6 @@ public class BMItems
     public static final FoodProperties COOKED_CRAB_FOOD = new FoodProperties.Builder().nutrition(5).saturationModifier(0.6F).build();
     public static final FoodProperties CRAB_CHOWDER_FOOD = new FoodProperties.Builder().nutrition(11).saturationModifier(0.9F).build();
 
-    public static final ArmorMaterial CLADDED_MATERIAL = new CladdedArmorMaterial();
-
     public static final RegistrySupplier<Item> GLOWSHROOM_STEW = registerItem("glowshroom_stew", ()->new SuspiciousStewItem(properties().stacksTo(1).craftRemainder(Items.BOWL).food(GLOWSHROOM_SOUP_FOOD)));
     public static final RegistrySupplier<Item> GLOWFISH = registerItem("glowfish", ()->new Item(properties().food(GLOWFISH_FOOD)));
     public static final RegistrySupplier<Item> COOKED_GLOWFISH = registerItem("cooked_glowfish", ()->new Item(properties().food(COOKED_GLOWFISH_FOOD)));
@@ -80,7 +75,7 @@ public class BMItems
     public static final RegistrySupplier<Item> ROASTED_BULBUS_ROOT = registerItem("roasted_bulbus_root", ()->new Item(properties().food(BULBUS_ROOT_FOOD)));
     public static final RegistrySupplier<Item> RAW_CRAB = registerItem("raw_crab", ()->new TItem(properties().food(RAW_CRAB_FOOD)));
     public static final RegistrySupplier<Item> COOKED_CRAB = registerItem("cooked_crab", ()->new TItem(properties().food(COOKED_CRAB_FOOD)));
-    public static final RegistrySupplier<Item> CRAB_CHOWDER = registerItem("crab_chowder", ()->new BowlFoodItem(properties().food(CRAB_CHOWDER_FOOD).stacksTo(1)));
+    public static final RegistrySupplier<Item> CRAB_CHOWDER = registerItem("crab_chowder", ()->new TItem(properties().food(CRAB_CHOWDER_FOOD).stacksTo(1)));
 
     public static final RegistrySupplier<Item> COWBOY_HAT = registerItem("cowboy_hat", ()->new HatItem(BiomeMakeover.ID("textures/misc/cowboy_hat.png"), properties()));
     public static final RegistrySupplier<Item> WITCH_HAT = registerItem("witch_hat", ()->new HatItem(BiomeMakeover.ID("textures/misc/witch_hat.png"), properties()));
@@ -120,10 +115,10 @@ public class BMItems
 
     public static final RegistrySupplier<Item> ENCHANTED_TOTEM = registerItem("enchanted_totem", ()->new EnchantedTotemItem(properties().rarity(Rarity.EPIC).stacksTo(1)));
 
-    public static final RegistrySupplier<Item> BUTTON_MUSHROOMS_MUSIC_DISK = registerItem("button_mushrooms_music_disk", ()->new ArchitecturyRecordItem(14, BMEffects.BUTTON_MUSHROOMS, properties().stacksTo(1).rarity(Rarity.RARE), 115));
-    public static final RegistrySupplier<Item> GHOST_TOWN_MUSIC_DISK = registerItem("ghost_town_music_disk", ()->new ArchitecturyRecordItem(15, BMEffects.GHOST_TOWN, properties().stacksTo(1).rarity(Rarity.RARE), 270));
-    public static final RegistrySupplier<Item> SWAMP_JIVES_MUSIC_DISK = registerItem("swamp_jives_music_disk", ()->new ArchitecturyRecordItem(1, BMEffects.SWAMP_JIVES, properties().stacksTo(1).rarity(Rarity.RARE), 277));
-    public static final RegistrySupplier<Item> RED_ROSE_MUSIC_DISK = registerItem("red_rose_music_disk", ()->new ArchitecturyRecordItem(2, BMEffects.RED_ROSE, properties().stacksTo(1).rarity(Rarity.RARE), 135));
+    public static final RegistrySupplier<Item> BUTTON_MUSHROOMS_MUSIC_DISK = registerItem("button_mushrooms_music_disk", ()->new Item(properties().jukeboxPlayable(BMEffects.BUTTON_MUSHROOMS).stacksTo(1).rarity(Rarity.RARE)));
+    public static final RegistrySupplier<Item> GHOST_TOWN_MUSIC_DISK = registerItem("ghost_town_music_disk", ()->new Item(properties().jukeboxPlayable(BMEffects.GHOST_TOWN).stacksTo(1).rarity(Rarity.RARE)));
+    public static final RegistrySupplier<Item> SWAMP_JIVES_MUSIC_DISK = registerItem("swamp_jives_music_disk", ()->new Item(properties().jukeboxPlayable(BMEffects.SWAMP_JIVES).stacksTo(1).rarity(Rarity.RARE)));
+    public static final RegistrySupplier<Item> RED_ROSE_MUSIC_DISK = registerItem("red_rose_music_disk", ()->new Item(properties().jukeboxPlayable(BMEffects.RED_ROSE).stacksTo(1).rarity(Rarity.RARE)));
 
     public static final RegistrySupplier<Item> GLOWFISH_BUCKET = registerItem("glowfish_bucket", ()->new GlowfishBucketItem(BMEntities.GLOWFISH, ()->Fluids.WATER, ()->SoundEvents.BUCKET_EMPTY_FISH, properties().stacksTo(1)));
     public static final RegistrySupplier<Item> TADPOLE_BUCKET = registerHiddenItem("tadpole_bucket", ()-> new ArchitecturyMobBucketItem(BMEntities.TADPOLE, ()->Fluids.WATER, ()->SoundEvents.BUCKET_EMPTY_FISH, properties().stacksTo(1)));
@@ -148,17 +143,17 @@ public class BMItems
     public static final RegistrySupplier<Item> ICON_ITEM = registerItem("icon_item", FakeItem::new, false);
 
     public static final RegistrySupplier<TradeTypes.TradeType<?>> SUSPICIOUS_STEW_TRADE = TRADE_TYPES.register(BiomeMakeover.ID("sussy_stew"), ()->new TradeTypes.TradeType<>(SuspiciousStewListing.CODEC));
-    public static final RegistrySupplier<String> CRACKED_PATTERN = DECORATED_POT_PATTERNS.register(BiomeMakeover.ID("cracked_pottery_pattern"), ()->"cracked_pottery_pattern");
-    public static final RegistrySupplier<String> REFINED_PATTERN = DECORATED_POT_PATTERNS.register(BiomeMakeover.ID("refined_pottery_pattern"), ()->"refined_pottery_pattern");
-    public static final RegistrySupplier<String> WORKER_PATTERN = DECORATED_POT_PATTERNS.register(BiomeMakeover.ID("worker_pottery_pattern"), ()->"worker_pottery_pattern");
-    public static final RegistrySupplier<String> WHINNY_PATTERN = DECORATED_POT_PATTERNS.register(BiomeMakeover.ID("whinny_pottery_pattern"), ()->"whinny_pottery_pattern");
+    public static final RegistrySupplier<DecoratedPotPattern>  CRACKED_PATTERN = DECORATED_POT_PATTERNS.register("cracked_pottery_pattern", () -> new DecoratedPotPattern(BiomeMakeover.ID("cracked_pottery_pattern")));
+    public static final RegistrySupplier<DecoratedPotPattern>  REFINED_PATTERN = DECORATED_POT_PATTERNS.register("refined_pottery_pattern", () -> new DecoratedPotPattern(BiomeMakeover.ID("refined_pottery_pattern")));
+    public static final RegistrySupplier<DecoratedPotPattern> WORKER_PATTERN = DECORATED_POT_PATTERNS.register("worker_pottery_pattern", () -> new DecoratedPotPattern(BiomeMakeover.ID("worker_pottery_pattern")));
+    public static final RegistrySupplier<DecoratedPotPattern> WHINNY_PATTERN = DECORATED_POT_PATTERNS.register("whinny_pottery_pattern", () -> new DecoratedPotPattern(BiomeMakeover.ID("whinny_pottery_pattern")));
 
-    public static final RegistrySupplier<LootPoolEntryType> BETTER_LOOTTABLE_REFERENCE = LOOT_POOL_ENTRIES.register(BiomeMakeover.ID("loot_table"), ()->new LootPoolEntryType(new BetterLootTableReference.Serializer()));
+    public static final RegistrySupplier<LootPoolEntryType> BETTER_LOOTTABLE_REFERENCE = LOOT_POOL_ENTRIES.register(BiomeMakeover.ID("loot_table"), () -> new LootPoolEntryType(BetterLootTableReference.CODEC));
 
     public static void init() {
 
         BMEntities.ATT_PROJECTILE_RESISTANCE.listen(a->{
-            ArmorBuilder CLADDED_ARMOR_BUILDER = ArmorBuilder.create(CLADDED_MATERIAL).attribute(ResourceLocation.parse("Armor Proj Res"), BMEntities.ATT_PROJECTILE_RESISTANCE.get(), 1.5, AttributeModifier.Operation.ADD_VALUE);
+            ArmorBuilder CLADDED_ARMOR_BUILDER = ArmorBuilder.create(ArmorMaterialRegistry.CLADDED_MATERIAL).attribute(ResourceLocation.parse("Armor Proj Res"), BMEntities.ATT_PROJECTILE_RESISTANCE.get(), 1.5, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
             Supplier<Item> CLADDED_HELMET = registerItem("cladded_helmet", CLADDED_ARMOR_BUILDER.build(ArmorItem.Type.HELMET, properties()));
             Supplier<Item> CLADDED_CHESTPLATE = registerItem("cladded_chestplate", CLADDED_ARMOR_BUILDER.build(ArmorItem.Type.CHESTPLATE, properties()));
             Supplier<Item> CLADDED_LEGGINGS = registerItem("cladded_leggings",CLADDED_ARMOR_BUILDER.build(ArmorItem.Type.LEGGINGS, properties()));
@@ -211,57 +206,6 @@ public class BMItems
         return new Item.Properties();
     }
 
-
-    private static class CladdedArmorMaterial implements ArmorMaterial
-    {
-
-        @Override
-        public int getDurabilityForType(ArmorItem.Type type)
-        {
-            return ArmorMaterials.IRON.getDurabilityForType(type);
-        }
-
-        @Override
-        public int getDefenseForType(ArmorItem.Type type)
-        {
-            return ArmorMaterials.IRON.getDefenseForType(type);
-        }
-
-        @Override
-        public int getEnchantmentValue() {
-            return 15;
-        }
-
-        @Override
-        public SoundEvent getEquipSound()
-        {
-            return ArmorMaterials.LEATHER.getEquipSound();
-        }
-
-        @Override
-        public Ingredient getRepairIngredient()
-        {
-            return ArmorMaterials.LEATHER.getRepairIngredient();
-        }
-
-        @Override
-        public String getName()
-        {
-            return Constants.MOD_ID + ":cladded";
-        }
-
-        @Override
-        public float getToughness()
-        {
-            return 0;
-        }
-
-        @Override
-        public float getKnockbackResistance()
-        {
-            return 0.07F;
-        }
-    }
 
     private static Item createCladdingTemplate()
     {

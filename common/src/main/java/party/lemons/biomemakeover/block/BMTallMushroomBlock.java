@@ -31,14 +31,14 @@ public class BMTallMushroomBlock extends TTallFlowerBlock
 	}
 
 	@Override
-	public boolean isValidBonemealTarget(LevelReader arg, BlockPos arg2, BlockState arg3, boolean bl) {
+	public boolean isValidBonemealTarget(LevelReader levelReader, BlockPos blockPos, BlockState blockState) {
 		return false;
 	}
 
 	@Override
 	public boolean canSurvive(BlockState blockState, LevelReader levelReader, BlockPos blockPos) {
 		if (blockState.getValue(HALF) != DoubleBlockHalf.UPPER) {
-			return Blocks.RED_MUSHROOM.canSurvive(blockState, levelReader, blockPos);
+			return super.canSurvive(blockState, levelReader, blockPos);
 		} else {
 			BlockState belowState = levelReader.getBlockState(blockPos.below());
 			return belowState.is(this) && belowState.getValue(HALF) == DoubleBlockHalf.LOWER;

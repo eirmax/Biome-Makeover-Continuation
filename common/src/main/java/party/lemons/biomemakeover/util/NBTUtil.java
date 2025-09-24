@@ -15,9 +15,8 @@ public final class NBTUtil
         tag.put(BLOCKPOS_TAG, NbtUtils.writeBlockPos(pos));
     }
 
-    public static BlockPos readBlockPos(CompoundTag tag)
-    {
-        return NbtUtils.readBlockPos(tag.getCompound(BLOCKPOS_TAG));
+    public static BlockPos readBlockPos(CompoundTag tag) {
+        return NbtUtils.readBlockPos(tag, BLOCKPOS_TAG).orElse(BlockPos.ZERO);
     }
 
     public static void writeBox(AABB box, CompoundTag tag)

@@ -20,16 +20,16 @@ public class BMEnchantments {
     public static final TagKey<Enchantment> ALTAR_CURSE_EXCLUDED = TagKey.create(Registries.ENCHANTMENT, BiomeMakeover.ID("altar_curse_excluded"));
     public static final TagKey<Enchantment> ALTAR_CANT_UPGRADE = TagKey.create(Registries.ENCHANTMENT, BiomeMakeover.ID("altar_cant_upgrade"));
 
-    public static final Holder<Enchantment> DECAY_CURSE = ENCHANTS.register(BiomeMakeover.ID("decay_curse"), ()->new DecayCurseEnchantment(()->BMConfig.INSTANCE.enchantmentConfig.DECAY));
-    public static final Holder<Enchantment> INSOMNIA_CURSE = ENCHANTS.register(BiomeMakeover.ID("insomnia_curse"), ()->new InsomniaCurseEnchantment(()->BMConfig.INSTANCE.enchantmentConfig.INSOMNIA));
-    public static final Holder<Enchantment> CONDUCTIVITY_CURSE = ENCHANTS.register(BiomeMakeover.ID("conductivity_curse"), ()->new ConductivityCurseEnchantment(()->BMConfig.INSTANCE.enchantmentConfig.CONDUCTIVITY));
-    public static final Holder<Enchantment> ENFEEBLEMENT_CURSE = ENCHANTS.register(BiomeMakeover.ID("enfeeblement_curse"), ()->new EnfeeblementCurseEnchantment(()->BMConfig.INSTANCE.enchantmentConfig.ENFEEBLEMENT));
-    public static final Holder<Enchantment> DEPTH_CURSE = ENCHANTS.register(BiomeMakeover.ID("depth_curse"), ()->new DepthsCurseEnchantment(()->BMConfig.INSTANCE.enchantmentConfig.DEPTHS));
-    public static final Holder<Enchantment> FLAMMABILITY_CURSE = ENCHANTS.register(BiomeMakeover.ID("flammability_curse"), ()->new BMEnchantment(()->BMConfig.INSTANCE.enchantmentConfig.FLAMMABILITY, true, Rarity.UNCOMMON, new EquipmentSlot[]{EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET}));
-    public static final Holder<Enchantment> SUFFOCATION_CURSE = ENCHANTS.register(BiomeMakeover.ID("suffocation_curse"), ()->new BMEnchantment(()->BMConfig.INSTANCE.enchantmentConfig.SUFFOCATION, true, Rarity.UNCOMMON, new EquipmentSlot[]{EquipmentSlot.HEAD}));
-    public static final Holder<Enchantment> UNWIELDINESS_CURSE = ENCHANTS.register(BiomeMakeover.ID("unwieldiness_curse"), ()->new UnwieldinessCurseEnchantment(()->BMConfig.INSTANCE.enchantmentConfig.UNWIELDINESS));
-    public static final Holder<Enchantment> INACCURACY_CURSE = ENCHANTS.register(BiomeMakeover.ID("inaccuracy_curse"), ()->new BMEnchantment(()->BMConfig.INSTANCE.enchantmentConfig.INACCURACY, true, Rarity.UNCOMMON, new EquipmentSlot[]{EquipmentSlot.MAINHAND}));
-    public static final Holder<Enchantment> BUCKLING_CURSE = ENCHANTS.register(BiomeMakeover.ID("buckling_curse"), ()->new BMEnchantment(()->BMConfig.INSTANCE.enchantmentConfig.BUCKLING, true, Rarity.UNCOMMON, new EquipmentSlot[]{EquipmentSlot.LEGS}));
+    public static final Holder<Enchantment> DECAY_CURSE = ENCHANTS.register(BiomeMakeover.ID("decay_curse"), ()->new DecayCurseEnchantment(()-> BMConfig.INSTANCE.enchantmentConfig.DECAY).createEnchantment());
+    public static final Holder<Enchantment> INSOMNIA_CURSE = ENCHANTS.register(BiomeMakeover.ID("insomnia_curse"), ()->new InsomniaCurseEnchantment(()-> BMConfig.INSTANCE.enchantmentConfig.INSOMNIA).createEnchantment());
+    public static final Holder<Enchantment> CONDUCTIVITY_CURSE = ENCHANTS.register(BiomeMakeover.ID("conductivity_curse"), ()->new ConductivityCurseEnchantment(()-> BMConfig.INSTANCE.enchantmentConfig.CONDUCTIVITY).createEnchantment());
+    public static final Holder<Enchantment> ENFEEBLEMENT_CURSE = ENCHANTS.register(BiomeMakeover.ID("enfeeblement_curse"), () -> new EnfeeblementCurseEnchantment(() -> BMConfig.INSTANCE.enchantmentConfig.ENFEEBLEMENT).createEnchantment());
+    public static final Holder<Enchantment> DEPTH_CURSE = ENCHANTS.register(BiomeMakeover.ID("depth_curse"), ()->new DepthsCurseEnchantment(()-> BMConfig.INSTANCE.enchantmentConfig.DEPTHS).createEnchantment());
+    public static final Holder<Enchantment> FLAMMABILITY_CURSE = ENCHANTS.register(BiomeMakeover.ID("flammability_curse"), () -> BMEnchantmentHelper.createEnchantment(() -> BMConfig.INSTANCE.enchantmentConfig.FLAMMABILITY, true, Rarity.UNCOMMON, new EquipmentSlot[]{EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET}));
+    public static final Holder<Enchantment> SUFFOCATION_CURSE = ENCHANTS.register(BiomeMakeover.ID("suffocation_curse"), ()-> BMEnchantmentHelper.createEnchantment(() -> BMConfig.INSTANCE.enchantmentConfig.SUFFOCATION, true, Rarity.UNCOMMON, new EquipmentSlot[]{EquipmentSlot.HEAD}));
+    public static final Holder<Enchantment> UNWIELDINESS_CURSE = ENCHANTS.register(BiomeMakeover.ID("unwieldiness_curse"), ()-> BMEnchantmentHelper.createEnchantment(() -> BMConfig.INSTANCE.enchantmentConfig.UNWIELDINESS));
+    public static final Holder<Enchantment> INACCURACY_CURSE = ENCHANTS.register(BiomeMakeover.ID("inaccuracy_curse"), ()-> BMEnchantmentHelper.createEnchantment(() -> BMConfig.INSTANCE.enchantmentConfig.INACCURACY, true, Rarity.UNCOMMON, new EquipmentSlot[]{EquipmentSlot.MAINHAND}));
+    public static final Holder<Enchantment> BUCKLING_CURSE = ENCHANTS.register(BiomeMakeover.ID("buckling_curse"), ()-> BMEnchantmentHelper.createEnchantment(()->BMConfig.INSTANCE.enchantmentConfig.BUCKLING, true, Rarity.UNCOMMON, new EquipmentSlot[]{EquipmentSlot.LEGS}));
 
     public static void init() {
         ENCHANTS.register();

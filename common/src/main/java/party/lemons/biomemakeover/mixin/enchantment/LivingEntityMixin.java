@@ -2,12 +2,16 @@ package party.lemons.biomemakeover.mixin.enchantment;
 
 import com.google.common.collect.Lists;
 import com.mojang.datafixers.util.Pair;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import net.minecraft.core.Holder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -18,10 +22,10 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import party.lemons.biomemakeover.init.BMEnchantments;
 import party.lemons.biomemakeover.item.enchantment.TickableAttributeEnchantment;
-import party.lemons.taniwha.util.ItemUtil;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Map;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity
@@ -29,6 +33,7 @@ public abstract class LivingEntityMixin extends Entity
     public LivingEntityMixin(EntityType<?> entityType, Level level) {
         super(entityType, level);
     }
+
 
     @Inject(at = @At("TAIL"), method = "tick")
     public void tick(CallbackInfo cbi)
@@ -42,13 +47,17 @@ public abstract class LivingEntityMixin extends Entity
                 ItemStack st = pair.getSecond();
                 if(!hasStackEquipInSlot(st, pair.getFirst()))
                 {
-                    ItemUtil.forEachEnchantment((en, stack, lvl)->
+                    // Fixed: Use ItemEnchantments instead of Map, and proper enchantment iteration
+                    ItemEnchantments enchants = EnchantmentHelper.getEnchantmentLevel(st);
+                    for(Holder<Enchantment> enchantmentHolder : enchants.keySet())
                     {
-                        if(en instanceof TickableAttributeEnchantment)
+                        Enchantment enchantment = enchantmentHolder.value();
+                        // Fixed: Added instanceof check before casting
+                        if(enchantment instanceof TickableAttributeEnchantment tickable)
                         {
-                            ((TickableAttributeEnchantment) en).removeAttributes((LivingEntity) (Object) this, pair.getFirst());
+                            tickable.removeAttributes((LivingEntity) (Object) this, pair.getFirst());
                         }
-                    }, st, true);
+                    }
                     it.remove();
                 }
             }
@@ -58,17 +67,24 @@ public abstract class LivingEntityMixin extends Entity
                 ItemStack stack = getItemBySlot(slot);
                 if(!stack.isEmpty())
                 {
-                    ItemUtil.forEachEnchantment((en, st, lvl)->
+                    // Fixed: Use ItemEnchantments and proper iteration
+                    ItemEnchantments enchants = EnchantmentHelper.getEnchantments(stack);
+                    for(Object2IntMap.Entry<Holder<Enchantment>> entry : enchants.entrySet())
                     {
-                        if(en instanceof TickableAttributeEnchantment)
+                        Holder<Enchantment> enchantmentHolder = entry.getKey();
+                        Enchantment enchantment = enchantmentHolder.value();
+                        int lvl = entry.getIntValue();
+
+                        // Fixed: Added instanceof check before casting
+                        if(enchantment instanceof TickableAttributeEnchantment tickable)
                         {
-                            ((TickableAttributeEnchantment) en).onTick((LivingEntity) (Object) this, st, lvl);
-                            if(!hasAttributeStack(st) && ((TickableAttributeEnchantment) en).addAttributes((LivingEntity) (Object) this, st, slot, lvl))
+                            tickable.onTick((LivingEntity) (Object) this, stack, lvl);
+                            if(!hasAttributeStack(stack) && tickable.addAttributes((LivingEntity) (Object) this, stack, slot, lvl))
                             {
-                                attributeStacks.add(new Pair<>(slot, st));
+                                attributeStacks.add(new Pair<>(slot, stack));
                             }
                         }
-                    }, stack);
+                    }
                 }
             }
         }

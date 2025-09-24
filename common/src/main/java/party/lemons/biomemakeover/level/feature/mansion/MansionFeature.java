@@ -13,6 +13,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
@@ -37,6 +38,7 @@ import net.minecraft.world.level.levelgen.structure.pieces.StructurePiecesBuilde
 import net.minecraft.world.level.levelgen.structure.templatesystem.BlockIgnoreProcessor;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
+import net.minecraft.world.level.storage.loot.LootTable;
 import party.lemons.biomemakeover.block.AbstractTapestryBlock;
 import party.lemons.biomemakeover.block.AbstractTapestryWallBlock;
 import party.lemons.biomemakeover.block.IvyBlock;
@@ -143,7 +145,7 @@ public class MansionFeature extends Structure
         private final MansionDetails details;
 
         public Piece(MansionDetails details, StructureTemplateManager structureManager, String string, BlockPos blockPos, Rotation rotation, boolean needsGroundAdjustment, boolean isWall) {
-            super(BMStructures.MANSION_PIECE.get(), 0, structureManager, new ResourceLocation(string), string, makeSettings(rotation, isWall), blockPos);
+            super(BMStructures.MANSION_PIECE.get(), 0, structureManager, ResourceLocation.withDefaultNamespace(string), string, makeSettings(rotation, isWall), blockPos);
             this.ground = needsGroundAdjustment;
             this.isWall = isWall;
             this.details = details;
@@ -168,7 +170,7 @@ public class MansionFeature extends Structure
         }
 
         private static StructurePlaceSettings makeSettings(Rotation rotation, boolean isWall) {
-            return new StructurePlaceSettings().setIgnoreEntities(true).setKeepLiquids(false).setRotation(rotation).setMirror(Mirror.NONE).addProcessor(isWall ? IGNORE_AIR_AND_STRUCTURE_BLOCKS : IGNORE_STRUCTURE_BLOCKS);
+            return new StructurePlaceSettings().setIgnoreEntities(true).setRotation(rotation).setMirror(Mirror.NONE).addProcessor(isWall ? IGNORE_AIR_AND_STRUCTURE_BLOCKS : IGNORE_STRUCTURE_BLOCKS);
         }
 
         @Override
@@ -178,7 +180,7 @@ public class MansionFeature extends Structure
             compoundTag.putBoolean("Ground", ground);
             compoundTag.putBoolean("IsWall", isWall);
             if(this.details != null) {
-                Either<Tag, DataResult.PartialResult<Tag>> detailsEncode = MansionDetails.CODEC.encodeStart(NbtOps.INSTANCE, details).get();
+                Either<Tag, DataResult<Tag>> detailsEncode = MansionDetails.CODEC.encodeStart(NbtOps.INSTANCE, details).get();
                 if(detailsEncode.left().isPresent())
                     compoundTag.put("Details", detailsEncode.left().get());
             }
@@ -202,7 +204,7 @@ public class MansionFeature extends Structure
             AdjudicatorEntity boss = BMEntities.ADJUDICATOR.get().create(level.getLevel());
             boss.setPersistenceRequired();
             boss.moveTo(pos, 0.0F, 0.0F);
-            boss.finalizeSpawn(level, level.getCurrentDifficultyAt(pos), MobSpawnType.STRUCTURE, null, null);
+            boss.finalizeSpawn(level, level.getCurrentDifficultyAt(pos), MobSpawnType.STRUCTURE, null);
             level.addFreshEntityWithPassengers(boss);
             level.setBlock(pos, Blocks.AIR.defaultBlockState(), 2);
         }
@@ -270,20 +272,20 @@ public class MansionFeature extends Structure
                     StringBuilder name = new StringBuilder();
                     for(int i = 3; i < splits.length; i++)
                         name.append(splits[i]).append("_");
-                    setState = world.registryAccess().registry(Registries.BLOCK).get().get(new ResourceLocation(name.substring(0, name.length() - 1))).defaultBlockState();
+                    setState = world.registryAccess().registry(Registries.BLOCK).get().get(ResourceLocation.withDefaultNamespace(name.substring(0, name.length() - 1))).defaultBlockState();
                 }
 
                 if(random.nextInt(100) <= chance)
                 {
-                    ResourceLocation tableID = null;
+                    ResourceKey<LootTable> tableID = null;
                     switch (table) {
-                        case "arrow" -> tableID = details.loot().arrow();
-                        case "dungeonjunk" -> tableID = details.loot().dungeon_junk();
-                        case "dungeon" -> tableID = details.loot().dungeon_standard();
-                        case "dungeongood" -> tableID = details.loot().dungeonGood();
-                        case "junk" -> tableID = details.loot().junk();
-                        case "standard", "common" -> tableID = details.loot().standard();
-                        case "loot_good", "good" -> tableID = details.loot().good();
+                        case "arrow" ->  details.loot().arrow();
+                        case "dungeonjunk" ->  details.loot().dungeon_junk();
+                        case "dungeon" -> details.loot().dungeon_standard();
+                        case "dungeongood" ->  details.loot().dungeonGood();
+                        case "junk" -> details.loot().junk();
+                        case "standard", "common" -> details.loot().standard();
+                        case "loot_good", "good" ->  details.loot().good();
                         default -> System.out.println(table);
                     }
 
@@ -359,7 +361,7 @@ public class MansionFeature extends Structure
                 e.moveTo(pos, 0, 0);
                 if(e instanceof Mob mob)
                 {
-                    mob.finalizeSpawn(world, world.getCurrentDifficultyAt(pos), MobSpawnType.STRUCTURE, null, null);
+                    mob.finalizeSpawn(world, world.getCurrentDifficultyAt(pos), MobSpawnType.STRUCTURE, null);
                     mob.setPersistenceRequired();
                 }
                 world.addFreshEntityWithPassengers(e);
@@ -369,7 +371,7 @@ public class MansionFeature extends Structure
         private void doBonemealEffect(WorldGenLevel level, BlockPos pos, Random random)
         {
             BlockPos blockPos = pos.above();
-            BlockState blockState = Blocks.GRASS.defaultBlockState();
+            BlockState blockState = Blocks.GRASS_BLOCK.defaultBlockState();
 
                 ///this broke at some point, so we just dont :^)
         }

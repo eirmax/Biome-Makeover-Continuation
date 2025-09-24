@@ -18,31 +18,29 @@ import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
-import party.lemons.biomemakeover.util.RandomUtil;
 import party.lemons.taniwha.level.structure.IgnoreAirProcessor;
 
-import java.util.Random;
 
 public class SurfaceFossilFeature extends Feature<NoneFeatureConfiguration> {
     private static final ResourceLocation[] FOSSILS = {
-            new ResourceLocation("fossil/spine_1"),
-            new ResourceLocation("fossil/spine_2"),
-            new ResourceLocation("fossil/spine_3"),
-            new ResourceLocation("fossil/spine_4"),
-            new ResourceLocation("nether_fossils/fossil_1"),
-            new ResourceLocation("nether_fossils/fossil_2"),
-            new ResourceLocation("nether_fossils/fossil_3"),
-            new ResourceLocation("nether_fossils/fossil_4"),
-            new ResourceLocation("nether_fossils/fossil_5"),
-            new ResourceLocation("nether_fossils/fossil_6"),
-            new ResourceLocation("nether_fossils/fossil_7"),
-            new ResourceLocation("nether_fossils/fossil_8"),
-            new ResourceLocation("nether_fossils/fossil_9"),
-            new ResourceLocation("nether_fossils/fossil_10"),
-            new ResourceLocation("nether_fossils/fossil_11"),
-            new ResourceLocation("nether_fossils/fossil_12"),
-            new ResourceLocation("nether_fossils/fossil_13"),
-            new ResourceLocation("nether_fossils/fossil_14")
+             ResourceLocation.withDefaultNamespace("fossil/spine_1"),
+             ResourceLocation.withDefaultNamespace("fossil/spine_2"),
+             ResourceLocation.withDefaultNamespace("fossil/spine_3"),
+             ResourceLocation.withDefaultNamespace("fossil/spine_4"),
+             ResourceLocation.withDefaultNamespace("nether_fossils/fossil_1"),
+             ResourceLocation.withDefaultNamespace("nether_fossils/fossil_2"),
+             ResourceLocation.withDefaultNamespace("nether_fossils/fossil_3"),
+             ResourceLocation.withDefaultNamespace("nether_fossils/fossil_4"),
+             ResourceLocation.withDefaultNamespace("nether_fossils/fossil_5"),
+             ResourceLocation.withDefaultNamespace("nether_fossils/fossil_6"),
+             ResourceLocation.withDefaultNamespace("nether_fossils/fossil_7"),
+             ResourceLocation.withDefaultNamespace("nether_fossils/fossil_8"),
+             ResourceLocation.withDefaultNamespace("nether_fossils/fossil_9"),
+             ResourceLocation.withDefaultNamespace("nether_fossils/fossil_10"),
+             ResourceLocation.withDefaultNamespace("nether_fossils/fossil_11"),
+             ResourceLocation.withDefaultNamespace("nether_fossils/fossil_12"),
+             ResourceLocation.withDefaultNamespace("nether_fossils/fossil_13"),
+             ResourceLocation.withDefaultNamespace("nether_fossils/fossil_14")
     };
 
     public SurfaceFossilFeature(Codec<NoneFeatureConfiguration> codec) {

@@ -6,6 +6,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
@@ -44,8 +45,7 @@ import java.util.UUID;
 
 public class ToadEntity extends Animal {
 
-    private static final UUID JUMP_SPEED_BOOST = UUID.fromString("0fa7caca-4f09-11eb-ae93-0242ac130002");
-    private static final AttributeModifier JUMP_SPEED_BOOST_MOD = new AttributeModifier(JUMP_SPEED_BOOST, "Jump Speed Boost", 0.6F, AttributeModifier.Operation.ADD_VALUE);
+    private static final AttributeModifier JUMP_SPEED_BOOST_MOD = new AttributeModifier( ResourceLocation.parse("Jump Speed Boost"), 0.6F, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
 
     private static final EntityDataAccessor<Integer> TONGUE_ENTITY = SynchedEntityData.defineId(ToadEntity.class, EntityDataSerializers.INT);
 
@@ -216,7 +216,7 @@ public class ToadEntity extends Animal {
             ticksUntilJump = RandomUtil.randomRange(20, 100);
             jumpFromGround();
             AttributeInstance entityAttributeInstance = this.getAttribute(Attributes.MOVEMENT_SPEED);
-            entityAttributeInstance.removeModifier(JUMP_SPEED_BOOST);
+            entityAttributeInstance.removeModifier(JUMP_SPEED_BOOST_MOD);
             entityAttributeInstance.addTransientModifier(JUMP_SPEED_BOOST_MOD);
 
             this.playSound(this.getJumpSound(), this.getSoundVolume(), ((this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F) * 0.8F);

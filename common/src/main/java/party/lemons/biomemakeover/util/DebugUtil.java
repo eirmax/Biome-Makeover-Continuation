@@ -44,12 +44,6 @@ public class DebugUtil
 			}
 		});
 
-		BuiltInRegistries.ENCHANTMENT.stream().filter(b -> BuiltInRegistries.ENCHANTMENT.getKey(b).getNamespace().equals(Constants.MOD_ID)).forEach((b) -> {
-			if (!I18n.exists(b.getDescriptionId())) {
-				s[0] += "\"" + b.getDescriptionId() + "\":\n";
-			}
-		});
-
 		System.out.println(s[0]);
 	}
 
@@ -82,12 +76,6 @@ public class DebugUtil
 			}
 		});
 
-		BuiltInRegistries.ENCHANTMENT.stream().filter(b->BuiltInRegistries.ENCHANTMENT.getKey(b).getNamespace().equals(Constants.MOD_ID)).forEach((b)->{
-			if(!I18n.exists(b.getDescriptionId()))
-			{
-				s[0] += "\"" + b.getDescriptionId() + "\": \"" + locationToEnglish(BuiltInRegistries.ENCHANTMENT.getKey(b)) + "\",\n";
-			}
-		});
 
 		System.out.println(s[0]);
 	}
@@ -125,7 +113,7 @@ public class DebugUtil
 	{
 		final String[] s = {"---BLOCKS WITHOUT LOOT---\n"};
 		BuiltInRegistries.BLOCK.stream().filter(b->BuiltInRegistries.BLOCK.getKey(b).getNamespace().equals(Constants.MOD_ID)).forEach(b->{
-			if(b.getLootTable() != BuiltInLootTables.EMPTY && Minecraft.getInstance().getSingleplayerServer().getLootData().getLootTable(b.getLootTable()) == LootTable.EMPTY)
+			if(b.getLootTable() != BuiltInLootTables.EMPTY && Minecraft.getInstance().getSingleplayerServer().reloadableRegistries().getLootTable(b.getLootTable()) == LootTable.EMPTY)
 				s[0] += b.getDescriptionId() + "\n";
 		});
 
