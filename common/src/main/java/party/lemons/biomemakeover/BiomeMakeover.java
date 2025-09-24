@@ -60,6 +60,7 @@ public class BiomeMakeover {
 
         AdjudicatorRoomListener.init();
         BMWorldEvents.init();
+        ArmorMaterialRegistry.init();
 
         ReloadListenerRegistry.register(PackType.SERVER_DATA, new QuestCategoryReloadListener());
         ReloadListenerRegistry.register(PackType.SERVER_DATA, new RewardTableReloadListener());
