@@ -29,7 +29,7 @@ public class BMPotions
     private static final DeferredRegister<Potion> POTIONS = DeferredRegister.create(Constants.MOD_ID, Registries.POTION);
 
 
-    public static final Holder<MobEffect> SHOCKED = EFFECTS.register(BiomeMakeover.ID("shocked"), ()->new TMobEffect(MobEffectCategory.HARMFUL, 0x6effff).addAttributeModifier(Attributes.MAX_HEALTH, ResourceLocation.parse("ad5a6d44-4a23-11eb-b378-0242ac130002"), -2D,AttributeModifier.Operation.ADD_VALUE));
+    public static final Holder<MobEffect> SHOCKED = EFFECTS.register(BiomeMakeover.ID("shocked"), ()->new TMobEffect(MobEffectCategory.HARMFUL, 0x6effff).addAttributeModifier(Attributes.MAX_HEALTH, ResourceLocation.parse("ad5a6d44-4a23-11eb-b378-0242ac130002"), -2D, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
     public static final Holder<MobEffect>  ANTIDOTE = EFFECTS.register(BiomeMakeover.ID("antidote"), AntidoteMobEffect::new);
     public static final Holder<MobEffect>  NOCTURNAL = EFFECTS.register(BiomeMakeover.ID("nocturnal"), NocturnalMobEffect::new);
     public static final Holder<MobEffect>  POSSESSED = EFFECTS.register(BiomeMakeover.ID("possessed"), PossessedEffect::new);

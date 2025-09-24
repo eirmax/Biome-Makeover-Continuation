@@ -38,7 +38,7 @@ public class BMTallMushroomBlock extends TTallFlowerBlock
 	@Override
 	public boolean canSurvive(BlockState blockState, LevelReader levelReader, BlockPos blockPos) {
 		if (blockState.getValue(HALF) != DoubleBlockHalf.UPPER) {
-			return Blocks.RED_MUSHROOM.ca(blockState, levelReader, blockPos);
+			return super.canSurvive(blockState, levelReader, blockPos);
 		} else {
 			BlockState belowState = levelReader.getBlockState(blockPos.below());
 			return belowState.is(this) && belowState.getValue(HALF) == DoubleBlockHalf.LOWER;
