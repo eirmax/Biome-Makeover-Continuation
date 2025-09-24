@@ -306,13 +306,21 @@ public class DecayedEntity extends Zombie
     }
 
     @Override
+    public float maxUpStep() {
+        if(isInWater()){
+            return 1;
+        }else
+            return 0.5F;
+    }
+
+    @Override
     public void updateSwimming() {
         if (!this.level().isClientSide)
         {
-            if(isInWater())
-                setMaxUpStep(1);
-            else
-                setMaxUpStep(0.5F);
+            if(isInWater()) {
+                maxUpStep();
+            } else
+                maxUpStep();
 
             if (this.isEffectiveAi() && this.isInWater() && this.wantsToSwim()) {
                 this.navigation = this.waterNavigation;
