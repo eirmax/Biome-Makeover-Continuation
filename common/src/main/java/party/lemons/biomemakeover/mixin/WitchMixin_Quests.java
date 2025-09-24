@@ -1,5 +1,6 @@
 package party.lemons.biomemakeover.mixin;
 
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -40,7 +41,7 @@ import party.lemons.taniwha.util.ItemUtil;
 public abstract class WitchMixin_Quests extends Raider implements WitchQuestEntity {
     @Shadow
     private NearestAttackableWitchTargetGoal<Player> attackPlayersGoal;
-    private static ResourceKey<LootTable> WITCH_HAT_TABLE;
+    private static ResourceKey<LootTable> WITCH_HAT_TABLE = ResourceKey.create(Registries.LOOT_TABLE, BiomeMakeover.ID("entities/witch_hat"));
 
     private Player customer;
     private WitchQuestList quests;
@@ -84,9 +85,6 @@ public abstract class WitchMixin_Quests extends Raider implements WitchQuestEnti
         super.dropFromLootTable(damageSource, causedByPlayer);
 
         if (!LootBlocker.isBlocked(this)) {
-            if (WITCH_HAT_TABLE == null)
-                WITCH_HAT_TABLE = BiomeMakeover.ID("entities/witch_hat");
-
             EntityUtil.dropFromLootTable(this, WITCH_HAT_TABLE);
         }
     }
