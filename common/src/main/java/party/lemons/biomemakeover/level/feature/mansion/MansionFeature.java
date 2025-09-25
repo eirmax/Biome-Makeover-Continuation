@@ -179,10 +179,14 @@ public class MansionFeature extends Structure
             compoundTag.putString("Rotation", this.placeSettings.getRotation().name());
             compoundTag.putBoolean("Ground", ground);
             compoundTag.putBoolean("IsWall", isWall);
-            if(this.details != null) {
-                Either<Tag, DataResult<Tag>> detailsEncode = MansionDetails.CODEC.encodeStart(NbtOps.INSTANCE, details).get();
-                if(detailsEncode.left().isPresent())
-                    compoundTag.put("Details", detailsEncode.left().get());
+            if (this.details != null) {
+                DataResult<Tag> detailsEncode = MansionDetails.CODEC.encodeStart(NbtOps.INSTANCE, details);
+
+                detailsEncode.resultOrPartial(error -> {
+                    System.err.println("Failed to encode mansion details: " + error);
+                }).ifPresent(tag -> {
+                    compoundTag.put("Details", tag);
+                });
             }
         }
 
