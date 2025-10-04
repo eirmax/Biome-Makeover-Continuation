@@ -36,12 +36,15 @@ public class BetterLootTableReference extends LootPoolSingletonContainer {
         return BMItems.BETTER_LOOTTABLE_REFERENCE.get();
     }
 
+
     public void createItemStack(Consumer<ItemStack> consumer, LootContext lootContext) {
         ResourceKey<LootTable> lootTableKey = ResourceKey.create(LootDataType.TABLE.registryKey(), this.name);
-        lootContext.getResolver().get(LootDataType.TABLE, this.name).ifPresent(lootTable -> {
-            lootTable.getRandomItems(lootContext, consumer);
-        });
+        lootContext.getResolver()
+                .get(LootDataType.TABLE.registryKey(), lootTableKey)
+                .map(ref -> ref.value())
+                .ifPresent(table -> table.getRandomItems(lootContext, consumer));
     }
+
 
     public void validate(ValidationContext validationContext) {
         ResourceKey<LootTable> lootTableKey = ResourceKey.create(LootDataType.TABLE.registryKey(), this.name);
@@ -49,11 +52,14 @@ public class BetterLootTableReference extends LootPoolSingletonContainer {
             validationContext.reportProblem("Table " + this.name + " is recursively called");
         } else {
             super.validate(validationContext);
-            validationContext.resolver().get(LootDataType.TABLE, this.name).ifPresentOrElse((lootTable) -> {
-                lootTable.value(validationContext.enterElement("->{" + this.name + "}", lootTableKey));
-            }, () -> {
-                validationContext.reportProblem("Unknown loot table called " + this.name);
-            });
+            validationContext.resolver()
+                    .get(LootDataType.TABLE.registryKey(), lootTableKey)
+                    .map(ref -> ref.value())
+                    .ifPresentOrElse(table -> {
+                        table.validate(validationContext.enterElement("->{" + this.name + "}", lootTableKey));
+                    }, () -> {
+                        validationContext.reportProblem("Unknown loot table called " + this.name);
+                    });
         }
     }
 
