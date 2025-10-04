@@ -1,7 +1,10 @@
 package party.lemons.biomemakeover.item;
 
+import net.minecraft.core.Direction;
 import net.minecraft.core.Position;
-import net.minecraft.core.dispenser.AbstractProjectileDispenseBehavior;
+import net.minecraft.core.dispenser.BlockSource;
+import net.minecraft.core.dispenser.DispenseItemBehavior;
+import net.minecraft.core.dispenser.ProjectileDispenseBehavior;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
@@ -11,35 +14,39 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ProjectileItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DispenserBlock;
+import net.minecraft.world.phys.Vec3;
 import party.lemons.biomemakeover.entity.LightningBottleEntity;
 import party.lemons.biomemakeover.init.BMEffects;
 import party.lemons.biomemakeover.util.RandomUtil;
 
 public class LightningBottleItem extends Item
 {
-    public LightningBottleItem(Properties settings)
-    {
+    public LightningBottleItem(Properties settings) {
         super(settings);
 
-        DispenserBlock.registerBehavior(this, (pointer, stack)->(new AbstractProjectileDispenseBehavior()
-        {
-            @Override
-            protected Projectile getProjectile(Level level, Position position, ItemStack itemStack) {
-                return new LightningBottleEntity(level, position.x(), position.y(), position.z());
-            }
+        DispenserBlock.registerBehavior(this, (pointer, stack) -> {
+            Level level = pointer.level();
+            Direction dir = pointer.state().getValue(DispenserBlock.FACING);
+            ProjectileItem item = (ProjectileItem) stack.getItem();
 
-            @Override
-            protected float getUncertainty() {
-                return super.getUncertainty() * 0.5F;
-            }
+            ProjectileItem.DispenseConfig cfg = ProjectileItem.DispenseConfig.builder()
+                    .uncertainty(6.0F)
+                    .power(1.1F)
+                    .build();
 
-            @Override
-            protected float getPower() {
-                return super.getPower() * 1.25F;
-            }
-        }).dispense(pointer, stack));
+            Position pos = cfg.positionFunction().getDispensePosition(pointer, dir);
+            Projectile projectile = item.asProjectile(level, pos, stack, dir);
+
+            Vec3 vec = new Vec3(dir.getStepX(), dir.getStepY(), dir.getStepZ());
+            item.shoot(projectile, vec.x, vec.y + 0.1, vec.z, cfg.power(), cfg.uncertainty());
+
+            level.addFreshEntity(projectile);
+            stack.shrink(1);
+            return stack;
+        });
     }
 
     @Override
