@@ -107,7 +107,7 @@ public class DirectionDataScreen extends AbstractContainerScreen<DirectionalData
     @Override
     protected void containerTick() {
         super.containerTick();
-        inputMetadata.tick();
+        this.tick();
     }
 
     private void cancel()
