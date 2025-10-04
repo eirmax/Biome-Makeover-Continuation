@@ -22,8 +22,5 @@ public class UnwieldinessCurseEnchantment extends TickableAttributeEnchantment {
     public void initAttributes() {
         addAttributeModifier((Attribute) Attributes.ATTACK_SPEED, ResourceLocation.parse(UUID.randomUUID().toString()), -0.25, AttributeModifier.Operation.ADD_VALUE);
     }
-    @Override
-    public boolean canEnchant(ItemStack stack) {
-        return stack.getItem() instanceof AxeItem || super.canEnchant(stack);
-    }
+
 }

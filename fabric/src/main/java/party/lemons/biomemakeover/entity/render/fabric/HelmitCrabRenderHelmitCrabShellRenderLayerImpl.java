@@ -16,10 +16,12 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.item.DyeableLeatherItem;
+import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.armortrim.ArmorTrim;
+import net.minecraft.world.item.armortrim.TrimMaterial;
+import net.minecraft.world.item.armortrim.TrimMaterials;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import party.lemons.biomemakeover.entity.HelmitCrabEntity;
@@ -47,8 +49,8 @@ public class HelmitCrabRenderHelmitCrabShellRenderLayerImpl
 		Item item = stack.getItem();
 		boolean hasGlint = stack.hasFoil();
 
-		if (item instanceof DyeableLeatherItem dyable) {
-			int dyeColor = dyable.getColor(stack);
+		if (item instanceof DyeItem dyable) {
+			int dyeColor = dyable.getBarColor(stack);
 			float dyeRed = (float)(dyeColor >> 16 & 0xFF) / 255.0F;
 			float dyeGreen = (float)(dyeColor >> 8 & 0xFF) / 255.0F;
 			float dyeBlue = (float)(dyeColor & 0xFF) / 255.0F;
@@ -77,16 +79,16 @@ public class HelmitCrabRenderHelmitCrabShellRenderLayerImpl
 		poseStack.translate(0, 0.65, 0.05);
 		poseStack.scale(1.1F, 1F, 1F);
 		VertexConsumer vertexConsumer = multiBufferSource.getBuffer(RenderType.armorCutoutNoCull(getArmorLocation((ArmorItem)stack.getItem(), false, string)));
-		humanoidModel.renderToBuffer(poseStack, vertexConsumer, light, OverlayTexture.NO_OVERLAY, f, g, h, 1.0F);
+		humanoidModel.renderToBuffer(poseStack, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
 
 		if(stack.getItem() instanceof ArmorItem armorItem) {
-			ArmorTrim.getTrim(entity.level().registryAccess(), stack).ifPresent(arg3x -> HelmitCrabRender.renderTrim(armorItem.getMaterial(), poseStack, multiBufferSource, light, arg3x, humanoidModel, false));
+			TrimMaterials.getFromIngredient(entity.level().registryAccess(), stack).ifPresent(arg3x -> HelmitCrabRender.renderTrim(armorItem.getMaterial(), poseStack, multiBufferSource, light, arg3x, humanoidModel, false));
 		}
 		poseStack.popPose();
 	}
 
 	private static ResourceLocation getArmorLocation(ArmorItem item, boolean secondLayer, String overlay) {
-		final String name = item.getMaterial().getName();
+		final String name = item.getMaterial().getRegisteredName();
 		final int separator = name.indexOf(ResourceLocation.NAMESPACE_SEPARATOR);
 
 		if (separator != -1) {
@@ -94,11 +96,11 @@ public class HelmitCrabRenderHelmitCrabShellRenderLayerImpl
 			final String path = name.substring(separator + 1);
 			final String texture = String.format(Locale.ROOT, "%s:textures/models/armor/%s_layer_%d%s.png", namespace, path, secondLayer ? 2 : 1, overlay == null ? "" : "_" + overlay);
 
-			return ARMOR_TEXTURE_CACHE.computeIfAbsent(texture, ResourceLocation::new);
+			return ARMOR_TEXTURE_CACHE.computeIfAbsent(texture, ResourceLocation::parse);
 		}
 
-		String string2 = "textures/models/armor/" + item.getMaterial().getName() + "_layer_1" + (overlay == null ? "" : "_" + overlay) + ".png";
-		return ARMOR_TEXTURE_CACHE.computeIfAbsent(string2, ResourceLocation::new);
+		String string2 = "textures/models/armor/" + item.getMaterial().getRegisteredName() + "_layer_1" + (overlay == null ? "" : "_" + overlay) + ".png";
+		return ARMOR_TEXTURE_CACHE.computeIfAbsent(string2, ResourceLocation::parse);
 	}
 	private static final Map<String, ResourceLocation> ARMOR_TEXTURE_CACHE = Maps.newHashMap();
 

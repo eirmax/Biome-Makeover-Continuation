@@ -1,10 +1,7 @@
 package party.lemons.biomemakeover.entity.render;
 
-import com.google.common.collect.Maps;
-import com.mojang.authlib.GameProfile;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Axis;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
@@ -17,7 +14,6 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.blockentity.SkullBlockRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -25,10 +21,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtUtils;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.armortrim.ArmorTrim;
 import net.minecraft.world.item.component.ResolvableProfile;
@@ -36,7 +29,6 @@ import net.minecraft.world.level.block.AbstractSkullBlock;
 import net.minecraft.world.level.block.SkullBlock;
 import party.lemons.biomemakeover.BiomeMakeover;
 import party.lemons.biomemakeover.entity.HelmitCrabEntity;
-import party.lemons.biomemakeover.item.HatItem;
 
 import java.util.Map;
 
@@ -83,8 +75,8 @@ public class HelmitCrabRender extends MobRenderer<HelmitCrabEntity, HelmitCrabMo
 		return TEXTURE;
 	}
 
-	public static void renderTrim(Holder<ArmorMaterial> arg, PoseStack arg2, MultiBufferSource arg3, int i, ArmorTrim arg4, Model arg5, boolean bl) {
-		TextureAtlasSprite textureatlassprite = Minecraft.getInstance().getModelManager().getAtlas(Sheets.ARMOR_TRIMS_SHEET).getSprite(bl ? arg4.innerTexture(arg) : arg4.outerTexture(arg));
+	public static void renderTrim(Holder<ArmorMaterial> arg, PoseStack arg2, MultiBufferSource arg3, int i, Object arg4, Model arg5, boolean bl) {
+		TextureAtlasSprite textureatlassprite = Minecraft.getInstance().getModelManager().getAtlas(Sheets.ARMOR_TRIMS_SHEET).getSprite(bl ? ((ArmorTrim)arg4).innerTexture(arg) : ((ArmorTrim)arg4).outerTexture(arg));
 		VertexConsumer vertexconsumer = textureatlassprite.wrap(arg3.getBuffer(Sheets.armorTrimsSheet(true)));
 		arg5.renderToBuffer(arg2, vertexconsumer, i, OverlayTexture.NO_OVERLAY);
 	}

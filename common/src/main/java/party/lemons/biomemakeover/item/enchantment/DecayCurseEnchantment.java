@@ -12,8 +12,4 @@ public class DecayCurseEnchantment extends BMEnchantment {
         super(config, true, Rarity.EPIC, EquipmentSlot.values());
     }
 
-    @Override
-    public boolean canEnchant(ItemStack stack) {
-        return stack.isDamageableItem() || super.canEnchant(stack);
-    }
 }

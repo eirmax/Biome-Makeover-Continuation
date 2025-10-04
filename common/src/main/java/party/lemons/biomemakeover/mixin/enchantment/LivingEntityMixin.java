@@ -48,14 +48,19 @@ public abstract class LivingEntityMixin extends Entity
                 if(!hasStackEquipInSlot(st, pair.getFirst()))
                 {
                     // Fixed: Use ItemEnchantments instead of Map, and proper enchantment iteration
-                    ItemEnchantments enchants = EnchantmentHelper.getEnchantmentLevel(st);
+                    ItemEnchantments enchants = EnchantmentHelper.getEnchantmentsForCrafting(st);
                     for(Holder<Enchantment> enchantmentHolder : enchants.keySet())
                     {
                         Enchantment enchantment = enchantmentHolder.value();
-                        // Fixed: Added instanceof check before casting
-                        if(enchantment instanceof TickableAttributeEnchantment tickable)
+                        // Check if this enchantment is a TickableAttributeEnchantment by checking the registry
+                        if(BMEnchantments.isTickableAttributeEnchantment(enchantment))
                         {
-                            tickable.removeAttributes((LivingEntity) (Object) this, pair.getFirst());
+                            // Get the BMEnchantment instance and cast to TickableAttributeEnchantment
+                            TickableAttributeEnchantment tickable = BMEnchantments.getTickableAttributeEnchantment(enchantment);
+                            if(tickable != null)
+                            {
+                                tickable.removeAttributes((LivingEntity) (Object) this, pair.getFirst());
+                            }
                         }
                     }
                     it.remove();
@@ -68,20 +73,25 @@ public abstract class LivingEntityMixin extends Entity
                 if(!stack.isEmpty())
                 {
                     // Fixed: Use ItemEnchantments and proper iteration
-                    ItemEnchantments enchants = EnchantmentHelper.getEnchantments(stack);
+                    ItemEnchantments enchants = EnchantmentHelper.getEnchantmentsForCrafting(stack);
                     for(Object2IntMap.Entry<Holder<Enchantment>> entry : enchants.entrySet())
                     {
                         Holder<Enchantment> enchantmentHolder = entry.getKey();
                         Enchantment enchantment = enchantmentHolder.value();
                         int lvl = entry.getIntValue();
 
-                        // Fixed: Added instanceof check before casting
-                        if(enchantment instanceof TickableAttributeEnchantment tickable)
+                        // Check if this enchantment is a TickableAttributeEnchantment by checking the registry
+                        if(BMEnchantments.isTickableAttributeEnchantment(enchantment))
                         {
-                            tickable.onTick((LivingEntity) (Object) this, stack, lvl);
-                            if(!hasAttributeStack(stack) && tickable.addAttributes((LivingEntity) (Object) this, stack, slot, lvl))
+                            // Get the BMEnchantment instance and cast to TickableAttributeEnchantment
+                            TickableAttributeEnchantment tickable = BMEnchantments.getTickableAttributeEnchantment(enchantment);
+                            if(tickable != null)
                             {
-                                attributeStacks.add(new Pair<>(slot, stack));
+                                tickable.onTick((LivingEntity) (Object) this, stack, lvl);
+                                if(!hasAttributeStack(stack) && tickable.addAttributes((LivingEntity) (Object) this, stack, slot, lvl))
+                                {
+                                    attributeStacks.add(new Pair<>(slot, stack));
+                                }
                             }
                         }
                     }

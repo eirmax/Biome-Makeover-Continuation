@@ -46,17 +46,18 @@ public class BMFeatures {
     public static final Supplier<Feature<NoneFeatureConfiguration>> REED_FEATURE =  FEATURES.register(BiomeMakeover.ID("reeds"), ()->new ReedFeature(NoneFeatureConfiguration.CODEC));
     public static final Supplier<Feature<FissureFeature.FissureConfig>> FISSURE =  FEATURES.register(BiomeMakeover.ID("fissure"), ()->new FissureFeature(FissureFeature.FissureConfig.CODEC));
 
-    public static final Supplier<FoliagePlacerType<WillowFoliagePlacer>> WILLOW_FOLIAGE = FOLIAGE.register(BiomeMakeover.ID("willow_foliage"), ()->new FoliagePlacerType<>(WillowFoliagePlacer.CODEC));
-    public static final Supplier<TreeDecoratorType<HangingLeavesDecorator>> HANGING_LEAVES_DECORATOR = DECORATOR.register(BiomeMakeover.ID("hanging_leaves_decorator"), ()->new TreeDecoratorType<>(HangingLeavesDecorator.CODEC));
-    public static final Supplier<TreeDecoratorType<WillowingBranchDecorator>> WILLOWING_BRANCH_DECORATOR = DECORATOR.register(BiomeMakeover.ID("willowing_branch_decorator"), ()->new TreeDecoratorType<>(WillowingBranchDecorator.CODEC));
-    public static final Supplier<TreeDecoratorType<IvyDecorator>> IVY_DECORATOR =  DECORATOR.register(BiomeMakeover.ID("ivy"), ()->new TreeDecoratorType<>(IvyDecorator.CODEC));
+    public static final Supplier<TreeDecoratorType<HangingLeavesDecorator>> HANGING_LEAVES_DECORATOR = DECORATOR.register(BiomeMakeover.ID("hanging_leaves_decorator"), () -> new TreeDecoratorType<>(HangingLeavesDecorator.CODEC.fieldOf("decorator")));
+    public static final Supplier<TreeDecoratorType<WillowingBranchDecorator>> WILLOWING_BRANCH_DECORATOR = DECORATOR.register(BiomeMakeover.ID("willowing_branch_decorator"), () -> new TreeDecoratorType<>(WillowingBranchDecorator.CODEC.fieldOf("decorator")));
+    public static final Supplier<FoliagePlacerType<WillowFoliagePlacer>> WILLOW_FOLIAGE = FOLIAGE.register(BiomeMakeover.ID("willow_foliage"), () -> new FoliagePlacerType<>(WillowFoliagePlacer.CODEC.fieldOf("foliage_placer")));
+    public static final Supplier<TreeDecoratorType<IvyDecorator>> IVY_DECORATOR = DECORATOR.register(BiomeMakeover.ID("ivy"), () -> new TreeDecoratorType<>(IvyDecorator.CODEC.fieldOf("decorator")));
+
 
     public static final TagKey<Biome> HAS_REWORKED_MANSION = TagKey.create(Registries.BIOME, BiomeMakeover.ID("has_structure/reworked_mansion"));
 
-    public static final RegistrySupplier<TrunkPlacerType<AncientOakTrunkPlacer>> ANCIENT_OAK_TRUNK = TRUNK.register(BiomeMakeover.ID("ancient_oak"), ()->new TrunkPlacerType<>(AncientOakTrunkPlacer.CODEC));
-    public static final RegistrySupplier<TrunkPlacerType<CypressTrunkPlacer>> CYPRESS_TRUNK = TRUNK.register(BiomeMakeover.ID("swamp_cypress"), ()->new TrunkPlacerType<>(CypressTrunkPlacer.CODEC));
-    public static final RegistrySupplier<TrunkPlacerType<WillowTrunkPlacer>> WILLOW_TRUNK = TRUNK.register(BiomeMakeover.ID("willow"), ()->new TrunkPlacerType<>(WillowTrunkPlacer.CODEC));
-    public static final RegistrySupplier<TrunkPlacerType<BalsaTrunkPlacer>> BLIGHTED_BALSA_TRUNK = TRUNK.register(BiomeMakeover.ID("blighted_balsa"), ()->new TrunkPlacerType<>(BalsaTrunkPlacer.CODEC));
+    public static final RegistrySupplier<TrunkPlacerType<AncientOakTrunkPlacer>> ANCIENT_OAK_TRUNK = TRUNK.register(BiomeMakeover.ID("ancient_oak"), () -> new TrunkPlacerType<>(AncientOakTrunkPlacer.CODEC.fieldOf("trunk_placer")));
+    public static final RegistrySupplier<TrunkPlacerType<CypressTrunkPlacer>> CYPRESS_TRUNK = TRUNK.register(BiomeMakeover.ID("swamp_cypress"), () -> new TrunkPlacerType<>(CypressTrunkPlacer.CODEC.fieldOf("trunk_placer")));
+    public static final RegistrySupplier<TrunkPlacerType<WillowTrunkPlacer>> WILLOW_TRUNK = TRUNK.register(BiomeMakeover.ID("willow"), () -> new TrunkPlacerType<>(WillowTrunkPlacer.CODEC.fieldOf("trunk_placer")));
+    public static final RegistrySupplier<TrunkPlacerType<BalsaTrunkPlacer>> BLIGHTED_BALSA_TRUNK = TRUNK.register(BiomeMakeover.ID("blighted_balsa"), () -> new TrunkPlacerType<>(BalsaTrunkPlacer.CODEC.fieldOf("trunk_placer")));
 
     public static TagKey<Biome> DARK_FOREST_BIOMES = TagKey.create(Registries.BIOME, BiomeMakeover.ID("dark_forest"));
     public static TagKey<Biome> SWAMP_BIOMES = TagKey.create(Registries.BIOME, BiomeMakeover.ID("swamps"));
@@ -98,7 +99,7 @@ public class BMFeatures {
         });
 
         BiomeModifications.removeProperties(p->p.hasTag(SWAMP_BIOMES), ((biomeContext, mutable) -> {
-            mutable.getGenerationProperties().removeFeature(GenerationStep.Decoration.VEGETAL_DECORATION, ResourceKey.create(Registries.PLACED_FEATURE, new ResourceLocation("trees_swamp")));
+            mutable.getGenerationProperties().removeFeature(GenerationStep.Decoration.VEGETAL_DECORATION, ResourceKey.create(Registries.PLACED_FEATURE,  ResourceLocation.withDefaultNamespace("trees_swamp")));
         }));
 
         BiomeModifications.addProperties(biomeContext -> biomeContext.hasTag(SWAMP_BIOMES), (biomeContext, mutable) -> {
