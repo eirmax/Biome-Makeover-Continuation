@@ -12,6 +12,8 @@ import party.lemons.biomemakeover.BMConfig;
 import party.lemons.biomemakeover.BiomeMakeover;
 import party.lemons.biomemakeover.Constants;
 import party.lemons.biomemakeover.item.enchantment.*;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class BMEnchantments {
@@ -30,6 +32,34 @@ public class BMEnchantments {
     public static final Holder<Enchantment> UNWIELDINESS_CURSE = ENCHANTS.register(BiomeMakeover.ID("unwieldiness_curse"), ()-> BMEnchantmentHelper.createEnchantment(() -> BMConfig.INSTANCE.enchantmentConfig.UNWIELDINESS));
     public static final Holder<Enchantment> INACCURACY_CURSE = ENCHANTS.register(BiomeMakeover.ID("inaccuracy_curse"), ()-> BMEnchantmentHelper.createEnchantment(() -> BMConfig.INSTANCE.enchantmentConfig.INACCURACY, true, Rarity.UNCOMMON, new EquipmentSlot[]{EquipmentSlot.MAINHAND}));
     public static final Holder<Enchantment> BUCKLING_CURSE = ENCHANTS.register(BiomeMakeover.ID("buckling_curse"), ()-> BMEnchantmentHelper.createEnchantment(()->BMConfig.INSTANCE.enchantmentConfig.BUCKLING, true, Rarity.UNCOMMON, new EquipmentSlot[]{EquipmentSlot.LEGS}));
+
+    private static final Map<Enchantment, TickableAttributeEnchantment> tickableEnchantments = new HashMap<>();
+    private static boolean initialized = false;
+
+    private static void ensureInitialized() {
+        if (!initialized) {
+            try {
+                tickableEnchantments.put(INSOMNIA_CURSE.value(), new InsomniaCurseEnchantment(() -> BMConfig.INSTANCE.enchantmentConfig.INSOMNIA));
+                tickableEnchantments.put(CONDUCTIVITY_CURSE.value(), new ConductivityCurseEnchantment(() -> BMConfig.INSTANCE.enchantmentConfig.CONDUCTIVITY));
+                tickableEnchantments.put(ENFEEBLEMENT_CURSE.value(), new EnfeeblementCurseEnchantment(() -> BMConfig.INSTANCE.enchantmentConfig.ENFEEBLEMENT));
+                tickableEnchantments.put(DEPTH_CURSE.value(), new DepthsCurseEnchantment(() -> BMConfig.INSTANCE.enchantmentConfig.DEPTHS));
+                tickableEnchantments.put(UNWIELDINESS_CURSE.value(), new UnwieldinessCurseEnchantment(() -> BMConfig.INSTANCE.enchantmentConfig.UNWIELDINESS));
+                initialized = true;
+            } catch (Exception e) {
+                // Registry not ready yet, will retry later
+            }
+        }
+    }
+
+    public static boolean isTickableAttributeEnchantment(Enchantment enchantment) {
+        ensureInitialized();
+        return tickableEnchantments.containsKey(enchantment);
+    }
+
+    public static TickableAttributeEnchantment getTickableAttributeEnchantment(Enchantment enchantment) {
+        ensureInitialized();
+        return tickableEnchantments.get(enchantment);
+    }
 
     public static void init() {
         ENCHANTS.register();

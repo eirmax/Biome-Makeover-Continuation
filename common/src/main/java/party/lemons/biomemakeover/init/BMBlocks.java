@@ -33,7 +33,7 @@ import party.lemons.biomemakeover.Constants;
 import party.lemons.biomemakeover.block.*;
 import party.lemons.biomemakeover.level.generate.foliage.AncientOakSaplingGenerator;
 import party.lemons.biomemakeover.level.generate.foliage.BalsaSaplingGenerator;
-import party.lemons.biomemakeover.level.generate.foliage.SwampCypressSaplingGenerator;
+import party.lemons.biomemakeover.level.generate.foliage.SwampCypressGenerator;
 import party.lemons.biomemakeover.level.generate.foliage.WillowSaplingGenerator;
 import party.lemons.biomemakeover.util.BMSoundType;
 import party.lemons.taniwha.block.BlockHelper;
@@ -96,7 +96,7 @@ public class BMBlocks
 
     public static final WoodBlockFactory BLIGHTED_BALSA_WOOD_INFO = new WoodBlockFactory(Constants.MOD_ID, "blighted_balsa", BMTab.TAB).color(MapColor.TERRACOTTA_GREEN, MapColor.WOOL).all(()-> BMBoats.BLIGHTED_BALSA).register(BLOCKS, ITEMS);
     public static final RegistrySupplier<Block> BLIGHTED_BALSA_LEAVES = registerBlockItem("blighted_balsa_leaves", ()->new TLeavesBlock(BlockUtil.copyProperties(LEAF_PROPERTIES).mapColor(MapColor.ICE)).modifiers(RTypeModifier.CUTOUT, FlammableModifier.LEAVES));
-    public static final RegistrySupplier<Block> BLIGHTED_BALSA_SAPLING = sapling("blighted_balsa_sapling", new BalsaSaplingGenerator(), MapColor.WOOL);
+    public static final RegistrySupplier<Block> BLIGHTED_BALSA_SAPLING = sapling("blighted_balsa_sapling",BalsaSaplingGenerator.BLIGHTED_BALSA, MapColor.WOOL);
 
     public static final RegistrySupplier<Block> GLOWSHROOM_STEM = registerBlockItem("glowshroom_stem", ()->new BMMushroomBlock(properties(0.2F).mapColor(MapColor.CLAY).instrument(NoteBlockInstrument.BASS).lightLevel((s)->7).sound(SoundType.FUNGUS)));
     public static final RegistrySupplier<Block> RED_MUSHROOM_BRICK = registerBlockItem("red_mushroom_brick", ()->new TBlock(properties(0.8F).sound(SoundType.FUNGUS).instrument(NoteBlockInstrument.BASS).mapColor(MapColor.COLOR_RED)));
@@ -133,8 +133,8 @@ public class BMBlocks
     public static final WoodBlockFactory SWAMP_CYPRESS_WOOD_INFO = new WoodBlockFactory(Constants.MOD_ID, "swamp_cypress", BMTab.TAB).color(MapColor.TERRACOTTA_BROWN, MapColor.TERRACOTTA_ORANGE).all(()->BMBoats.SWAMP_CYPRESS).register(BLOCKS, ITEMS);
 
     public static final RegistrySupplier<Block> WILLOWING_BRANCHES = registerBlockItem("willowing_branches", ()->new WillowingBranchesBlock(properties(0.1F).offsetType(BlockBehaviour.OffsetType.XZ).pushReaction(PushReaction.DESTROY).randomTicks().sound(SoundType.VINE).noCollission().noOcclusion().ignitedByLava().mapColor(MapColor.PLANT)).modifiers(RTypeModifier.create(RType.CUTOUT_MIPPED), new FlammableModifier(15, 100)));
-    public static final RegistrySupplier<Block> WILLOW_SAPLING = registerBlockItem("willow_sapling", ()->new WaterSaplingBlock(new WillowSaplingGenerator(), 1, properties(0).noCollission().randomTicks().pushReaction(PushReaction.DESTROY).instabreak().mapColor(MapColor.PLANT).sound(SoundType.GRASS)).modifiers(RTypeModifier.CUTOUT));
-    public static final RegistrySupplier<Block> SWAMP_CYPRESS_SAPLING = registerBlockItem("swamp_cypress_sapling", ()->new WaterSaplingBlock(new SwampCypressSaplingGenerator(), 3, properties(0).pushReaction(PushReaction.DESTROY).noCollission().randomTicks().mapColor(MapColor.PLANT).instabreak().sound(SoundType.GRASS)).modifiers(RTypeModifier.CUTOUT));
+    public static final RegistrySupplier<Block> WILLOW_SAPLING = registerBlockItem("willow_sapling", ()->new WaterSaplingBlock(WillowSaplingGenerator.WILLOW, 1, properties(0).noCollission().randomTicks().pushReaction(PushReaction.DESTROY).instabreak().mapColor(MapColor.PLANT).sound(SoundType.GRASS)).modifiers(RTypeModifier.CUTOUT));
+    public static final RegistrySupplier<Block> SWAMP_CYPRESS_SAPLING = registerBlockItem("swamp_cypress_sapling", () -> new WaterSaplingBlock(SwampCypressGenerator.SWAMP_CYPRESS, 3, properties(0).pushReaction(PushReaction.DESTROY).noCollission().randomTicks().mapColor(MapColor.PLANT).instabreak().sound(SoundType.GRASS)).modifiers(RTypeModifier.CUTOUT));
     public static final RegistrySupplier<Block> PEAT = registerBlockItem("peat", ()->new TBlock(properties(0.5F).sound(SoundType.WET_GRASS).mapColor(MapColor.TERRACOTTA_GRAY)));
     public static final RegistrySupplier<Block> DRIED_PEAT = registerBlockItem("dried_peat", ()->new TBlock(properties(1F).sound(SoundType.NETHERRACK).mapColor(MapColor.TERRACOTTA_BROWN)));
     public static final RegistrySupplier<Block> MOSSY_PEAT = registerBlockItem("mossy_peat", ()->new TSpreadableBlock(properties(0.5F).randomTicks().sound(SoundType.WET_GRASS), PEAT));
@@ -177,7 +177,7 @@ public class BMBlocks
     public static final DecorationBlockFactory POLISHED_MESMERITE_DECORATION = new DecorationBlockFactory(Constants.MOD_ID, "polished_mesmerite", POLISHED_MESMERITE, properties(1.5F).instrument(NoteBlockInstrument.BASEDRUM).mapColor(MapColor.ICE), BMTab.TAB).all().register(BLOCKS, ITEMS);
     public static final WoodBlockFactory ANCIENT_OAK_WOOD_INFO = new WoodBlockFactory(Constants.MOD_ID, "ancient_oak", BMTab.TAB).color(MapColor.TERRACOTTA_BLACK, MapColor.TERRACOTTA_BROWN).all(()->BMBoats.ANCIENT_OAK).register(BLOCKS, ITEMS);
 
-    public static final RegistrySupplier<Block> ANCIENT_OAK_SAPLING = sapling("ancient_oak_sapling", new AncientOakSaplingGenerator(), MapColor.PLANT);
+    public static final RegistrySupplier<Block> ANCIENT_OAK_SAPLING = sapling("ancient_oak_sapling", AncientOakSaplingGenerator.ANCIENT_OAK, MapColor.PLANT);
     public static final RegistrySupplier<Block> ANCIENT_OAK_LEAVES = registerBlockItem("ancient_oak_leaves", ()->new TLeavesBlock(LEAF_PROPERTIES).modifiers(RTypeModifier.create(RType.CUTOUT_MIPPED), FlammableModifier.LEAVES));
     public static final RegistrySupplier<Block> ALTAR = registerBlockItem("altar", ()->new AltarBlock(properties(5F).lightLevel((st)->st.getValue(AltarBlock.ACTIVE) ? 5 : 1).instrument(NoteBlockInstrument.BASEDRUM).requiresCorrectToolForDrops().mapColor(MapColor.COLOR_BLACK).noOcclusion()).modifiers(RTypeModifier.CUTOUT));
     public static final RegistrySupplier<Block> CLADDED_STONE = registerBlockItem("cladded_stone", ()->new TBlock(properties(1.5F, 6.0F).requiresCorrectToolForDrops().instrument(NoteBlockInstrument.BASEDRUM).mapColor(MapColor.STONE)));
@@ -189,7 +189,7 @@ public class BMBlocks
     public static final RegistrySupplier<Block> MOTH_BLOSSOM = registerBlockItem("moth_blossom", ()->new MothBlossomBlock(properties(0.25F).speedFactor(0.5F).noCollission().randomTicks().sound(SoundType.VINE).mapColor(MapColor.COLOR_ORANGE).pushReaction(PushReaction.DESTROY)).modifiers(RTypeModifier.CUTOUT, FlammableModifier.IVY));
     public static final RegistrySupplier<Block> WILD_MUSHROOMS = registerBlockItem("wild_mushrooms", ()->new WildMushroomBlock(properties(0F).noCollission().instabreak().randomTicks().noOcclusion().sound(SoundType.FUNGUS).mapColor(MapColor.WOOL).pushReaction(PushReaction.DESTROY)).modifiers(RTypeModifier.CUTOUT, FlammableModifier.IVY));
 
-    public static final RegistrySupplier<Block> SUSPICIOUS_RED_SAND = registerBlockItem("suspicious_red_sand", ()->new BrushableBlock(Blocks.RED_SAND, BlockBehaviour.Properties.of().mapColor(MapColor.SAND).instrument(NoteBlockInstrument.SNARE).strength(0.25F).sound(SoundType.SUSPICIOUS_SAND).pushReaction(PushReaction.DESTROY), SoundEvents.BRUSH_SAND, SoundEvents.BRUSH_SAND_COMPLETED));
+    public static final RegistrySupplier<Block> SUSPICIOUS_RED_SAND = registerBlockItem("suspicious_red_sand", ()->new BrushableBlock(Blocks.RED_SAND, SoundEvents.BRUSH_SAND, SoundEvents.BRUSH_SAND_COMPLETED, BlockBehaviour.Properties.of().mapColor(MapColor.SAND).instrument(NoteBlockInstrument.SNARE).strength(0.25F).sound(SoundType.SUSPICIOUS_SAND).pushReaction(PushReaction.DESTROY)));
 
     public static final TapestryInfo TAPESTRIES = TapestryInfo.create();
     public static final TerracottaBrickInfo TERRACOTTA_BRICKS = TerracottaBrickInfo.create();
