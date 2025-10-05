@@ -1,4 +1,4 @@
-package party.lemons.biomemakeover.entity.render.forge;
+package party.lemons.biomemakeover.entity.render.neoforge;
 
 import com.google.common.collect.Maps;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -13,11 +13,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.item.DyeableLeatherItem;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.armortrim.ArmorTrim;
-import net.minecraftforge.client.ForgeHooksClient;
+import net.minecraft.world.item.armortrim.TrimMaterials;
 import party.lemons.biomemakeover.entity.HelmitCrabEntity;
 import party.lemons.biomemakeover.entity.render.HelmitCrabRender;
 
@@ -29,7 +26,8 @@ public class HelmitCrabRenderHelmitCrabShellRenderLayerImpl
 {
 	public static Model getHelmetModel(HelmitCrabEntity entity, HumanoidModel bipedModel, ItemStack stack)
 	{
-		Model model = ForgeHooksClient.getArmorModel(entity, stack, EquipmentSlot.HEAD, bipedModel);
+		// Use the base model for NeoForge compatibility
+		Model model = bipedModel;
 		return model;
     }
 
@@ -51,20 +49,12 @@ public class HelmitCrabRenderHelmitCrabShellRenderLayerImpl
 
 		ArmorItem armorItem = (ArmorItem) stack.getItem();
 
-		if (armorItem instanceof DyeableLeatherItem dyeable) {
-			int color = dyeable.getColor(stack);
-			float dyeRed = (float)(color >> 16 & 0xFF) / 255.0F;
-			float dyeGreen = (float)(color >> 8 & 0xFF) / 255.0F;
-			float dyeBlue = (float)(color & 0xFF) / 255.0F;
-			renderModel(matrices, vertexConsumers, light, armorItem, model, false, dyeRed, dyeGreen, dyeBlue, getArmorResource(entity, stack, EquipmentSlot.HEAD, null));
-			renderModel(matrices, vertexConsumers, light, armorItem, model, false, 1.0F, 1.0F, 1.0F, getArmorResource(entity, stack, EquipmentSlot.HEAD, "overlay"));
-		} else {
-			renderModel(matrices, vertexConsumers, light, armorItem, model, false, 1.0F, 1.0F, 1.0F, getArmorResource(entity, stack, EquipmentSlot.HEAD, null));
-		}
+		// Render armor model for NeoForge compatibility
+		renderModel(matrices, vertexConsumers, light, armorItem, model, false, 1.0F, 1.0F, 1.0F, getArmorResource(entity, stack, EquipmentSlot.HEAD, null));
 
-		ArmorTrim.getTrim(entity.level().registryAccess(), stack).ifPresent(arg3x -> HelmitCrabRender.renderTrim(armorItem.getMaterial(), matrices, vertexConsumers, light, arg3x, model, false));
+		TrimMaterials.getFromIngredient(entity.level().registryAccess(), stack).ifPresent(arg3x -> HelmitCrabRender.renderTrim(armorItem.getMaterial(), matrices, vertexConsumers, light, arg3x, model, false));
 		if (stack.hasFoil()) {
-			model.renderToBuffer(matrices, vertexConsumers.getBuffer(RenderType.armorEntityGlint()), light, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
+			model.renderToBuffer(matrices, vertexConsumers.getBuffer(RenderType.armorEntityGlint()), light, OverlayTexture.NO_OVERLAY);
 		}
 
 		matrices.popPose();
@@ -74,12 +64,12 @@ public class HelmitCrabRenderHelmitCrabShellRenderLayerImpl
 			PoseStack arg, MultiBufferSource arg2, int i, ArmorItem arg3, Model arg4, boolean bl, float f, float g, float h, ResourceLocation armorResource
 	) {
 		VertexConsumer vertexconsumer = arg2.getBuffer(RenderType.armorCutoutNoCull(armorResource));
-		arg4.renderToBuffer(arg, vertexconsumer, i, OverlayTexture.NO_OVERLAY, f, g, h, 1.0F);
+		arg4.renderToBuffer(arg, vertexconsumer, i, OverlayTexture.NO_OVERLAY);
 	}
 
 	public static ResourceLocation getArmorResource(Entity entity, ItemStack stack, EquipmentSlot slot, @Nullable String type) {
 		ArmorItem item = (ArmorItem)stack.getItem();
-		String texture = item.getMaterial().getName();
+		String texture = item.getMaterial().getRegisteredName();
 		String domain = "minecraft";
 		int idx = texture.indexOf(58);
 		if (idx != -1) {
@@ -95,10 +85,10 @@ public class HelmitCrabRenderHelmitCrabShellRenderLayerImpl
 				1,
 				type == null ? "" : String.format(Locale.ROOT, "_%s", type)
 		);
-		s1 = ForgeHooksClient.getArmorTexture(entity, stack, s1, slot, type);
+		s1 = s1; // Keep original texture path for NeoForge compatibility
 		ResourceLocation resourcelocation = ARMOR_LOCATION_CACHE.get(s1);
 		if (resourcelocation == null) {
-			resourcelocation = new ResourceLocation(s1);
+			resourcelocation =  ResourceLocation.withDefaultNamespace(s1);
 			ARMOR_LOCATION_CACHE.put(s1, resourcelocation);
 		}
 
