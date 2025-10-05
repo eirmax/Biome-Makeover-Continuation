@@ -52,30 +52,41 @@ public class BMConfig
 
 
 	public static BMConfig INSTANCE;
+	private static boolean loaded = false;
+	
 	public static void load()
 	{
-		Gson gson = new GsonBuilder().setLenient().setPrettyPrinting().create();
-		File cfgFile = getConfigFile().toFile();
-		INSTANCE = new BMConfig();
+		if (loaded) return;
+		
+		try {
+			Gson gson = new GsonBuilder().setLenient().setPrettyPrinting().create();
+			File cfgFile = getConfigFile().toFile();
+			INSTANCE = new BMConfig();
 
-		if(cfgFile.exists())
-		{
-			try(FileReader fileReader = new FileReader(cfgFile))
+			if(cfgFile.exists())
 			{
-				try(JsonReader reader = new JsonReader(fileReader))
+				try(FileReader fileReader = new FileReader(cfgFile))
 				{
-					INSTANCE = gson.fromJson(reader, BMConfig.class);
-					writeConfig(gson, cfgFile, INSTANCE);
+					try(JsonReader reader = new JsonReader(fileReader))
+					{
+						INSTANCE = gson.fromJson(reader, BMConfig.class);
+						writeConfig(gson, cfgFile, INSTANCE);
+					}
+				}
+				catch (IOException e)
+				{
+					e.printStackTrace();
 				}
 			}
-			catch (IOException e)
+			else
 			{
-				e.printStackTrace();
+				writeConfig(gson, cfgFile, INSTANCE);
 			}
-		}
-		else
-		{
-			writeConfig(gson, cfgFile, INSTANCE);
+			loaded = true;
+		} catch (Exception e) {
+			// Platform not ready yet, use default config
+			INSTANCE = new BMConfig();
+			loaded = true;
 		}
 	}
 
@@ -92,6 +103,18 @@ public class BMConfig
 
 	public static Path getConfigFile()
 	{
-		return Platform.getConfigFolder().resolve(Constants.MOD_ID + ".json");
+		try {
+			return Platform.getConfigFolder().resolve(Constants.MOD_ID + ".json");
+		} catch (Exception e) {
+			// Platform not ready, return a temporary path
+			return Path.of(System.getProperty("java.io.tmpdir")).resolve(Constants.MOD_ID + ".json");
+		}
+	}
+	
+	public static void ensureLoaded()
+	{
+		if (!loaded) {
+			load();
+		}
 	}
 }

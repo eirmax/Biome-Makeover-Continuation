@@ -45,7 +45,7 @@ import java.util.UUID;
 
 public class ToadEntity extends Animal {
 
-    private static final AttributeModifier JUMP_SPEED_BOOST_MOD = new AttributeModifier( ResourceLocation.parse("Jump Speed Boost"), 0.6F, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
+    private static final AttributeModifier JUMP_SPEED_BOOST_MOD = new AttributeModifier(ResourceLocation.parse("jump_speed_boost"), 0.6F, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
 
     private static final EntityDataAccessor<Integer> TONGUE_ENTITY = SynchedEntityData.defineId(ToadEntity.class, EntityDataSerializers.INT);
 

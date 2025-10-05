@@ -1,11 +1,11 @@
 package party.lemons.biomemakeover.init;
 
 import dev.architectury.registry.registries.DeferredRegister;
+import dev.architectury.event.events.common.LifecycleEvent;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.enchantment.Enchantment;
 import party.lemons.biomemakeover.BMConfig;
@@ -39,6 +39,7 @@ public class BMEnchantments {
     private static void ensureInitialized() {
         if (!initialized) {
             try {
+                BMConfig.ensureLoaded();
                 tickableEnchantments.put(INSOMNIA_CURSE.value(), new InsomniaCurseEnchantment(() -> BMConfig.INSTANCE.enchantmentConfig.INSOMNIA));
                 tickableEnchantments.put(CONDUCTIVITY_CURSE.value(), new ConductivityCurseEnchantment(() -> BMConfig.INSTANCE.enchantmentConfig.CONDUCTIVITY));
                 tickableEnchantments.put(ENFEEBLEMENT_CURSE.value(), new EnfeeblementCurseEnchantment(() -> BMConfig.INSTANCE.enchantmentConfig.ENFEEBLEMENT));
@@ -62,6 +63,10 @@ public class BMEnchantments {
     }
 
     public static void init() {
-        ENCHANTS.register();
+        // Register enchantments during the SETUP lifecycle event when registries are available
+        LifecycleEvent.SETUP.register(() -> {
+            BMConfig.ensureLoaded();
+            ENCHANTS.register();
+        });
     }
 }
