@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "biomemakeover",
-  "version": "${version}",
+  "version": "1.21-1.21.1",
   "name": "Biome Makeover",
   "description": "Biome Makeover is a mod designed to update vanilla's biomes.",
   "authors": [
