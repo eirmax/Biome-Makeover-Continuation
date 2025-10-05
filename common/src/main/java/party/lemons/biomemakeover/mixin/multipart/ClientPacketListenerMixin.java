@@ -19,7 +19,7 @@ public class ClientPacketListenerMixin
 {
     @Shadow private ClientLevel level;
 
-    @Inject(method = "handleAddEntity", at = @At(value = "INVOKE", target = "net/minecraft/world/entity/Entity.recreateFromPacket(Lnet/minecraft/network/protocol/game/ClientboundAddEntityPacket;)V"), locals = LocalCapture.CAPTURE_FAILSOFT)
+    @Inject(method = "handleAddEntity", at = @At(value = "TAIL"), locals = LocalCapture.CAPTURE_FAILSOFT)
     private void onHandleMobSpawn(ClientboundAddEntityPacket packet, CallbackInfo cbi, EntityType<?> entityType, Entity livingEntity)
     {
         if(livingEntity instanceof MultiPartEntity<?> mpe)

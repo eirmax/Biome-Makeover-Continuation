@@ -19,7 +19,7 @@ import java.util.Iterator;
 @Mixin(Beardifier.class)
 public class BeardifierMixin_Mansion {
 
-    @Inject(at = @At(value = "INVOKE", shift = At.Shift.AFTER, target = "Lit/unimi/dsi/fastutil/objects/ObjectList;add(Ljava/lang/Object;)Z", ordinal = 2), method = "method_42694(Lnet/minecraft/world/level/ChunkPos;Lit/unimi/dsi/fastutil/objects/ObjectList;IILit/unimi/dsi/fastutil/objects/ObjectList;Lnet/minecraft/world/level/levelgen/structure/StructureStart;)V", locals = LocalCapture.CAPTURE_FAILEXCEPTION)
+    @Inject(at = @At(value = "TAIL"), method = "method_42694(Lnet/minecraft/world/level/ChunkPos;Lit/unimi/dsi/fastutil/objects/ObjectList;IILit/unimi/dsi/fastutil/objects/ObjectList;Lnet/minecraft/world/level/levelgen/structure/StructureStart;)V", locals = LocalCapture.CAPTURE_FAILSOFT)
     private static void forStructuresInChunk(ChunkPos chunkPos, ObjectList objectList, int i, int j, ObjectList objectList2, StructureStart structureStart, CallbackInfo ci, TerrainAdjustment terrainAdjustment, Iterator var7, StructurePiece structurePiece)
     {
 
