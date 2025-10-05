@@ -36,11 +36,17 @@ dependencies {
 }
 
 processResources {
-    inputs.property "version", project.version
+    inputs.property 'version', project.version
 
-    filesMatching("META-INF/mods.toml") {
-        expand "version": project.version
+    filesMatching('META-INF/neoforge.mods.toml') {
+        expand version: project.version
     }
+        from(project(":common").file("src/main/resources")) {
+            include "data/**"
+            include "assets/**"
+        }
+
+
 }
 
 shadowJar {

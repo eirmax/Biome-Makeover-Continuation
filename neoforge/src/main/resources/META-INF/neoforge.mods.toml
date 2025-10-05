@@ -1,6 +1,5 @@
-modLoader = "javafml"
-loaderVersion = "[37,)"
-#issueTrackerURL = ""
+modLoader = "lowcodefml"
+loaderVersion = "[4,)"
 license = "Custom"
 
 [[mods]]
@@ -15,7 +14,7 @@ logoFile = "bm-logo.png"
 
 [[dependencies.biomemakeover]]
 modId = "neoforge"
-versionRange = "21.1,)"
+versionRange = "[21.1,)"
 ordering = "NONE"
 side = "BOTH"
 
