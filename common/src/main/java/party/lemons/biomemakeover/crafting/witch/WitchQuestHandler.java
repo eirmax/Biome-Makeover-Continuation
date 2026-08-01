@@ -27,6 +27,7 @@ public class WitchQuestHandler
         List<QuestItem> questItems = Lists.newArrayList();
 
         int safetyCount = count * 2;    //If there's not enough items to select, it infinite loops
+        // UPD I have serious reservations about this operation—it’s far from optimal—but it works, so don't touch it.
 
         while(questItems.size() < count && safetyCount > 0)
         {

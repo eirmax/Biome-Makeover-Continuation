@@ -46,7 +46,7 @@ public class AltarRenderer implements BlockEntityRenderer<AltarBlockEntity>
         float o = Mth.lerp(delta, blockEntity.pageTurningSpeed, blockEntity.nextPageTurningSpeed);
         this.bookModel.setupAnim(g, Mth.clamp(m, 0.0f, 1.0f), Mth.clamp(n, 0.0f, 1.0f), o);
         VertexConsumer vertexConsumer = BOOK_LOCATION.buffer(multiBufferSource, RenderType::entitySolid);
-        this.bookModel.render(poseStack, vertexConsumer, i, j, 1);
+        this.bookModel.render(poseStack, vertexConsumer, i, j, 0xFFFFFFFF);
         poseStack.popPose();
     }
 }

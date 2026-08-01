@@ -1,19 +1,30 @@
 package party.lemons.biomemakeover.crafting.witch.data.reward;
 
 import com.google.common.collect.Maps;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.Items;
 import party.lemons.biomemakeover.crafting.witch.QuestRarity;
 import party.lemons.taniwha.util.collections.WeightedList;
 
 import java.util.EnumMap;
+import java.util.List;
 
 public class RewardTables
 {
 	public static final EnumMap<QuestRarity, WeightedList<RewardTable>> tables = Maps.newEnumMap(QuestRarity.class);
+	private static final RewardTable FALLBACK_TABLE = new RewardTable(
+			new RewardTable.Weights(1, 1, 1, 1),
+			List.of(new ItemQuestRewardItem(Items.EMERALD, new CompoundTag(), 1, 3))
+	);
 
 	public static RewardTable getTable(QuestRarity rarity, RandomSource randomSource)
 	{
-		return tables.get(rarity).sample(randomSource);
+		WeightedList<RewardTable> table = tables.get(rarity);
+		if(table == null || table.isEmpty())
+			return FALLBACK_TABLE;
+
+		return table.sample(randomSource);
 	}
 
 	public static void addTable(RewardTable table)

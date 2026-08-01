@@ -2,8 +2,7 @@ package party.lemons.biomemakeover.crafting;
 
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.VertexSorting;
 import com.mojang.math.Axis;
@@ -11,7 +10,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.model.BookModel;
 import net.minecraft.client.model.geom.ModelLayers;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.network.chat.Component;
@@ -21,7 +19,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import org.joml.Matrix4f;
 import party.lemons.biomemakeover.BiomeMakeover;
-import party.lemons.biomemakeover.Constants;
 import party.lemons.biomemakeover.block.blockentity.AltarBlockEntity;
 
 import java.util.Random;
@@ -29,7 +26,7 @@ import java.util.Random;
 public class AltarScreen extends AbstractContainerScreen<AltarMenu> {
     private static final ResourceLocation TEXTURE = BiomeMakeover.ID("textures/gui/altar.png");
     private static final int[] GYLPH_PROGRESS = new int[]{0, 6, 11, 16, 20, 24, 29, 35, 42, 49, 54, 54, 54};
-    private static final ResourceLocation BOOK_TEXTURE =  ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID,"textures/entity/enchanting_table_book.png");
+    private static final ResourceLocation BOOK_TEXTURE = ResourceLocation.withDefaultNamespace("textures/entity/enchanting_table_book.png");
     private BookModel bookModel;
     private final Random random = new Random();
 
@@ -115,9 +112,12 @@ public class AltarScreen extends AbstractContainerScreen<AltarMenu> {
             p = 1.0f;
         }
         this.bookModel.setupAnim(0.0f, o, p, h);
-        VertexConsumer vertexConsumer = this.minecraft.renderBuffers().bufferSource().getBuffer(this.bookModel.renderType(BOOK_TEXTURE));
-        this.bookModel.renderToBuffer(g.pose(), vertexConsumer, 0xF000F0, OverlayTexture.NO_OVERLAY);
-        this.minecraft.renderBuffers().bufferSource().endBatch();
+        try (ByteBufferBuilder byteBufferBuilder = new ByteBufferBuilder(256)) {
+            MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(byteBufferBuilder);
+            VertexConsumer vertexConsumer = bufferSource.getBuffer(this.bookModel.renderType(BOOK_TEXTURE));
+            this.bookModel.renderToBuffer(g.pose(), vertexConsumer, 0xF000F0, OverlayTexture.NO_OVERLAY);
+            bufferSource.endBatch();
+        }
         g.pose().popPose();
         RenderSystem.viewport(0, 0, this.minecraft.getWindow().getWidth(), this.minecraft.getWindow().getHeight());
         RenderSystem.restoreProjectionMatrix();

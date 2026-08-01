@@ -2,6 +2,7 @@
 package party.lemons.biomemakeover.crafting.witch.data.reward;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -44,7 +45,7 @@ public class ItemQuestRewardItem extends QuestRewardItem
 		return stack;
 	}
 
-	public static final Codec<ItemQuestRewardItem> CODEC = RecordCodecBuilder.create(instance ->
+	public static final MapCodec<ItemQuestRewardItem> CODEC = RecordCodecBuilder.mapCodec(instance ->
 			instance.group(
 							BuiltInRegistries.ITEM.byNameCodec().fieldOf("item").forGetter(i->i.item),
 							CompoundTag.CODEC.optionalFieldOf("tag", new CompoundTag()).forGetter(i->i.tag),

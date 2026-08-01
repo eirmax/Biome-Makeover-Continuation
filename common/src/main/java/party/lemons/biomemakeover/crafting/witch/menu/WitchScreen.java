@@ -114,6 +114,11 @@ public class WitchScreen extends AbstractContainerScreen<WitchMenu>
 
     class QuestButton extends Button
     {
+        private static final int RARITY_ICON_X = 4;
+        private static final int RARITY_ICON_Y = 11;
+        private static final int RARITY_ICON_SIZE = 5;
+        private static final int RARITY_TEXTURE_X = 278;
+        private static final int[] RARITY_TEXTURE_Y = { 7, 12, 17, 22 };
         private final WitchQuest quest;
         private final QuestRarity questRarity;
 
@@ -139,8 +144,8 @@ public class WitchScreen extends AbstractContainerScreen<WitchMenu>
             RenderSystem.enableDepthTest();
             g.blit(TEXTURE, this.getX(), this.getY(), 174, drawTextureIndex * 26, this.width, this.height, 512, 256);
 
-            int rarityY = 7 + (questRarity.ordinal() * 5);
-            g.blit(TEXTURE, getX() + 4, getY() + 11, 278, rarityY, 5, 5, 512, 256);
+            int rarityY = RARITY_TEXTURE_Y[questRarity.ordinal()];
+            g.blit(TEXTURE, getX() + RARITY_ICON_X, getY() + RARITY_ICON_Y, RARITY_TEXTURE_X, rarityY, RARITY_ICON_SIZE, RARITY_ICON_SIZE, 512, 256);
 
             int itemXX = getX() + 11;
             ItemRenderer itemRenderer = minecraft.getItemRenderer();
@@ -157,9 +162,10 @@ public class WitchScreen extends AbstractContainerScreen<WitchMenu>
             int xx = mouseX - getX();
             int yy = mouseY - getY();
 
-            if(isHoveredOrFocused() && xx > 5 && yy < 19)
+            if(isHoveredOrFocused() && yy >= 5 && yy < 21)
             {
-                if(xx > 2 && xx < 9) g.renderTooltip(font, questRarity.getTooltipText(), mouseX, mouseY);
+                if(xx >= RARITY_ICON_X && xx < RARITY_ICON_X + RARITY_ICON_SIZE && yy >= RARITY_ICON_Y && yy < RARITY_ICON_Y + RARITY_ICON_SIZE)
+                    g.renderTooltip(font, questRarity.getTooltipText(), mouseX, mouseY);
 
                 if(xx > 11)
                 {

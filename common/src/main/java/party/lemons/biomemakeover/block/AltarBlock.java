@@ -1,6 +1,5 @@
 package party.lemons.biomemakeover.block;
 
-import dev.architectury.registry.menu.MenuRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -44,7 +43,8 @@ public class AltarBlock extends TBlock implements SimpleWaterloggedBlock, Entity
     public static final VoxelShape BOTTOM_SHAPE = Block.box(2.0D, 0.0D, 2.0D, 14.0D, 2.0D, 14.0D);
     public static final VoxelShape MIDDLE_SHAPE = Block.box(4.0D, 2.0D, 4D, 12.0D, 10.0D, 12.0D);
     public static final VoxelShape TOP_SHAPE = Block.box(2.0D, 10.0D, 2D, 14.0D, 12.0D, 14.0D);
-    public static final VoxelShape SHAPE = Shapes.or(BOTTOM_SHAPE, MIDDLE_SHAPE, TOP_SHAPE);
+    public static final VoxelShape BOOK_SHAPE = Block.box(3.0D, 12.0D, 3.0D, 13.0D, 16.0D, 13.0D);
+    public static final VoxelShape SHAPE = Shapes.or(BOTTOM_SHAPE, MIDDLE_SHAPE, TOP_SHAPE, BOOK_SHAPE);
     public static BooleanProperty ACTIVE = BooleanProperty.create("active");
 
     public AltarBlock(Properties properties)
@@ -55,16 +55,27 @@ public class AltarBlock extends TBlock implements SimpleWaterloggedBlock, Entity
     }
 
     @Override
+    protected InteractionResult useWithoutItem(BlockState blockState, Level level, BlockPos blockPos, Player player, BlockHitResult blockHitResult) {
+        openMenu(blockState, level, blockPos, player);
+        return InteractionResult.sidedSuccess(level.isClientSide());
+    }
+
+    @Override
     protected ItemInteractionResult useItemOn(ItemStack itemStack, BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
+        openMenu(blockState, level, blockPos, player);
+        return ItemInteractionResult.sidedSuccess(level.isClientSide());
+    }
+
+    private void openMenu(BlockState blockState, Level level, BlockPos blockPos, Player player)
+    {
         if(!level.isClientSide())
         {
             MenuProvider screenHandlerFactory = blockState.getMenuProvider(level, blockPos);
             if(screenHandlerFactory != null)
             {
-                MenuRegistry.openMenu((ServerPlayer) player, screenHandlerFactory);
+                ((ServerPlayer) player).openMenu(screenHandlerFactory);
             }
         }
-        return ItemInteractionResult.SUCCESS;
     }
 
     @Nullable
@@ -105,6 +116,13 @@ public class AltarBlock extends TBlock implements SimpleWaterloggedBlock, Entity
             }
             super.onRemove(state, level, pos, newState, moved);
         }
+    }
+
+    @Override
+    public boolean triggerEvent(BlockState state, Level level, BlockPos pos, int type, int data) {
+        super.triggerEvent(state, level, pos, type, data);
+        BlockEntity blockEntity = level.getBlockEntity(pos);
+        return blockEntity != null && blockEntity.triggerEvent(type, data);
     }
 
     @Override

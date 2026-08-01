@@ -5,6 +5,7 @@ import dev.architectury.networking.NetworkManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
@@ -28,6 +29,12 @@ public class WitchMenu extends AbstractContainerMenu {
     public WitchMenu(int containerID, Inventory playerInventory)
     {
         this(containerID, playerInventory, new SimpleWitch(playerInventory.player));
+    }
+
+    public WitchMenu(int containerID, Inventory playerInventory, FriendlyByteBuf buf)
+    {
+        this(containerID, playerInventory);
+        this.witch.setQuestsFromServer(new WitchQuestList(buf));
     }
 
     public WitchMenu(int containerID, Inventory playerInventory, WitchQuestEntity witch)

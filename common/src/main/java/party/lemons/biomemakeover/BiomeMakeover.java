@@ -7,7 +7,6 @@ import dev.architectury.event.events.common.LootEvent;
 import dev.architectury.registry.CreativeTabRegistry;
 import dev.architectury.registry.ReloadListenerRegistry;
 import dev.architectury.registry.registries.RegistrySupplier;
-import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
 import net.minecraft.resources.ResourceLocation;
@@ -20,7 +19,7 @@ import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.predicates.LootItemKilledByPlayerCondition;
-import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceWithEnchantedBonusCondition;
+import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceCondition;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import party.lemons.biomemakeover.crafting.witch.data.QuestCategoryReloadListener;
 import party.lemons.biomemakeover.crafting.witch.data.reward.QuestRewardItem;
@@ -84,20 +83,24 @@ public class BiomeMakeover {
 
         final ResourceLocation evokerTable =  ResourceLocation.fromNamespaceAndPath("minecraft", "entities/evoker");
         final ResourceLocation pillagerOutpostTable =  ResourceLocation.fromNamespaceAndPath("minecraft", "chests/pillager_outpost");
-        LootTableEvents.MODIFY.register((key, tableBuilder, source, registries) -> {
+        LootEvent.MODIFY_LOOT_TABLE.register((key, context, builtin) -> {
+            if(!builtin) {
+                return;
+            }
+
             if(key.location().equals(evokerTable)) {
                 LootPool.Builder pool = LootPool.lootPool().add(
                         LootItem.lootTableItem(BMItems.ILLUNITE_SHARD.get())
                                 .apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0f, 2.0f)))
                                 .when(LootItemKilledByPlayerCondition.killedByPlayer())
-                                .when(LootItemRandomChanceWithEnchantedBonusCondition.randomChanceAndLootingBoost(registries, 0.25F, 0.05F))
+                                .when(LootItemRandomChanceCondition.randomChance(0.25F))
                 );
-                tableBuilder.pool(pool.build());
+                context.addPool(pool);
             }else if(key.location().equals(pillagerOutpostTable)){
                 LootPool.Builder pool = LootPool.lootPool().add(
                         BetterLootTableReference.lootTableReference(BiomeMakeover.ID("pillager_outpost_additional"))
                 );
-                tableBuilder.pool(pool.build());
+                context.addPool(pool);
             }
         });
 

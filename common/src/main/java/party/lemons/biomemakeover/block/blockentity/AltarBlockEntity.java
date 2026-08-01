@@ -113,7 +113,7 @@ public class AltarBlockEntity extends RandomizableContainerBlockEntity implement
         {
             progress = 0;
             working = false;
-            if(!workingPrevious)
+            if(workingPrevious || level.getBlockState(pos).getValue(AltarBlock.ACTIVE))
             {
                 level.setBlock(pos, level.getBlockState(pos).setValue(AltarBlock.ACTIVE, false), 3);
             }
@@ -232,7 +232,12 @@ public class AltarBlockEntity extends RandomizableContainerBlockEntity implement
 
     @Override
     public boolean isEmpty() {
-        return false;
+        for(ItemStack itemStack : inventory) {
+            if(!itemStack.isEmpty()) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override

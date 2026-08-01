@@ -33,9 +33,8 @@ import party.lemons.biomemakeover.crafting.witch.data.QuestCategories;
 import party.lemons.biomemakeover.entity.ai.WitchLookAtCustomerGoal;
 import party.lemons.biomemakeover.entity.ai.WitchStopFollowingCustomerGoal;
 import party.lemons.biomemakeover.init.BMItems;
+import party.lemons.biomemakeover.util.BMLootUtil;
 import party.lemons.biomemakeover.util.extension.LootBlocker;
-import party.lemons.taniwha.util.EntityUtil;
-import party.lemons.taniwha.util.ItemUtil;
 
 @Mixin(Witch.class)
 public abstract class WitchMixin_Quests extends Raider implements WitchQuestEntity {
@@ -50,6 +49,7 @@ public abstract class WitchMixin_Quests extends Raider implements WitchQuestEnti
 
     @Inject(at = @At("TAIL"), method = "<init>")
     public void onConstruct(EntityType<? extends Witch> entityType, Level world, CallbackInfo cbi) {
+        QuestCategories.addSafety();
         quests = new WitchQuestList();
         quests.populate(getRandom());
         replenishTime = getRandom().nextInt(24000);
@@ -69,6 +69,7 @@ public abstract class WitchMixin_Quests extends Raider implements WitchQuestEnti
     protected InteractionResult mobInteract(Player player, InteractionHand hand) {
         if (this.isAlive() && !this.hasCustomer() && canInteract(player)) {
             if (!this.level().isClientSide()) {
+                populateQuestsIfEmpty();
                 despawnShield = 12000;
                 this.setCurrentCustomer(player);
                 this.sendQuests(player, this.getDisplayName());
@@ -85,7 +86,7 @@ public abstract class WitchMixin_Quests extends Raider implements WitchQuestEnti
         super.dropFromLootTable(damageSource, causedByPlayer);
 
         if (!LootBlocker.isBlocked(this)) {
-            EntityUtil.dropFromLootTable(this, WITCH_HAT_TABLE);
+            BMLootUtil.dropEntityLoot(this, WITCH_HAT_TABLE, damageSource);
         }
     }
 
@@ -114,11 +115,24 @@ public abstract class WitchMixin_Quests extends Raider implements WitchQuestEnti
 
     @Override
     public boolean canInteract(Player player) {
+        QuestCategories.addSafety();
         return getTarget() == null && !hasActiveRaid() && playerHasHat(player) && QuestCategories.hasQuests();
     }
 
     public boolean playerHasHat(Player player) {
         return player.getItemBySlot(EquipmentSlot.HEAD).is(BMItems.WITCH_HATS);
+    }
+
+    private void populateQuestsIfEmpty() {
+        if (quests == null) {
+            quests = new WitchQuestList();
+        }
+
+        quests.removeInvalidQuests();
+
+        if (quests.isEmpty() && QuestCategories.hasQuests()) {
+            quests.populate(getRandom());
+        }
     }
 
     @Override

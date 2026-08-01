@@ -43,8 +43,6 @@ public class BiomeMakeoverClient
     @Environment(EnvType.CLIENT)
     public static void init()
     {
-        BMEntities.registerModelLayers();
-
         BMBlockEntities.DIRECTIONAL_DATA.listen((b)->{
             BlockEntityRendererRegistry.register(BMBlockEntities.TAPESTRY.get(), TapestryRenderer::new);
             BlockEntityRendererRegistry.register(BMBlockEntities.ALTAR.get(), AltarRenderer::new);
@@ -54,11 +52,9 @@ public class BiomeMakeoverClient
 
         initColors();
 
-        BMScreens.DIRECTIONAL_DATA.listen((b)->{
-            MenuRegistry.registerScreenFactory(BMScreens.WITCH.get(), WitchScreen::new);
-            MenuRegistry.registerScreenFactory(BMScreens.ALTAR.get(), AltarScreen::new);
-            MenuRegistry.registerScreenFactory(BMScreens.DIRECTIONAL_DATA.get(), DirectionDataScreen::new);
-        });
+        MenuRegistry.registerScreenFactory(BMScreens.WITCH.get(), WitchScreen::new);
+        MenuRegistry.registerScreenFactory(BMScreens.ALTAR.get(), AltarScreen::new);
+        MenuRegistry.registerScreenFactory(BMScreens.DIRECTIONAL_DATA.get(), DirectionDataScreen::new);
 
         registerModels();
     }

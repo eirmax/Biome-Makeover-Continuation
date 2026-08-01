@@ -4,7 +4,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.util.RandomSource;
 import party.lemons.biomemakeover.crafting.witch.data.QuestCategories;
 
@@ -23,7 +23,7 @@ public class WitchQuestList extends ArrayList<WitchQuest>
             add(new WitchQuest(questsTag.getCompound(i), registryAccess));
     }
 
-    public WitchQuestList(RegistryFriendlyByteBuf buffer)
+    public WitchQuestList(FriendlyByteBuf buffer)
     {
         int size = buffer.readByte() & 255;
         for(int i = 0; i < size; i++)
@@ -44,7 +44,12 @@ public class WitchQuestList extends ArrayList<WitchQuest>
         }
     }
 
-    public void toPacket(RegistryFriendlyByteBuf buffer)
+    public void removeInvalidQuests()
+    {
+        removeIf(quest -> !quest.isValid());
+    }
+
+    public void toPacket(FriendlyByteBuf buffer)
     {
         buffer.writeByte((byte) (this.size() & 255));
         for(int i = 0; i < this.size(); i++)

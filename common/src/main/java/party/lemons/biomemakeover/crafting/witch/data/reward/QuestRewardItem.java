@@ -25,8 +25,8 @@ public abstract class QuestRewardItem {
 	public static final Registrar<RewardItemType<?>> REGISTRY = RegistrarManager.get(Constants.MOD_ID).builder(KEY.location(), new RewardItemType<?>[0]).build();
 	public static final DeferredRegister<RewardItemType<?>> REWARD_TYPES = DeferredRegister.create(Constants.MOD_ID, KEY);
 
-	public static final RegistrySupplier<RewardItemType<ItemQuestRewardItem>> ITEM = REWARD_TYPES.register(BiomeMakeover.ID("item"), () -> new RewardItemType<>(ItemQuestRewardItem.CODEC.fieldOf("item")));
-	public static final RegistrySupplier<RewardItemType<PotionQuestRewardItem>> POTION = REWARD_TYPES.register(BiomeMakeover.ID("potion"), () -> new RewardItemType<>(PotionQuestRewardItem.CODEC.fieldOf("potion")));
+	public static final RegistrySupplier<RewardItemType<ItemQuestRewardItem>> ITEM = REWARD_TYPES.register(BiomeMakeover.ID("item"), () -> new RewardItemType<>(ItemQuestRewardItem.CODEC));
+	public static final RegistrySupplier<RewardItemType<PotionQuestRewardItem>> POTION = REWARD_TYPES.register(BiomeMakeover.ID("potion"), () -> new RewardItemType<>(PotionQuestRewardItem.CODEC));
 
 	public static Codec<RewardItemType<?>> byNameCodec() {
 		Codec<RewardItemType<?>> codec = ResourceLocation.CODEC

@@ -31,13 +31,13 @@ public interface WitchQuestEntity
 
     default void sendQuests(Player player, Component text)
     {
-        MenuRegistry.openMenu((ServerPlayer) player, new SimpleMenuProvider((ix, playerInventory, playerEntityx)->new WitchMenu(ix, playerInventory, this), text));
-
-        int menu = player.containerMenu.containerId;
         WitchQuestList quests = this.getQuests();
+        MenuRegistry.openExtendedMenu((ServerPlayer) player,
+                new SimpleMenuProvider((ix, playerInventory, playerEntityx)->new WitchMenu(ix, playerInventory, this), text),
+                quests::toPacket
+        );
+
         if(!quests.isEmpty())
-        {
-            WitchQuestHandler.sendQuests(player, menu, quests);
-        }
+            WitchQuestHandler.sendQuests(player, player.containerMenu.containerId, quests);
     }
 }

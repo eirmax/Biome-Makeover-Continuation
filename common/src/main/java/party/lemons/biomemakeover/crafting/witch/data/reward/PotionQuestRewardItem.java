@@ -1,6 +1,7 @@
 package party.lemons.biomemakeover.crafting.witch.data.reward;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -16,9 +17,9 @@ public class PotionQuestRewardItem extends QuestRewardItem
 {
 	private final Holder<Potion> potion;
 
-	public PotionQuestRewardItem(Potion potion)
+	public PotionQuestRewardItem(Holder<Potion> potion)
 	{
-		this.potion = (Holder<Potion>) potion;
+		this.potion = potion;
 	}
 
 	@Override
@@ -39,9 +40,9 @@ public class PotionQuestRewardItem extends QuestRewardItem
 		return PotionContents.createItemStack(new ItemStack(it).getItem(), potion);
 	}
 
-	public static final Codec<PotionQuestRewardItem> CODEC = RecordCodecBuilder.create(instance ->
+	public static final MapCodec<PotionQuestRewardItem> CODEC = RecordCodecBuilder.mapCodec(instance ->
 			instance.group(
-							BuiltInRegistries.POTION.byNameCodec().fieldOf("potion").forGetter(i-> i.potion.value())
+							BuiltInRegistries.POTION.holderByNameCodec().fieldOf("potion").forGetter(i-> i.potion)
 					)
 					.apply(instance, PotionQuestRewardItem::new));
 }

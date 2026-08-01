@@ -19,7 +19,7 @@ public class BMScreens
     private static final DeferredRegister<MenuType<?>> MENUS = DeferredRegister.create(Constants.MOD_ID, Registries.MENU);
 
 
-    public static final RegistrySupplier<MenuType<WitchMenu>> WITCH = MENUS.register(BiomeMakeover.ID("witch"), ()->new MenuType<>(WitchMenu::new, FeatureFlags.VANILLA_SET));
+    public static final RegistrySupplier<MenuType<WitchMenu>> WITCH = MENUS.register(BiomeMakeover.ID("witch"), ()->MenuRegistry.ofExtended(WitchMenu::new));
     public static final RegistrySupplier<MenuType<AltarMenu>> ALTAR = MENUS.register(BiomeMakeover.ID("altar"), ()->new MenuType<>(AltarMenu::new, FeatureFlags.VANILLA_SET));
     public static final RegistrySupplier<MenuType<DirectionalDataMenu>> DIRECTIONAL_DATA = MENUS.register(BiomeMakeover.ID("directional_data"), ()->MenuRegistry.ofExtended((id, inventory, buf) -> new DirectionalDataMenu(id, buf)));
 

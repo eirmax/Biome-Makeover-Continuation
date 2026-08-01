@@ -1,14 +1,18 @@
 package party.lemons.biomemakeover.crafting.witch;
 
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
 import java.util.List;
 
@@ -42,7 +46,7 @@ public class WitchQuest
         }
     }
 
-    public WitchQuest(RegistryFriendlyByteBuf buffer)
+    public WitchQuest(FriendlyByteBuf buffer)
     {
         rarityPoints = buffer.readFloat();
         int length = buffer.readByte() & 255;
@@ -50,13 +54,28 @@ public class WitchQuest
 
         for(int i = 0; i < length; i++)
         {
-            requiredItems[i] = ItemStack.STREAM_CODEC.decode(buffer);
+            Item item = BuiltInRegistries.ITEM.get(ResourceLocation.parse(buffer.readUtf()));
+            requiredItems[i] = new ItemStack(item, buffer.readVarInt());
         }
     }
 
     public ItemStack[] getRequiredItems()
     {
         return requiredItems;
+    }
+
+    public boolean isValid()
+    {
+        if(requiredItems.length == 0)
+            return false;
+
+        for(ItemStack stack : requiredItems)
+        {
+            if(stack.isEmpty() || stack.is(Items.AIR))
+                return false;
+        }
+
+        return true;
     }
 
     public boolean hasItems(Container inventory)
@@ -125,6 +144,9 @@ public class WitchQuest
         ListTag items = new ListTag();
         for(int i = 0; i < requiredItems.length; i++)
         {
+            if(requiredItems[i].isEmpty())
+                continue;
+
             CompoundTag itemTag = new CompoundTag();
             requiredItems[i].save(registryAccess, itemTag);
             items.add(itemTag);
@@ -133,7 +155,7 @@ public class WitchQuest
         return tag;
     }
 
-    public void toPacket(RegistryFriendlyByteBuf buffer)
+    public void toPacket(FriendlyByteBuf buffer)
     {
         buffer.writeFloat(rarityPoints);
 
@@ -142,7 +164,8 @@ public class WitchQuest
 
         for(int i = 0; i < length; i++)
         {
-            ItemStack.STREAM_CODEC.encode(buffer, requiredItems[i]);
+            buffer.writeUtf(BuiltInRegistries.ITEM.getKey(requiredItems[i].getItem()).toString());
+            buffer.writeVarInt(requiredItems[i].getCount());
         }
     }
 }
