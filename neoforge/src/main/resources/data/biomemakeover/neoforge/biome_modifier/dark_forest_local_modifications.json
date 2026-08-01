@@ -1,0 +1,8 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#biomemakeover:dark_forest",
+  "features": [
+    "biomemakeover:dark_forest/mesmerite_fissure"
+  ],
+  "step": "local_modifications"
+}

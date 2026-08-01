@@ -1,0 +1,10 @@
+{
+  "type": "neoforge:remove_features",
+  "biomes": "#biomemakeover:swamps",
+  "features": [
+    "minecraft:trees_swamp"
+  ],
+  "steps": [
+    "vegetal_decoration"
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#biomemakeover:dark_forest",
+  "features": [
+    "biomemakeover:dark_forest/grass",
+    "biomemakeover:dark_forest/tall_grass",
+    "biomemakeover:dark_forest/flowers"
+  ],
+  "step": "vegetal_decoration"
+}

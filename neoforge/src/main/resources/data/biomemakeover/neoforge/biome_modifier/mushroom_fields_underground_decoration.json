@@ -1,0 +1,8 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#biomemakeover:mushroom_fields",
+  "features": [
+    "biomemakeover:mushroom_fields/underground_mycelium"
+  ],
+  "step": "underground_decoration"
+}

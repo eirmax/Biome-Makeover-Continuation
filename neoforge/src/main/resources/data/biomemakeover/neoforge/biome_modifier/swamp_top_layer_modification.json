@@ -1,0 +1,9 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#biomemakeover:swamps",
+  "features": [
+    "biomemakeover:swamp/peat",
+    "biomemakeover:swamp/reeds"
+  ],
+  "step": "top_layer_modification"
+}

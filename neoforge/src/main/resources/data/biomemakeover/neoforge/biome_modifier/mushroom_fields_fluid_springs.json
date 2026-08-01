@@ -1,0 +1,8 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#biomemakeover:mushroom_fields",
+  "features": [
+    "biomemakeover:mushroom_fields/blighted_balsa_trees"
+  ],
+  "step": "fluid_springs"
+}

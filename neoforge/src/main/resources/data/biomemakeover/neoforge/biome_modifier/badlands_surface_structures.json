@@ -1,0 +1,8 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#biomemakeover:badlands",
+  "features": [
+    "biomemakeover:badlands/surface_fossil"
+  ],
+  "step": "surface_structures"
+}

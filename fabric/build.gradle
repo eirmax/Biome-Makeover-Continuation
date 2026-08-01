@@ -30,9 +30,13 @@ dependencies {
 
    include("eirmax:taniwha-remaked-fabric:${rootProject.taniwha_version}"){
         transitive = true;
+        exclude group: "me.shedaniel"
+        exclude group: "mezz.jei"
    }
     modApi("eirmax:taniwha-remaked-fabric:${rootProject.taniwha_version}"){
         transitive = true;
+        exclude group: "me.shedaniel"
+        exclude group: "mezz.jei"
     }
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }

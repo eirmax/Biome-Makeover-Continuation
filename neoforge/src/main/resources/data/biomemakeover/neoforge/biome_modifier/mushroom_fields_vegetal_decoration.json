@@ -1,0 +1,16 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#biomemakeover:mushroom_fields",
+  "features": [
+    "biomemakeover:mushroom_fields/green_glowshrooms",
+    "biomemakeover:mushroom_fields/purple_glowshrooms",
+    "biomemakeover:mushroom_fields/orange_glowshrooms",
+    "biomemakeover:mushroom_fields/mycelium_sprouts",
+    "biomemakeover:mushroom_fields/mycelium_roots",
+    "biomemakeover:mushroom_fields/underground_huge_glowshrooms",
+    "biomemakeover:mushroom_fields/tall_brown_mushrooms",
+    "biomemakeover:mushroom_fields/tall_red_mushrooms",
+    "biomemakeover:mushroom_fields/wild_mushrooms"
+  ],
+  "step": "vegetal_decoration"
+}

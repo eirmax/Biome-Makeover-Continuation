@@ -3,6 +3,8 @@ dependencies {
     modApi "dev.architectury:architectury:${rootProject.architectury_version}"
     modApi("eirmax:taniwha-remaked-fabric:${rootProject.taniwha_version}"){
         transitive = true
+        exclude group: "me.shedaniel"
+        exclude group: "mezz.jei"
     }
 }
 

@@ -37,15 +37,23 @@ allprojects {
 
     def apikeyPropertiesFile = rootProject.file("secret/secrets.properties");
     def apikeyProperties = new Properties()
-    apikeyProperties.load(new FileInputStream(apikeyPropertiesFile))
+    if (apikeyPropertiesFile.exists()) {
+        apikeyProperties.load(new FileInputStream(apikeyPropertiesFile))
+    }
 
 
     repositories {
-        maven {
-            url = uri("https://maven.pkg.github.com/eirmax/taniwha-remaked")
-            credentials {
-                username = apikeyProperties['gpr.user'] ?: System.getenv("USERNAME")
-                password = apikeyProperties['gpr.key'] ?: System.getenv("TOKEN")
+        mavenLocal()
+
+        def githubUser = apikeyProperties['gpr.user'] ?: System.getenv("GITHUB_ACTOR") ?: System.getenv("USERNAME")
+        def githubToken = apikeyProperties['gpr.key'] ?: System.getenv("GITHUB_TOKEN") ?: System.getenv("TOKEN")
+        if (githubUser && githubToken) {
+            maven {
+                url = uri("https://maven.pkg.github.com/eirmax/taniwha-remaked")
+                credentials {
+                    username = githubUser
+                    password = githubToken
+                }
             }
         }
         maven { url "https://maven.shedaniel.me" }

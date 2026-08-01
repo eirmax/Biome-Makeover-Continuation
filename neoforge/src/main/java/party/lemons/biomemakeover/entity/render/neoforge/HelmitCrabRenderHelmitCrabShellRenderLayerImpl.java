@@ -85,10 +85,9 @@ public class HelmitCrabRenderHelmitCrabShellRenderLayerImpl
 				1,
 				type == null ? "" : String.format(Locale.ROOT, "_%s", type)
 		);
-		s1 = s1; // Keep original texture path for NeoForge compatibility
 		ResourceLocation resourcelocation = ARMOR_LOCATION_CACHE.get(s1);
 		if (resourcelocation == null) {
-			resourcelocation =  ResourceLocation.withDefaultNamespace(s1);
+			resourcelocation =  ResourceLocation.parse(s1);
 			ARMOR_LOCATION_CACHE.put(s1, resourcelocation);
 		}
 

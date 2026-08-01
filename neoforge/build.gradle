@@ -26,9 +26,13 @@ dependencies {
 
     modApi("eirmax:taniwha-remaked-neoforge:${rootProject.taniwha_version}"){
         transitive = true;
+        exclude group: "me.shedaniel"
+        exclude group: "mezz.jei"
     }
     include("eirmax:taniwha-remaked-neoforge:${rootProject.taniwha_version}"){
         transitive = true;
+        exclude group: "me.shedaniel"
+        exclude group: "mezz.jei"
     }
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }

@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "package": "party.lemons.biomemakeover.mixin.forge",
+  "compatibilityLevel": "JAVA_21",
+  "minVersion": "0.8",
+  "client": [],
+  "mixins": [
+    "bm.HatItemForgeMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
