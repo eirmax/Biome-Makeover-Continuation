@@ -2,6 +2,7 @@ package party.lemons.biomemakeover.level.feature.foliage;
 
 import com.mojang.datafixers.Products;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -89,7 +90,7 @@ public class WillowFoliagePlacer extends FoliagePlacer
         }
     }
 
-    public static final Codec<WillowFoliagePlacer> CODEC = RecordCodecBuilder.create(
+    public static final MapCodec<WillowFoliagePlacer> CODEC = RecordCodecBuilder.mapCodec(
             (instance)->foliagePlacerParts(instance)
                     .and(
                             Codec.intRange(0, 16).fieldOf("height").forGetter((cdc)->cdc.height)

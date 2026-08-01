@@ -22,10 +22,7 @@ public class ReedFeature extends Feature<NoneFeatureConfiguration>
     private static final int TRIES = 20;
     private static final float SPREAD_XZ = 5.64f;
     private static final float SPREAD_Y = 1.23f;
-    private static final BlockStateProvider STATES = new WeightedStateProvider(SimpleWeightedRandomList .<BlockState>builder()
-                .add(BMBlocks.REED.get().defaultBlockState(), 10)
-                .add(BMBlocks.CATTAIL.get().defaultBlockState(), 5)
-        );
+
     public ReedFeature(Codec<NoneFeatureConfiguration> codec)
     {
         super(codec);
@@ -41,10 +38,14 @@ public class ReedFeature extends Feature<NoneFeatureConfiguration>
 
         int successes = 0;
         BlockPos.MutableBlockPos placePos = new BlockPos.MutableBlockPos();
+        BlockStateProvider states = new WeightedStateProvider(SimpleWeightedRandomList.<BlockState>builder()
+                .add(BMBlocks.REED.get().defaultBlockState(), 10)
+                .add(BMBlocks.CATTAIL.get().defaultBlockState(), 5)
+        );
 
         for(int j = 0; j < TRIES; ++j)
         {
-            BlockState blockState = STATES.getState(random, placePos);
+            BlockState blockState = states.getState(random, placePos);
 
             SpreadUtil.sampleEllipsoidalOutwardlyFadingSpread(random, SPREAD_XZ, SPREAD_Y,
                     (dx, dy, dz) -> placePos.setWithOffset(centerPos, Math.round(dx), Math.round(dy), Math.round(dz))

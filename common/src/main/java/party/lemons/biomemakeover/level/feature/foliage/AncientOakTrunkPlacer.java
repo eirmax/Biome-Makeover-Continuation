@@ -1,7 +1,7 @@
 package party.lemons.biomemakeover.level.feature.foliage;
 
 import com.google.common.collect.Lists;
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
@@ -151,6 +151,6 @@ public class AncientOakTrunkPlacer extends TrunkPlacer
         }
     }
 
-    public static final Codec<AncientOakTrunkPlacer> CODEC = RecordCodecBuilder.create((instance)->trunkPlacerParts(instance).apply(instance, AncientOakTrunkPlacer::new));
+    public static final MapCodec<AncientOakTrunkPlacer> CODEC = RecordCodecBuilder.mapCodec((instance)->trunkPlacerParts(instance).apply(instance, AncientOakTrunkPlacer::new));
 
 }

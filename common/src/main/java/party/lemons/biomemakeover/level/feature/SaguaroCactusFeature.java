@@ -13,10 +13,9 @@ public class SaguaroCactusFeature extends Feature<NoneFeatureConfiguration> {
         super(codec);
     }
 
-    private final SaguaroCactusBlock CACTUS = (SaguaroCactusBlock) BMBlocks.SAGUARO_CACTUS.get();
-
     @Override
     public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> ctx) {
-        return SaguaroCactusBlock.generateCactus(CACTUS, ctx.level(), ctx.random().nextBoolean(), ctx.origin(), ctx.random(), false);
+        SaguaroCactusBlock cactus = (SaguaroCactusBlock) BMBlocks.SAGUARO_CACTUS.get();
+        return SaguaroCactusBlock.generateCactus(cactus, ctx.level(), ctx.random().nextBoolean(), ctx.origin(), ctx.random(), false);
     }
 }

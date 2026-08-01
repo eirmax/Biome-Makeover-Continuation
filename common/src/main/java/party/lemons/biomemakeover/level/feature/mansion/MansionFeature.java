@@ -5,6 +5,7 @@ import com.mojang.datafixers.util.Either;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.architectury.registry.registries.RegistrySupplier;
 import net.minecraft.core.BlockPos;
@@ -37,8 +38,10 @@ import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSeriali
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePiecesBuilder;
 import net.minecraft.world.level.levelgen.structure.templatesystem.BlockIgnoreProcessor;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
 import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.phys.AABB;
 import party.lemons.biomemakeover.block.AbstractTapestryBlock;
 import party.lemons.biomemakeover.block.AbstractTapestryWallBlock;
 import party.lemons.biomemakeover.block.IvyBlock;
@@ -59,15 +62,12 @@ import java.util.stream.Collectors;
 
 public class MansionFeature extends Structure
 {
-    public static final Codec<MansionFeature> CODEC = RecordCodecBuilder.create(i->
+    public static final MapCodec<MansionFeature> CODEC = RecordCodecBuilder.mapCodec(i->
             i.group(
                     settingsCodec(i),
                     MansionTemplates.CODEC.fieldOf("templates").forGetter(m->m.templates),
                     MansionDetails.CODEC.fieldOf("details").forGetter(m->m.details)
             ).apply(i, MansionFeature::new));
-
-    public static final BlockIgnoreProcessor IGNORE_AIR_AND_STRUCTURE_BLOCKS = new BlockIgnoreProcessor(ImmutableList.of(Blocks.AIR, Blocks.STRUCTURE_BLOCK, BMBlocks.DIRECTIONAL_DATA.get()));
-    public static final BlockIgnoreProcessor IGNORE_STRUCTURE_BLOCKS = new BlockIgnoreProcessor(ImmutableList.of(Blocks.STRUCTURE_BLOCK, BMBlocks.DIRECTIONAL_DATA.get()));
 
     private final MansionTemplates templates;
     private final MansionDetails details;
@@ -140,12 +140,14 @@ public class MansionFeature extends Structure
 
     public static class Piece extends TemplateStructurePiece implements DirectionalDataHandler
     {
+        private static final int ADJUDICATOR_DUPLICATE_CHECK_RADIUS = 16;
+
         private final boolean ground;
         private final boolean isWall;
         private final MansionDetails details;
 
         public Piece(MansionDetails details, StructureTemplateManager structureManager, String string, BlockPos blockPos, Rotation rotation, boolean needsGroundAdjustment, boolean isWall) {
-            super(BMStructures.MANSION_PIECE.get(), 0, structureManager, ResourceLocation.withDefaultNamespace(string), string, makeSettings(rotation, isWall), blockPos);
+            super(BMStructures.MANSION_PIECE.get(), 0, structureManager, ResourceLocation.parse(string), string, makeSettings(rotation, isWall), blockPos);
             this.ground = needsGroundAdjustment;
             this.isWall = isWall;
             this.details = details;
@@ -170,7 +172,7 @@ public class MansionFeature extends Structure
         }
 
         private static StructurePlaceSettings makeSettings(Rotation rotation, boolean isWall) {
-            return new StructurePlaceSettings().setIgnoreEntities(true).setRotation(rotation).setMirror(Mirror.NONE).addProcessor(isWall ? IGNORE_AIR_AND_STRUCTURE_BLOCKS : IGNORE_STRUCTURE_BLOCKS);
+            return new StructurePlaceSettings().setIgnoreEntities(true).setRotation(rotation).setMirror(Mirror.NONE).addProcessor(isWall ? ignoreAirAndStructureBlocks() : ignoreStructureBlocks());
         }
 
         @Override
@@ -205,12 +207,28 @@ public class MansionFeature extends Structure
 
         private void spawnBoss(ServerLevelAccessor level, BlockPos pos)
         {
+            if(!level.getLevel().getEntitiesOfClass(AdjudicatorEntity.class, new AABB(pos).inflate(ADJUDICATOR_DUPLICATE_CHECK_RADIUS)).isEmpty()) {
+                level.setBlock(pos, Blocks.AIR.defaultBlockState(), 2);
+                return;
+            }
+
             AdjudicatorEntity boss = BMEntities.ADJUDICATOR.get().create(level.getLevel());
             boss.setPersistenceRequired();
             boss.moveTo(pos, 0.0F, 0.0F);
             boss.finalizeSpawn(level, level.getCurrentDifficultyAt(pos), MobSpawnType.STRUCTURE, null);
             level.addFreshEntityWithPassengers(boss);
             level.setBlock(pos, Blocks.AIR.defaultBlockState(), 2);
+        }
+
+        @Override
+        public void postProcess(WorldGenLevel worldGenLevel, StructureManager structureManager, ChunkGenerator chunkGenerator, RandomSource randomSource, BoundingBox boundingBox, ChunkPos chunkPos, BlockPos blockPos) {
+            super.postProcess(worldGenLevel, structureManager, chunkGenerator, randomSource, boundingBox, chunkPos, blockPos);
+
+            for(StructureTemplate.StructureBlockInfo info : this.template.filterBlocks(this.templatePosition, this.placeSettings, Blocks.STRUCTURE_BLOCK)) {
+                if(info.nbt() != null) {
+                    handleDataMarker(info.nbt().getString("metadata"), info.pos(), worldGenLevel, randomSource, boundingBox);
+                }
+            }
         }
 
         @Override
@@ -250,7 +268,7 @@ public class MansionFeature extends Structure
                     world.addFreshEntityWithPassengers(e);
                     break;
                 case "shroom":
-                      world.setBlock(pos, SHROOMS[random.nextInt(SHROOMS.length)], 3);
+                      world.setBlock(pos, randomShroom(random), 3);
                     break;
             }
 
@@ -276,27 +294,30 @@ public class MansionFeature extends Structure
                     StringBuilder name = new StringBuilder();
                     for(int i = 3; i < splits.length; i++)
                         name.append(splits[i]).append("_");
-                    setState = world.registryAccess().registry(Registries.BLOCK).get().get(ResourceLocation.withDefaultNamespace(name.substring(0, name.length() - 1))).defaultBlockState();
+                    ResourceLocation blockId = normalizeMetadataBlockId(ResourceLocation.parse(name.substring(0, name.length() - 1)));
+                    setState = world.registryAccess().registry(Registries.BLOCK).get().get(blockId).defaultBlockState();
                 }
 
                 if(random.nextInt(100) <= chance)
                 {
-                    ResourceKey<LootTable> tableID = null;
-                    switch (table) {
-                        case "arrow" ->  details.loot().arrow();
-                        case "dungeonjunk" ->  details.loot().dungeon_junk();
+                    ResourceLocation tableID = switch (table) {
+                        case "arrow" -> details.loot().arrow();
+                        case "dungeonjunk" -> details.loot().dungeon_junk();
                         case "dungeon" -> details.loot().dungeon_standard();
-                        case "dungeongood" ->  details.loot().dungeonGood();
+                        case "dungeongood" -> details.loot().dungeonGood();
                         case "junk" -> details.loot().junk();
                         case "standard", "common" -> details.loot().standard();
-                        case "loot_good", "good" ->  details.loot().good();
-                        default -> System.out.println(table);
-                    }
+                        case "loot_good", "good" -> details.loot().good();
+                        default -> {
+                            System.out.println(table);
+                            yield null;
+                        }
+                    };
 
                     BlockEntity be = world.getBlockEntity(offsetPos);
-                    if(be instanceof RandomizableContainerBlockEntity container)
+                    if(tableID != null && be instanceof RandomizableContainerBlockEntity container)
                     {
-                        container.setLootTable(tableID, random.nextLong());
+                        container.setLootTable(ResourceKey.create(Registries.LOOT_TABLE, tableID), random.nextLong());
                     }
                 }
                 else
@@ -338,6 +359,13 @@ public class MansionFeature extends Structure
                     if(details != null)
                         handleSpawning(meta, world, pos, details.mobs().allays());
             }
+        }
+
+        private static ResourceLocation normalizeMetadataBlockId(ResourceLocation id) {
+            if(id.getNamespace().equals("minecraft") && id.getPath().equals("stone_brick"))
+                return ResourceLocation.fromNamespaceAndPath("minecraft", "stone_bricks");
+
+            return id;
         }
 
         private void handleSpawning(String meta, WorldGenLevel world, BlockPos pos, List<EntityType<?>> pool)
@@ -451,5 +479,16 @@ public class MansionFeature extends Structure
         }
     }
 
-    private static final BlockState[] SHROOMS = {Blocks.RED_MUSHROOM.defaultBlockState(), Blocks.BROWN_MUSHROOM.defaultBlockState(), BMBlocks.WILD_MUSHROOMS.get().defaultBlockState()};
+    private static BlockIgnoreProcessor ignoreAirAndStructureBlocks() {
+        return new BlockIgnoreProcessor(ImmutableList.of(Blocks.AIR, BMBlocks.DIRECTIONAL_DATA.get()));
+    }
+
+    private static BlockIgnoreProcessor ignoreStructureBlocks() {
+        return new BlockIgnoreProcessor(ImmutableList.of(BMBlocks.DIRECTIONAL_DATA.get()));
+    }
+
+    private static BlockState randomShroom(RandomSource random) {
+        BlockState[] shrooms = {Blocks.RED_MUSHROOM.defaultBlockState(), Blocks.BROWN_MUSHROOM.defaultBlockState(), BMBlocks.WILD_MUSHROOMS.get().defaultBlockState()};
+        return shrooms[random.nextInt(shrooms.length)];
+    }
 }

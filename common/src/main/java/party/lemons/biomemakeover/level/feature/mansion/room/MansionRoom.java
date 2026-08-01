@@ -130,9 +130,9 @@ public class MansionRoom
                     else if(layout.get(Direction.SOUTH) && layout.get(Direction.WEST))
                         return Rotation.CLOCKWISE_180; // ~
                     else if(layout.get(Direction.EAST) && layout.get(Direction.WEST)) return Rotation.CLOCKWISE_90;
-                    else if(layout.get(Direction.NORTH) && layout.get(Direction.EAST)) return Rotation.NONE; //~!
+                    else if(layout.get(Direction.NORTH) && layout.get(Direction.EAST)) return Rotation.NONE; //
                     else if(layout.get(Direction.NORTH) && layout.get(Direction.WEST))
-                        return Rotation.COUNTERCLOCKWISE_90; //~ !!
+                        return Rotation.COUNTERCLOCKWISE_90;
                 case 3:
                     if(layout.get(Direction.NORTH) && layout.get(Direction.SOUTH) && layout.get(Direction.WEST))
                         return Rotation.CLOCKWISE_180;

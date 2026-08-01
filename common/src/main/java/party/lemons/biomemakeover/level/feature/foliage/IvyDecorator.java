@@ -1,6 +1,6 @@
 package party.lemons.biomemakeover.level.feature.foliage;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
@@ -13,7 +13,7 @@ import party.lemons.biomemakeover.init.BMFeatures;
 public class IvyDecorator extends TreeDecorator
 {
     public static final IvyDecorator INSTANCE = new IvyDecorator();
-    public static final Codec<IvyDecorator> CODEC = Codec.unit(() -> INSTANCE);
+    public static final MapCodec<IvyDecorator> CODEC = MapCodec.unit(() -> INSTANCE);
 
     @Override
     protected TreeDecoratorType<?> type() {

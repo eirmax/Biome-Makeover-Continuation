@@ -6,8 +6,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
@@ -24,7 +26,19 @@ public class DirectionalDataBlock extends DirectionalBlock implements EntityBloc
         super(properties);
     }
 
-    public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
+    @Override
+    protected InteractionResult useWithoutItem(BlockState blockState, Level level, BlockPos blockPos, Player player, BlockHitResult blockHitResult) {
+        openDataMenu(blockState, level, blockPos, player);
+        return InteractionResult.SUCCESS;
+    }
+
+    @Override
+    protected ItemInteractionResult useItemOn(ItemStack itemStack, BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
+        openDataMenu(blockState, level, blockPos, player);
+        return ItemInteractionResult.SUCCESS;
+    }
+
+    private void openDataMenu(BlockState blockState, Level level, BlockPos blockPos, Player player) {
         if(!level.isClientSide() && player.isCreative())
         {
             MenuProvider screenHandlerFactory = blockState.getMenuProvider(level, blockPos);
@@ -40,7 +54,6 @@ public class DirectionalDataBlock extends DirectionalBlock implements EntityBloc
                 }
             }
         }
-        return InteractionResult.SUCCESS;
     }
 
     @Override

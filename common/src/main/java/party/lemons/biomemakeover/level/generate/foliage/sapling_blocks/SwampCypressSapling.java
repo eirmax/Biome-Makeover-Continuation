@@ -5,39 +5,30 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.SaplingBlock;
-import net.minecraft.world.level.block.grower.TreeGrower;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
-import org.jetbrains.annotations.Nullable;
 import party.lemons.biomemakeover.BiomeMakeover;
+import party.lemons.biomemakeover.block.WaterSaplingBlock;
+import party.lemons.biomemakeover.level.generate.foliage.SwampCypressGenerator;
 
-public class SwampCypressSapling extends SaplingBlock {
+public class SwampCypressSapling extends WaterSaplingBlock {
 
     public static final ResourceKey<ConfiguredFeature<?,?>> SMALL = ResourceKey.create(
             Registries.CONFIGURED_FEATURE,
             BiomeMakeover.ID("swamp/swamp_cypress")
     );
 
-    public static final TreeGrower SWAMP_CYPRESS_GROWER = new TreeGrower(
-            "swamp_cypress",
-            java.util.Optional.empty(),
-            java.util.Optional.of(SMALL),
-            java.util.Optional.empty()
-    );
-
-    public SwampCypressSapling(Properties properties) {
-        super(SWAMP_CYPRESS_GROWER, properties);
+    public SwampCypressSapling(int maxDepth, Properties properties) {
+        super(SwampCypressGenerator.SWAMP_CYPRESS, maxDepth, properties);
     }
 
     @Override
     public void advanceTree(ServerLevel level, BlockPos pos, BlockState state, RandomSource random) {
+        if(!canGrowAtDepth(level, pos, state)) return;
+
         if (state.getValue(STAGE) == 0) {
             level.setBlock(pos, state.cycle(STAGE), 4);
         } else {
@@ -46,14 +37,9 @@ public class SwampCypressSapling extends SaplingBlock {
     }
 
     private boolean growCustomTree(ServerLevel serverLevel, ChunkGenerator chunkGenerator, BlockPos blockPos, BlockState blockState, RandomSource random) {
-        ResourceKey<ConfiguredFeature<?,?>> key = this.getConfiguredFeature(random, this.hasFlowers(serverLevel, blockPos));
-        if (key == null) {
-            return false;
-        }
-
         Holder<ConfiguredFeature<?,?>> holder = serverLevel.registryAccess()
                 .registryOrThrow(Registries.CONFIGURED_FEATURE)
-                .getHolder(key)
+                .getHolder(SMALL)
                 .orElse(null);
 
         if(holder != null) {
@@ -63,21 +49,6 @@ public class SwampCypressSapling extends SaplingBlock {
             }
         }
         serverLevel.setBlock(blockPos, blockState, 4);
-        return false;
-    }
-
-    private ResourceKey<ConfiguredFeature<?, ?>> getConfiguredFeature(RandomSource randomSource, boolean hasFlowers) {
-        return SMALL;
-    }
-
-    private boolean hasFlowers(LevelAccessor levelAccessor, BlockPos blockPos) {
-        for (BlockPos blockPos2 : BlockPos.MutableBlockPos.betweenClosed(
-                blockPos.below().north(2).west(2),
-                blockPos.above().south(2).east(2))) {
-            if (levelAccessor.getBlockState(blockPos2).is(BlockTags.FLOWERS)) {
-                return true;
-            }
-        }
         return false;
     }
 }

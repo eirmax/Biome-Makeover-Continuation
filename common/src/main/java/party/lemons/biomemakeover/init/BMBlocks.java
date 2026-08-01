@@ -33,8 +33,8 @@ import party.lemons.biomemakeover.Constants;
 import party.lemons.biomemakeover.block.*;
 import party.lemons.biomemakeover.level.generate.foliage.AncientOakSaplingGenerator;
 import party.lemons.biomemakeover.level.generate.foliage.BalsaSaplingGenerator;
-import party.lemons.biomemakeover.level.generate.foliage.SwampCypressGenerator;
 import party.lemons.biomemakeover.level.generate.foliage.WillowSaplingGenerator;
+import party.lemons.biomemakeover.level.generate.foliage.sapling_blocks.SwampCypressSapling;
 import party.lemons.biomemakeover.util.BMSoundType;
 import party.lemons.taniwha.block.BlockHelper;
 import party.lemons.taniwha.block.DecorationBlockFactory;
@@ -117,7 +117,7 @@ public class BMBlocks
     public static final DecorationBlockFactory BLIGHTED_COBBLESTONE_DECORATION = new DecorationBlockFactory(Constants.MOD_ID, "blighted_cobblestone", BLIGHTED_COBBLESTONE, properties(2F).instrument(NoteBlockInstrument.BASEDRUM).mapColor(MapColor.STONE).requiresCorrectToolForDrops().sound(SoundType.STONE), BMTab.TAB).all().register(BLOCKS, ITEMS);
     public static final RegistrySupplier<Block> BLIGHTED_STONE_BRICKS = registerBlockItem("blighted_stone_bricks", ()->new TBlock(properties(2).sound(SoundType.STONE).instrument(NoteBlockInstrument.BASEDRUM).mapColor(MapColor.STONE).requiresCorrectToolForDrops()));
     public static final DecorationBlockFactory BLIGHTED_STONE_BRICKS_DECORATION = new DecorationBlockFactory(Constants.MOD_ID, "blighted_stone_bricks", BLIGHTED_STONE_BRICKS, properties(2F).instrument(NoteBlockInstrument.BASEDRUM).mapColor(MapColor.STONE).requiresCorrectToolForDrops().sound(SoundType.STONE), BMTab.TAB).all().register(BLOCKS, ITEMS);
-    public static final RegistrySupplier<Block> PAYDIRT = registerBlockItem("paydirt", ()->new TBlock(properties(1.4F).requiresCorrectToolForDrops().sound(SoundType.GRAVEL).mapColor(MapColor.TERRACOTTA_GRAY)));
+    public static final RegistrySupplier<Block> PAYDIRT = registerBlockItem("paydirt", ()->new PaydirtBlock(properties(1.4F).randomTicks().requiresCorrectToolForDrops().sound(SoundType.GRAVEL).mapColor(MapColor.TERRACOTTA_GRAY)));
 
     public static final RegistrySupplier<Block> TUMBLEWEED = BLOCKS.register(BiomeMakeover.ID("tumbleweed"), ()->new Block(properties(0).mapColor(MapColor.COLOR_YELLOW)));
 
@@ -134,7 +134,7 @@ public class BMBlocks
 
     public static final RegistrySupplier<Block> WILLOWING_BRANCHES = registerBlockItem("willowing_branches", ()->new WillowingBranchesBlock(properties(0.1F).offsetType(BlockBehaviour.OffsetType.XZ).pushReaction(PushReaction.DESTROY).randomTicks().sound(SoundType.VINE).noCollission().noOcclusion().ignitedByLava().mapColor(MapColor.PLANT)).modifiers(RTypeModifier.create(RType.CUTOUT_MIPPED), new FlammableModifier(15, 100)));
     public static final RegistrySupplier<Block> WILLOW_SAPLING = registerBlockItem("willow_sapling", ()->new WaterSaplingBlock(WillowSaplingGenerator.WILLOW, 1, properties(0).noCollission().randomTicks().pushReaction(PushReaction.DESTROY).instabreak().mapColor(MapColor.PLANT).sound(SoundType.GRASS)).modifiers(RTypeModifier.CUTOUT));
-    public static final RegistrySupplier<Block> SWAMP_CYPRESS_SAPLING = registerBlockItem("swamp_cypress_sapling", () -> new WaterSaplingBlock(SwampCypressGenerator.SWAMP_CYPRESS, 3, properties(0).pushReaction(PushReaction.DESTROY).noCollission().randomTicks().mapColor(MapColor.PLANT).instabreak().sound(SoundType.GRASS)).modifiers(RTypeModifier.CUTOUT));
+    public static final RegistrySupplier<Block> SWAMP_CYPRESS_SAPLING = registerBlockItem("swamp_cypress_sapling", () -> new SwampCypressSapling(3, properties(0).pushReaction(PushReaction.DESTROY).noCollission().randomTicks().mapColor(MapColor.PLANT).instabreak().sound(SoundType.GRASS)).modifiers(RTypeModifier.CUTOUT));
     public static final RegistrySupplier<Block> PEAT = registerBlockItem("peat", ()->new TBlock(properties(0.5F).sound(SoundType.WET_GRASS).mapColor(MapColor.TERRACOTTA_GRAY)));
     public static final RegistrySupplier<Block> DRIED_PEAT = registerBlockItem("dried_peat", ()->new TBlock(properties(1F).sound(SoundType.NETHERRACK).mapColor(MapColor.TERRACOTTA_BROWN)));
     public static final RegistrySupplier<Block> MOSSY_PEAT = registerBlockItem("mossy_peat", ()->new TSpreadableBlock(properties(0.5F).randomTicks().sound(SoundType.WET_GRASS), PEAT));

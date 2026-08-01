@@ -1,6 +1,6 @@
 package party.lemons.biomemakeover.level.feature.foliage;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
@@ -13,7 +13,7 @@ import party.lemons.biomemakeover.init.BMFeatures;
 
 public class HangingLeavesDecorator extends TreeDecorator
 {
-    public static final Codec<HangingLeavesDecorator> CODEC =BlockStateProvider.CODEC.fieldOf("provider").xmap(HangingLeavesDecorator::new, d -> d.provider).codec();
+    public static final MapCodec<HangingLeavesDecorator> CODEC =BlockStateProvider.CODEC.fieldOf("provider").xmap(HangingLeavesDecorator::new, d -> d.provider);
 
     public final BlockStateProvider provider;
 

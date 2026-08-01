@@ -1,6 +1,6 @@
 package party.lemons.biomemakeover.level.generate;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.LevelReader;
@@ -20,7 +20,7 @@ import party.lemons.biomemakeover.util.RandomUtil;
 public class GhostTownLootProcessor extends StructureProcessor
 {
 	public static final GhostTownLootProcessor INSTANCE = new GhostTownLootProcessor();
-	public static final Codec<GhostTownLootProcessor> CODEC = Codec.unit(()->INSTANCE);
+	public static final MapCodec<GhostTownLootProcessor> CODEC = MapCodec.unit(()->INSTANCE);
 
 	@Nullable
 	@Override

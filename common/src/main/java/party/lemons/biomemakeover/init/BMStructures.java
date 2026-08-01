@@ -18,14 +18,14 @@ public class BMStructures
 	private static final DeferredRegister<StructureType<?>> STRUCTURE_TYPES = DeferredRegister.create(Constants.MOD_ID, Registries.STRUCTURE_TYPE);
 	private static final DeferredRegister<StructurePieceType> STRUCTURE_PIECES = DeferredRegister.create(Constants.MOD_ID, Registries.STRUCTURE_PIECE);
 
-	public static RegistrySupplier<StructureType<MansionFeature>> MANSION = STRUCTURE_TYPES.register(BiomeMakeover.ID("mansion"), ()->()->MansionFeature.CODEC.fieldOf("mansion"));
+	public static RegistrySupplier<StructureType<MansionFeature>> MANSION = STRUCTURE_TYPES.register(BiomeMakeover.ID("mansion"), ()->()->MansionFeature.CODEC);
 	public static final RegistrySupplier<StructurePieceType> MANSION_PIECE = STRUCTURE_PIECES.register(BiomeMakeover.ID("mansion"), ()->MansionFeature.Piece::new);
 
-	public static RegistrySupplier<StructureType<SunkenRuinFeature>> SUNKEN_RUIN = STRUCTURE_TYPES.register(BiomeMakeover.ID("sunken_ruin"), ()->()->SunkenRuinFeature.CODEC.fieldOf("sunken_ruin"));
+	public static RegistrySupplier<StructureType<SunkenRuinFeature>> SUNKEN_RUIN = STRUCTURE_TYPES.register(BiomeMakeover.ID("sunken_ruin"), ()->()->SunkenRuinFeature.CODEC);
 	public static final RegistrySupplier<StructurePieceType> SUNKEN_RUIN_PIECE = STRUCTURE_PIECES.register(BiomeMakeover.ID("sunken_ruin"), ()->SunkenRuinFeature.SunkenRuinPiece::new);
-	public static final RegistrySupplier<StructureProcessorType<GhostTownLootProcessor>> GHOST_TOWN_LOOT_PROCESSOR = PROCESSOR_TYPES.register(BiomeMakeover.ID("ghost_town_loot"), ()->()->GhostTownLootProcessor.CODEC.fieldOf("ghost_town_loot"));
+	public static final RegistrySupplier<StructureProcessorType<GhostTownLootProcessor>> GHOST_TOWN_LOOT_PROCESSOR = PROCESSOR_TYPES.register(BiomeMakeover.ID("ghost_town_loot"), ()->()->GhostTownLootProcessor.CODEC);
 
-	public static final RegistrySupplier<StructureProcessorType<FillBookshelvesProcessor>> FILL_BOOKSHELVES = PROCESSOR_TYPES.register(BiomeMakeover.ID("fill_bookshelves"), ()->()-> FillBookshelvesProcessor.CODEC.fieldOf("fill_bookshelves"));
+	public static final RegistrySupplier<StructureProcessorType<FillBookshelvesProcessor>> FILL_BOOKSHELVES = PROCESSOR_TYPES.register(BiomeMakeover.ID("fill_bookshelves"), ()->()-> FillBookshelvesProcessor.CODEC);
 
 	public static void init()
 	{

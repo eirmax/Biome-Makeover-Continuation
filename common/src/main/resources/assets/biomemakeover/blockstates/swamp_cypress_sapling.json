@@ -1,6 +1,15 @@
 {
   "variants": {
-    "": {
+    "stage=0,waterlogged=false": {
+      "model": "biomemakeover:block/swamp_cypress_sapling"
+    },
+    "stage=0,waterlogged=true": {
+      "model": "biomemakeover:block/swamp_cypress_sapling"
+    },
+    "stage=1,waterlogged=false": {
+      "model": "biomemakeover:block/swamp_cypress_sapling"
+    },
+    "stage=1,waterlogged=true": {
       "model": "biomemakeover:block/swamp_cypress_sapling"
     }
   }

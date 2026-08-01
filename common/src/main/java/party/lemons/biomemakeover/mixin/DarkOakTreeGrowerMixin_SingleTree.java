@@ -16,6 +16,7 @@ import party.lemons.biomemakeover.init.BMFeatures;
 public class DarkOakTreeGrowerMixin_SingleTree {
     @Inject(at = @At("HEAD"), method = "getConfiguredFeature", cancellable = true)
     protected void getConfiguredFeature(RandomSource randomSource, boolean bl, CallbackInfoReturnable<ResourceKey<ConfiguredFeature<?, ?>>> cbi) {
-        cbi.setReturnValue(BMFeatures.SINGLE_DARK_OAK_KEY);
+        if((Object) this == TreeGrower.DARK_OAK)
+            cbi.setReturnValue(BMFeatures.SINGLE_DARK_OAK_KEY);
     }
 }

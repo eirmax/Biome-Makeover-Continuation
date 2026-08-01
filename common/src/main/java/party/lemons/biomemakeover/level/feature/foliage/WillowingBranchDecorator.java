@@ -1,6 +1,6 @@
 package party.lemons.biomemakeover.level.feature.foliage;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.tags.BlockTags;
@@ -17,7 +17,7 @@ import party.lemons.biomemakeover.init.BMFeatures;
 
 public class WillowingBranchDecorator extends TreeDecorator {
     public static final WillowingBranchDecorator INSTANCE = new WillowingBranchDecorator();
-    public static final Codec<WillowingBranchDecorator> CODEC = Codec.unit(() -> INSTANCE);
+    public static final MapCodec<WillowingBranchDecorator> CODEC = MapCodec.unit(() -> INSTANCE);
 
     @Override
     protected TreeDecoratorType<?> type() {

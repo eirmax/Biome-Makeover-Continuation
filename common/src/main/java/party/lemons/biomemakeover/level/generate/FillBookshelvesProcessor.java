@@ -1,6 +1,7 @@
 package party.lemons.biomemakeover.level.generate;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -36,7 +37,7 @@ import party.lemons.taniwha.util.MathUtils;
 
 public class FillBookshelvesProcessor extends StructureProcessor
 {
-	public static final Codec<FillBookshelvesProcessor> CODEC =  RecordCodecBuilder.create(instance ->
+	public static final MapCodec<FillBookshelvesProcessor> CODEC =  RecordCodecBuilder.mapCodec(instance ->
 			instance.group(
 							Codec.FLOAT.fieldOf("replace_chance").forGetter(c->c.replace_chance),
 							Codec.FLOAT.fieldOf("fill_chance").forGetter(c->c.fill_chance),

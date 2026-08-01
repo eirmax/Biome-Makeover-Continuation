@@ -1,7 +1,7 @@
 package party.lemons.biomemakeover.level.feature.foliage;
 
 import com.google.common.collect.Lists;
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -85,5 +85,5 @@ public class BalsaTrunkPlacer extends TrunkPlacer
     }
 
 
-    public static final Codec<BalsaTrunkPlacer> CODEC = RecordCodecBuilder.create((instance)->trunkPlacerParts(instance).apply(instance, BalsaTrunkPlacer::new));
+    public static final MapCodec<BalsaTrunkPlacer> CODEC = RecordCodecBuilder.mapCodec((instance)->trunkPlacerParts(instance).apply(instance, BalsaTrunkPlacer::new));
 }

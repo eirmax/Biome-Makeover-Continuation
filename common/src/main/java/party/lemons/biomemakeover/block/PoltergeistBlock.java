@@ -132,15 +132,15 @@ public class PoltergeistBlock extends TBlock implements EntityBlock
         if (blockState.getValue(ENABLED) && entity.getY() < (double)blockPos.getY() + 0.8 && entity.getBoundingBox().maxY > (double)blockPos.getY() + 0.25) {
             if(entity instanceof LivingEntity living)
             {
-                MobEffectInstance instance = living.getEffect(BMPotions.POSSESSED);
+                MobEffectInstance instance = living.getEffect(BMPotions.possessed());
                 if(instance == null)
-                    living.addEffect(new MobEffectInstance(BMPotions.POSSESSED, 200, 0));
+                    living.addEffect(new MobEffectInstance(BMPotions.possessed(), 200, 0));
                 else if(instance.getDuration() < maxTime || instance.getAmplifier() < maxLevel){
                     int nextLevel = instance.getAmplifier();
                     if(nextLevel <= maxLevel && living.getRandom().nextInt(100) == 0)
                         nextLevel += 1;
 
-                    MobEffectInstance newEffect = new MobEffectInstance(BMPotions.POSSESSED, instance.getDuration() + 2, nextLevel);
+                    MobEffectInstance newEffect = new MobEffectInstance(BMPotions.possessed(), instance.getDuration() + 2, nextLevel);
                     instance.update(newEffect);
                 }
 

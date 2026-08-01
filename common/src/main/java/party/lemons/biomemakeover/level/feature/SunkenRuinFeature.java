@@ -2,6 +2,7 @@ package party.lemons.biomemakeover.level.feature;
 
 import com.google.common.collect.Lists;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
@@ -42,7 +43,7 @@ import java.util.Optional;
 
 public class SunkenRuinFeature extends Structure
 {
-    public static final Codec<SunkenRuinFeature> CODEC = RecordCodecBuilder.create(i->{
+    public static final MapCodec<SunkenRuinFeature> CODEC = RecordCodecBuilder.mapCodec(i->{
         return  i.group(settingsCodec(i), Codec.floatRange(0, 1).fieldOf("large_probability").forGetter(s -> s.largeProbability),
                 Codec.floatRange(0, 1).fieldOf("cluster_probability").forGetter(s -> s.clusterProbability)
         ).apply(i, SunkenRuinFeature::new);
