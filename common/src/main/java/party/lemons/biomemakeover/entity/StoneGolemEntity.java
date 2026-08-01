@@ -103,8 +103,8 @@ public class StoneGolemEntity extends AbstractGolem implements CrossbowAttackMob
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
-        getEntityData().set(CHARGING, false);
-        getEntityData().set(PLAYER_CREATED, false);
+        builder.define(CHARGING, false);
+        builder.define(PLAYER_CREATED, false);
     }
 
     @Override
@@ -383,8 +383,10 @@ public class StoneGolemEntity extends AbstractGolem implements CrossbowAttackMob
     }
 
     @Override
-    public double getEyeY() {
-        return 0.6;
+    protected EntityDimensions getDefaultDimensions(Pose pose) {
+        return super.getDefaultDimensions(pose)
+                .withEyeHeight(2.0F)
+                .withAttachments(EntityAttachments.builder().attach(EntityAttachment.PASSENGER, 0.0F, 2.0F, 0.0F));
     }
 
     @Override

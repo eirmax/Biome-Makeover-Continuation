@@ -84,7 +84,7 @@ public class MothEntity extends Monster
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
 
-        getEntityData().set(TARGETING, false);
+        builder.define(TARGETING, false);
     }
 
     public static AttributeSupplier.Builder createAttributes()
@@ -224,7 +224,6 @@ public class MothEntity extends Monster
     protected boolean isFlapping() {
         return true;
     }
-
 
     @Override
     public void tick() {

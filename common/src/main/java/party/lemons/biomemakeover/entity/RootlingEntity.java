@@ -40,8 +40,8 @@ import party.lemons.biomemakeover.entity.event.EntityEvent;
 import party.lemons.biomemakeover.entity.event.EntityEventBroadcaster;
 import party.lemons.biomemakeover.init.BMEffects;
 import party.lemons.biomemakeover.init.BMItems;
+import party.lemons.biomemakeover.util.BMLootUtil;
 import party.lemons.biomemakeover.util.RandomUtil;
-import party.lemons.taniwha.util.EntityUtil;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -91,8 +91,8 @@ public class RootlingEntity extends Animal implements Shearable, EntityEventBroa
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
-        getEntityData().set(HAS_FLOWER, true);
-        getEntityData().set(FLOWER_TYPE, 0);
+        builder.define(HAS_FLOWER, true);
+        builder.define(FLOWER_TYPE, 0);
     }
 
     @Override
@@ -194,8 +194,9 @@ public class RootlingEntity extends Animal implements Shearable, EntityEventBroa
     }
 
     @Override
-    public double getEyeY() {
-        return super.getEyeY() * 0.6F;
+    protected EntityDimensions getDefaultDimensions(Pose pose) {
+        EntityDimensions dimensions = super.getDefaultDimensions(pose);
+        return dimensions.withEyeHeight(dimensions.height() * 0.6F);
     }
 
     public boolean hasFlower()
@@ -214,7 +215,7 @@ public class RootlingEntity extends Animal implements Shearable, EntityEventBroa
                 randomizeFlower();
             }else
             {
-                EntityUtil.dropFromLootTable(this, ResourceKey.create(Registries.LOOT_TABLE, PETAL_LOOT_TABLES[getEntityData().get(FLOWER_TYPE)]));
+                BMLootUtil.dropEntityLoot(this, ResourceKey.create(Registries.LOOT_TABLE, PETAL_LOOT_TABLES[getEntityData().get(FLOWER_TYPE)]));
             }
         }
     }
@@ -536,7 +537,7 @@ public class RootlingEntity extends Animal implements Shearable, EntityEventBroa
 
         public boolean canUse()
         {
-            if(level().isRaining() && !level().canSeeSky(getOnPos())) return true;
+            if(!level().isRaining() || level().canSeeSky(getOnPos())) return false;
 
             return this.targetSkyPos();
         }

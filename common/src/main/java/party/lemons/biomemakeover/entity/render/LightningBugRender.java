@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
@@ -72,11 +73,16 @@ public class LightningBugRender extends MobRenderer<LightningBugEntity, Lightnin
         public void render(PoseStack poseStack, MultiBufferSource multiBufferSource, int i, LightningBugEntity entity, float f, float g, float delta, float j, float k, float l) {
             if(!entity.isInvisible())
             {
-                Vector3f color = this.color ? getColor(entity, delta) : new Vector3f(1, 1, 1);
+                int color = this.color ? colorFromVector(getColor(entity, delta)) : 0xFFFFFFFF;
                 VertexConsumer vertexConsumer = multiBufferSource.getBuffer(RenderType.entityTranslucent(getTextureLocation(entity)));
 
-                model.renderToBuffer(poseStack, vertexConsumer, i, LivingEntityRenderer.getOverlayCoords(entity, 0));
+                model.renderToBuffer(poseStack, vertexConsumer, i, LivingEntityRenderer.getOverlayCoords(entity, 0), color);
             }
+        }
+
+        private static int colorFromVector(Vector3f color)
+        {
+            return FastColor.ARGB32.colorFromFloat(1.0F, Mth.clamp(color.x(), 0.0F, 1.0F), Mth.clamp(color.y(), 0.0F, 1.0F), Mth.clamp(color.z(), 0.0F, 1.0F));
         }
 
         public Vector3f getColor(LightningBugEntity entity, float delta)

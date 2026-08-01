@@ -1,6 +1,7 @@
 package party.lemons.biomemakeover.crafting;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
@@ -25,10 +26,10 @@ import java.util.Optional;
 
 public class SuspiciousStewListing extends TItemListing
 {
-	public static final Codec<SuspiciousStewListing> CODEC = RecordCodecBuilder.create(instance ->
+	public static final MapCodec<SuspiciousStewListing> CODEC = RecordCodecBuilder.mapCodec(instance ->
 			instance.group(
 							ItemCost.CODEC.fieldOf("item1").forGetter(i-> i.item1),
-							ItemCost.CODEC.fieldOf("item2").forGetter(i-> i.item2),
+							ItemCost.CODEC.optionalFieldOf("item2").forGetter(i-> Optional.ofNullable(i.item2)),
 							EffectDuration.CODEC.listOf().fieldOf("effects").forGetter(i->i.effects),
 							Codec.INT.optionalFieldOf("uses", 0).forGetter(i->i.uses),
 							Codec.INT.fieldOf("max_uses").forGetter(i->i.maxUses),
@@ -36,7 +37,7 @@ public class SuspiciousStewListing extends TItemListing
 							Codec.FLOAT.optionalFieldOf("price_multiplier", 0.05F).forGetter(i->i.priceMultiplier),
 							Codec.INT.optionalFieldOf("demand", 0).forGetter(i->i.demand)
 					)
-					.apply(instance, SuspiciousStewListing::new));
+					.apply(instance, SuspiciousStewListing::fromCodec));
 
 	private final ItemCost item1;
 	private final ItemCost item2;
@@ -59,6 +60,11 @@ public class SuspiciousStewListing extends TItemListing
 		this.demand = demand;
 	}
 
+	private static SuspiciousStewListing fromCodec(ItemCost item1, Optional<ItemCost> item2, List<EffectDuration> effects, int uses, int maxUses, int xp, float priceMultiplier, int demand)
+	{
+		return new SuspiciousStewListing(item1, item2.orElse(null), effects, uses, maxUses, xp, priceMultiplier, demand);
+	}
+
 	@Override
 	public TradeTypes.TradeType<?> type()
 	{
@@ -71,7 +77,7 @@ public class SuspiciousStewListing extends TItemListing
 		EffectDuration effect = effects.get(randomSource.nextInt(effects.size()));
 
 		SuspiciousStewEffects.Entry newEffect = new SuspiciousStewEffects.Entry(
-				Holder.direct(effect.effect()),
+				effect.effect(),
 				effect.duration()
 		);
 
@@ -88,11 +94,11 @@ public class SuspiciousStewListing extends TItemListing
 		return new MerchantOffer(item1, Optional.ofNullable(item2), result, uses, maxUses, xp, priceMultiplier, demand);
 	}
 
-	private record EffectDuration(MobEffect effect, int duration)
+	private record EffectDuration(Holder<MobEffect> effect, int duration)
 	{
 		public static final Codec<EffectDuration> CODEC = RecordCodecBuilder.create(instance ->
 				instance.group(
-							BuiltInRegistries.MOB_EFFECT.byNameCodec().fieldOf("effect").forGetter(EffectDuration::effect),
+							BuiltInRegistries.MOB_EFFECT.holderByNameCodec().fieldOf("effect").forGetter(EffectDuration::effect),
 							Codec.INT.fieldOf("duration").forGetter(EffectDuration::duration)
 						)
 						.apply(instance, EffectDuration::new));

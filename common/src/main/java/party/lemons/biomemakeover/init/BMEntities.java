@@ -8,6 +8,7 @@ import dev.architectury.registry.registries.DeferredRegister;
 import dev.architectury.registry.registries.RegistrySupplier;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.IllagerModel;
+import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.core.BlockPos;
@@ -43,6 +44,9 @@ import party.lemons.taniwha.entity.TEntityTypeBuilder;
 import party.lemons.taniwha.entity.golem.GolemHandler;
 import party.lemons.taniwha.mixin.spawn.SpawnPlacementsInvoker;
 
+import java.util.function.BiConsumer;
+import java.util.function.Supplier;
+
 public class BMEntities
 {
     public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(Constants.MOD_ID, Registries.ENTITY_TYPE);
@@ -66,8 +70,8 @@ public class BMEntities
     public static final RegistrySupplier<EntityType<OwlEntity>> OWL = ENTITIES.register(BiomeMakeover.ID("owl"), ()->TEntityTypeBuilder.of(OwlEntity::new, MobCategory.CREATURE).sized(0.7F, 0.8F).clientTrackingRange(12).build());
     public static final RegistrySupplier<EntityType<MothEntity>> MOTH = ENTITIES.register(BiomeMakeover.ID("moth"), ()->TEntityTypeBuilder.of(MothEntity::new, MobCategory.MONSTER).sized(0.8F, 1.2F).clientTrackingRange(12).build());
     public static final RegistrySupplier<EntityType<RootlingEntity>> ROOTLING = ENTITIES.register(BiomeMakeover.ID("rootling"), ()->TEntityTypeBuilder.of(RootlingEntity::new, MobCategory.CREATURE).sized(0.6F, 1.1F).clientTrackingRange(12).build());
-    public static final RegistrySupplier<EntityType<AdjudicatorEntity>> ADJUDICATOR = ENTITIES.register(BiomeMakeover.ID("adjudicator"), ()->TEntityTypeBuilder.of(AdjudicatorEntity::new, MobCategory.MONSTER).fireImmune().sized(0.6F, 1.95F).clientTrackingRange(12).noSummon().build());
-    public static final RegistrySupplier<EntityType<AdjudicatorMimicEntity>> ADJUDICATOR_MIMIC = ENTITIES.register(BiomeMakeover.ID("adjudicator_mimic"), ()->TEntityTypeBuilder.of(AdjudicatorMimicEntity::new, MobCategory.MONSTER).fireImmune().sized(0.6F, 1.95F).clientTrackingRange(12).noSummon().build());
+    public static final RegistrySupplier<EntityType<AdjudicatorEntity>> ADJUDICATOR = ENTITIES.register(BiomeMakeover.ID("adjudicator"), ()->TEntityTypeBuilder.of(AdjudicatorEntity::new, MobCategory.MONSTER).fireImmune().sized(0.6F, 1.95F).clientTrackingRange(12).build());
+    public static final RegistrySupplier<EntityType<AdjudicatorMimicEntity>> ADJUDICATOR_MIMIC = ENTITIES.register(BiomeMakeover.ID("adjudicator_mimic"), ()->TEntityTypeBuilder.of(AdjudicatorMimicEntity::new, MobCategory.MONSTER).fireImmune().sized(0.6F, 1.95F).clientTrackingRange(12).build());
     public static final RegistrySupplier<EntityType<StoneGolemEntity>> STONE_GOLEM = ENTITIES.register(BiomeMakeover.ID("stone_golem"), ()->TEntityTypeBuilder.of(StoneGolemEntity::new, MobCategory.MISC).sized(1.6F, 2.5F).clientTrackingRange(12).build());
     public static final RegistrySupplier<EntityType<HelmitCrabEntity>> HELMIT_CRAB = ENTITIES.register(BiomeMakeover.ID("helmit_crab"), ()->TEntityTypeBuilder.of(HelmitCrabEntity::new, MobCategory.CREATURE).sized(0.825F, 0.5F).clientTrackingRange(12).build());
 
@@ -172,31 +176,36 @@ public class BMEntities
 
     public static void registerModelLayers()
     {
+        registerModelLayers(EntityModelLayerRegistry::register);
+    }
+
+    public static void registerModelLayers(BiConsumer<ModelLayerLocation, Supplier<LayerDefinition>> registrar)
+    {
         LayerDefinition HUMANOID_OVERLAY = LayerDefinition.create(HumanoidModel.createMesh(new CubeDeformation(0.5f), 0.0f), 64, 64);
         LayerDefinition HUMANOID_OVERLAY2 = LayerDefinition.create(HumanoidModel.createMesh(new CubeDeformation(0.5f), 0.0f), 64, 32);
 
-        EntityModelLayerRegistry.register(TapestryRenderer.LAYER_LOCATION, TapestryRenderer::createBodyLayer);
-        EntityModelLayerRegistry.register(CowboyHatModel.LAYER_LOCATION, CowboyHatModel::createBodyLayer);
-        EntityModelLayerRegistry.register(WitchHatModel.LAYER_LOCATION, WitchHatModel::createBodyLayer);
-        EntityModelLayerRegistry.register(BlightBatRender.BlightBatModel.LAYER_LOCATION, BlightBatRender.BlightBatModel::createBodyLayer);
-        EntityModelLayerRegistry.register(ScuttlerModel.LAYER_LOCATION, ScuttlerModel::createBodyLayer);
-        EntityModelLayerRegistry.register(GhostModel.LAYER_LOCATION, GhostModel::createBodyLayer);
-        EntityModelLayerRegistry.register(CowboyRender.LAYER_LOCATION, IllagerModel::createBodyLayer);
-        EntityModelLayerRegistry.register(DecayedModel.LAYER_LOCATION, ()->DecayedModel.createBodyLayer(CubeDeformation.NONE));
-        EntityModelLayerRegistry.register(DecayedModel.LAYER_LOCATION_2, ()->HUMANOID_OVERLAY);
-        EntityModelLayerRegistry.register(DecayedModel.LAYER_LOCATION_3, ()->HUMANOID_OVERLAY2);
-        EntityModelLayerRegistry.register(DragonflyModel.LAYER_LOCATION, DragonflyModel::createBodyLayer);
-        EntityModelLayerRegistry.register(ToadModel.LAYER_LOCATION, ToadModel::createBodyLayer);
-        EntityModelLayerRegistry.register(TadpoleModel.LAYER_LOCATION, TadpoleModel::createBodyLayer);
-        EntityModelLayerRegistry.register(LightningBugModel.LAYER_LOCATION, LightningBugModel::createBodyLayer);
-        EntityModelLayerRegistry.register(LightningBugModel.LAYER_LOCATION_INNER, LightningBugModel.LightningBugInner::createBodyLayer);
-        EntityModelLayerRegistry.register(LightningBugModel.LAYER_LOCATION_OUTER, LightningBugModel.LightningBugOuter::createBodyLayer);
-        EntityModelLayerRegistry.register(OwlModel.LAYER_LOCATION, OwlModel::createBodyLayer);
-        EntityModelLayerRegistry.register(MothModel.LAYER_LOCATION, MothModel::createBodyLayer);
-        EntityModelLayerRegistry.register(RootlingModel.LAYER_LOCATION, RootlingModel::createBodyLayer);
-        EntityModelLayerRegistry.register(AdjudicatorModel.LAYER_LOCATION, AdjudicatorModel::createBodyLayer);
-        EntityModelLayerRegistry.register(StoneGolemModel.LAYER_LOCATION, StoneGolemModel::createBodyLayer);
-        EntityModelLayerRegistry.register(HelmitCrabModel.LAYER_LOCATION, HelmitCrabModel::createBodyLayer);
+        registrar.accept(TapestryRenderer.LAYER_LOCATION, TapestryRenderer::createBodyLayer);
+        registrar.accept(CowboyHatModel.LAYER_LOCATION, CowboyHatModel::createBodyLayer);
+        registrar.accept(WitchHatModel.LAYER_LOCATION, WitchHatModel::createBodyLayer);
+        registrar.accept(BlightBatRender.BlightBatModel.LAYER_LOCATION, BlightBatRender.BlightBatModel::createBodyLayer);
+        registrar.accept(ScuttlerModel.LAYER_LOCATION, ScuttlerModel::createBodyLayer);
+        registrar.accept(GhostModel.LAYER_LOCATION, GhostModel::createBodyLayer);
+        registrar.accept(CowboyRender.LAYER_LOCATION, IllagerModel::createBodyLayer);
+        registrar.accept(DecayedModel.LAYER_LOCATION, ()->DecayedModel.createBodyLayer(CubeDeformation.NONE));
+        registrar.accept(DecayedModel.LAYER_LOCATION_2, ()->HUMANOID_OVERLAY);
+        registrar.accept(DecayedModel.LAYER_LOCATION_3, ()->HUMANOID_OVERLAY2);
+        registrar.accept(DragonflyModel.LAYER_LOCATION, DragonflyModel::createBodyLayer);
+        registrar.accept(ToadModel.LAYER_LOCATION, ToadModel::createBodyLayer);
+        registrar.accept(TadpoleModel.LAYER_LOCATION, TadpoleModel::createBodyLayer);
+        registrar.accept(LightningBugModel.LAYER_LOCATION, LightningBugModel::createBodyLayer);
+        registrar.accept(LightningBugModel.LAYER_LOCATION_INNER, LightningBugModel.LightningBugInner::createBodyLayer);
+        registrar.accept(LightningBugModel.LAYER_LOCATION_OUTER, LightningBugModel.LightningBugOuter::createBodyLayer);
+        registrar.accept(OwlModel.LAYER_LOCATION, OwlModel::createBodyLayer);
+        registrar.accept(MothModel.LAYER_LOCATION, MothModel::createBodyLayer);
+        registrar.accept(RootlingModel.LAYER_LOCATION, RootlingModel::createBodyLayer);
+        registrar.accept(AdjudicatorModel.LAYER_LOCATION, AdjudicatorModel::createBodyLayer);
+        registrar.accept(StoneGolemModel.LAYER_LOCATION, StoneGolemModel::createBodyLayer);
+        registrar.accept(HelmitCrabModel.LAYER_LOCATION, HelmitCrabModel::createBodyLayer);
 
     }
 

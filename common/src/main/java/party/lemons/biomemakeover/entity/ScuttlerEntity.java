@@ -93,9 +93,9 @@ public class ScuttlerEntity extends Animal {
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
-        entityData.set(RATTLING, false);
-        entityData.set(EATING, false);
-        entityData.set(PASSIVE, false);
+        builder.define(RATTLING, false);
+        builder.define(EATING, false);
+        builder.define(PASSIVE, false);
     }
 
     @Override
@@ -136,12 +136,12 @@ public class ScuttlerEntity extends Animal {
             FoodProperties foodComponent = itemStack.get(DataComponents.FOOD);
 
             if (entityData.get(PASSIVE)) {
-                if (foodComponent != null && this.getHealth() < this.getMaxHealth()) {
+                if (foodComponent != null && this.isFood(itemStack) && this.getHealth() < this.getMaxHealth()) {
                     this.eat(level(), itemStack);
                     this.heal((float) foodComponent.nutrition());
                     return InteractionResult.CONSUME;
                 }
-            } else if (foodComponent != null) {
+            } else if (this.isFood(itemStack)) {
                 this.eat(level(), itemStack);
                 if (this.random.nextInt(3) == 0) {
                     entityData.set(PASSIVE, true);
@@ -240,8 +240,8 @@ public class ScuttlerEntity extends Animal {
     }
 
     @Override
-    public double getEyeY() {
-        return 0.2F;
+    protected EntityDimensions getDefaultDimensions(Pose pose) {
+        return super.getDefaultDimensions(pose).withEyeHeight(0.2F);
     }
 
     @Override

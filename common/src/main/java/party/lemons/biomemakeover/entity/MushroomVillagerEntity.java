@@ -68,18 +68,20 @@ public class MushroomVillagerEntity extends AbstractVillager {
                 player.awardStat(Stats.TALKED_TO_VILLAGER);
             }
 
+            if(this.level().isClientSide())
+            {
+                return InteractionResult.SUCCESS;
+            }
+
             if(this.getOffers().isEmpty())
             {
-                return InteractionResult.sidedSuccess(this.level().isClientSide());
+                return InteractionResult.CONSUME;
             }else
             {
-                if(!this.level().isClientSide())
-                {
-                    this.setTradingPlayer(player);
-                    this.openTradingScreen(player, this.getDisplayName(), 1);
-                }
+                this.setTradingPlayer(player);
+                this.openTradingScreen(player, this.getDisplayName(), 1);
 
-                return InteractionResult.sidedSuccess(this.level().isClientSide());
+                return InteractionResult.CONSUME;
             }
         }else
         {
@@ -114,19 +116,29 @@ public class MushroomVillagerEntity extends AbstractVillager {
             return;
 
         TradeList trades = TradeLists.get(BiomeMakeover.ID("mushroom_trader"));
+        if(trades == null)
+            return;
 
         List<TItemListing> tradesCommon = trades.getListingsForLevel(1);
         List<TItemListing> tradesStew = trades.getListingsForLevel(2);
         List<TItemListing> tradesRare = trades.getListingsForLevel(3);
-        if(tradesCommon != null && tradesRare != null && tradesStew != null)
+        if(tradesCommon != null && !tradesCommon.isEmpty())
         {
             MerchantOffers traderOfferList = this.getOffers();
             this.addOffersFromItemListings(traderOfferList, tradesCommon.toArray(new TItemListing[0]), 5);
+        }
 
+        if(tradesStew != null && !tradesStew.isEmpty())
+        {
+            MerchantOffers traderOfferList = this.getOffers();
             MerchantOffer stewTrade = tradesStew.get(this.random.nextInt(tradesStew.size())).getOffer(this, this.random);
             if(stewTrade != null)
                 traderOfferList.add(stewTrade);
+        }
 
+        if(tradesRare != null && !tradesRare.isEmpty())
+        {
+            MerchantOffers traderOfferList = this.getOffers();
             MerchantOffer rareTrade = tradesRare.get(this.random.nextInt(tradesRare.size())).getOffer(this, this.random);
             if(rareTrade != null)
                 traderOfferList.add(rareTrade);

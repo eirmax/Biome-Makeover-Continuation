@@ -153,7 +153,7 @@ public class BMItems
     public static void init() {
 
         BMEntities.ATT_PROJECTILE_RESISTANCE.listen(a->{
-            ArmorBuilder CLADDED_ARMOR_BUILDER = ArmorBuilder.create(ArmorMaterialRegistry.CLADDED_MATERIAL).attribute(ResourceLocation.parse("armor_proj_res"), BMEntities.ATT_PROJECTILE_RESISTANCE.get(), 1.5, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
+            ArmorBuilder CLADDED_ARMOR_BUILDER = ArmorBuilder.create(ArmorMaterialRegistry.CLADDED_MATERIAL).attribute(ResourceLocation.parse("armor_proj_res"), BMEntities.ATT_PROJECTILE_RESISTANCE, 1.5, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
             Supplier<Item> CLADDED_HELMET = registerItem("cladded_helmet", CLADDED_ARMOR_BUILDER.build(ArmorItem.Type.HELMET, properties()));
             Supplier<Item> CLADDED_CHESTPLATE = registerItem("cladded_chestplate", CLADDED_ARMOR_BUILDER.build(ArmorItem.Type.CHESTPLATE, properties()));
             Supplier<Item> CLADDED_LEGGINGS = registerItem("cladded_leggings",CLADDED_ARMOR_BUILDER.build(ArmorItem.Type.LEGGINGS, properties()));

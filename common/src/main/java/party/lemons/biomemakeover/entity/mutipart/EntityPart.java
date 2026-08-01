@@ -58,7 +58,6 @@ public class EntityPart<T extends LivingEntity & MultiPartEntity> extends Entity
 
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
-
     }
 
     @Override

@@ -98,7 +98,7 @@ public class LightningBugEntity extends ToadTargetEntity implements FlyingAnimal
 
     @Override
     public void baseTick() {
-        if(firstTick && !isAlternate)
+        if(firstTick && !isAlternate && !level().isClientSide())
         {
             for(int i = 0; i < random.nextInt(5); i++)
             {

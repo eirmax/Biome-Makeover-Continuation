@@ -47,6 +47,7 @@ import party.lemons.biomemakeover.entity.ai.FlyingFollowOwnerGoal;
 import party.lemons.biomemakeover.entity.ai.PredicateTemptGoal;
 import party.lemons.biomemakeover.init.BMEffects;
 import party.lemons.biomemakeover.init.BMEntities;
+import party.lemons.biomemakeover.util.EntityUtil;
 
 import java.util.Iterator;
 import java.util.Random;
@@ -57,7 +58,7 @@ public class OwlEntity extends ShoulderRidingEntity
 {
     private static final EntityDataAccessor<Integer> STANDING_STATE = SynchedEntityData.defineId(OwlEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> OWL_STATE = SynchedEntityData.defineId(OwlEntity.class, EntityDataSerializers.INT);
-    private static final EntityDimensions FLYING_DIMENSION =  EntityDimensions.fixed(0.7F, 1.4F);
+    private static final EntityDimensions FLYING_DIMENSION = EntityDimensions.scalable(0.7F, 1.4F);
     private static final Predicate<LivingEntity> IS_OWL_TARGET = e->e.getType().is(BMEntities.OWL_TARGETS);
 
     private float leaningPitch;
@@ -153,6 +154,7 @@ public class OwlEntity extends ShoulderRidingEntity
         Vec3 velocity = this.getDeltaMovement();
         if (!this.onGround() && velocity.y < 0.0D) {
             this.setDeltaMovement(velocity.multiply(1.0D, 0.75D, 1.0D));
+            EntityUtil.markVelocityChanged(this);
         }
     }
 
@@ -245,8 +247,7 @@ public class OwlEntity extends ShoulderRidingEntity
         if (!stack.has(DataComponents.FOOD)) {
             return false;
         }
-        FoodProperties foodProperties = stack.get(DataComponents.FOOD);
-            return foodProperties.canAlwaysEat() && stack.is(ItemTags.MEAT);
+        return stack.is(ItemTags.MEAT);
     }
 
     @Override
@@ -266,14 +267,14 @@ public class OwlEntity extends ShoulderRidingEntity
 
     @Override
     protected EntityDimensions getDefaultDimensions(Pose pose) {
-        return getStandingState() == StandingState.STANDING ? super.getDimensions(pose) : FLYING_DIMENSION;
+        return getStandingState() == StandingState.STANDING ? super.getDefaultDimensions(pose) : FLYING_DIMENSION;
     }
 
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
-        getEntityData().set(STANDING_STATE, 0);
-        getEntityData().set(OWL_STATE, 0);
+        builder.define(STANDING_STATE, 0);
+        builder.define(OWL_STATE, 0);
     }
     @Override
     public boolean causeFallDamage(float f, float g, DamageSource damageSource) {

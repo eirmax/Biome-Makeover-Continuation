@@ -6,6 +6,7 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.server.level.ServerEntity;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -23,6 +24,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import party.lemons.biomemakeover.init.BMEffects;
 import party.lemons.biomemakeover.init.BMEntities;
 import party.lemons.biomemakeover.init.BMItems;
@@ -64,11 +66,23 @@ public class LightningBottleEntity extends ThrowableItemProjectile
     protected void onHit(HitResult hitResult)
     {
         super.onHit(hitResult);
-        NetworkUtil.doLightningSplash(level(), true, getOnPos());
 
         if(!this.level().isClientSide())
         {
-            level().playSound(null, getOnPos(), BMEffects.BOTTLE_THUNDER.get(), SoundSource.NEUTRAL, 50F, 0.8F + this.random.nextFloat() * 0.2F);
+            ServerLevel serverLevel = (ServerLevel) level();
+            BlockPos hitPos = BlockPos.containing(hitResult.getLocation());
+            NetworkUtil.doLightningSplash(serverLevel, true, hitPos);
+            level().playSound(null, hitPos, BMEffects.BOTTLE_THUNDER.get(), SoundSource.NEUTRAL, 50F, 0.8F + this.random.nextFloat() * 0.2F);
+
+            LightningBolt lightning = EntityType.LIGHTNING_BOLT.create(serverLevel);
+            if(lightning != null)
+            {
+                lightning.moveTo(Vec3.atBottomCenterOf(hitPos));
+                lightning.setVisualOnly(true);
+                if(getOwner() instanceof ServerPlayer player)
+                    lightning.setCause(player);
+                serverLevel.addFreshEntity(lightning);
+            }
 
             AABB box = this.getBoundingBox().inflate(4.0D, 2.0D, 4.0D);
             List<LivingEntity> entities = this.level().getEntitiesOfClass(LivingEntity.class, box, EntitySelector.LIVING_ENTITY_STILL_ALIVE);
@@ -81,10 +95,10 @@ public class LightningBottleEntity extends ThrowableItemProjectile
                         int fireTicks = e.getRemainingFireTicks();
                         boolean isInvul = e.isInvulnerable();
 
-                        LightningBolt dummyLightning = new LightningBolt(EntityType.LIGHTNING_BOLT, level());
+                        LightningBolt dummyLightning = new LightningBolt(EntityType.LIGHTNING_BOLT, serverLevel);
                         dummyLightning.setPos(e.getX(), e.getY(), e.getZ());
                         e.setInvulnerable(true);
-                        e.thunderHit((ServerLevel) level(), dummyLightning);
+                        e.thunderHit(serverLevel, dummyLightning);
 
                         e.setRemainingFireTicks(fireTicks);
                         e.setInvulnerable(isInvul);
@@ -103,10 +117,10 @@ public class LightningBottleEntity extends ThrowableItemProjectile
                     if (distance < 16.0D) {
                         NetworkUtil.doLightningEntity(level(), e, 100);
 
-                        if (!e.hasEffect(BMPotions.SHOCKED)) {
-                            e.addEffect(new MobEffectInstance(BMPotions.SHOCKED, 1000, 0));
+                        if (!e.hasEffect(BMPotions.shocked())) {
+                            e.addEffect(new MobEffectInstance(BMPotions.shocked(), 1000, 0));
                         } else {
-                            e.addEffect(new MobEffectInstance(BMPotions.SHOCKED, 1000, Math.min(3, e.getEffect(BMPotions.SHOCKED).getAmplifier() + 1)));
+                            e.addEffect(new MobEffectInstance(BMPotions.shocked(), 1000, Math.min(3, e.getEffect(BMPotions.shocked()).getAmplifier() + 1)));
                         }
                         e.hurt(level().damageSources().indirectMagic(this, this.getOwner()), 0);
                         if (getOwner() instanceof LivingEntity) {
@@ -119,13 +133,13 @@ public class LightningBottleEntity extends ThrowableItemProjectile
             }
 
             if(hitResult instanceof BlockHitResult blockHitResult) {
-                BlockPos hitPos = blockPosition().relative(blockHitResult.getDirection().getOpposite());
+                BlockPos hitBlockPos = blockPosition().relative(blockHitResult.getDirection().getOpposite());
 
-                BlockState blockState = this.level().getBlockState(hitPos);
+                BlockState blockState = this.level().getBlockState(hitBlockPos);
                 if (blockState.is(Blocks.LIGHTNING_ROD)) {
-                    ((LightningRodBlock)blockState.getBlock()).onLightningStrike(blockState, this.level(), hitPos);
+                    ((LightningRodBlock)blockState.getBlock()).onLightningStrike(blockState, this.level(), hitBlockPos);
                 }
-                LightningBolt.clearCopperOnLightningStrike(level(), hitPos);
+                LightningBolt.clearCopperOnLightningStrike(level(), hitBlockPos);
             }
             this.remove(RemovalReason.DISCARDED);
 
@@ -135,6 +149,6 @@ public class LightningBottleEntity extends ThrowableItemProjectile
 
     @Override
     public Packet<ClientGamePacketListener> getAddEntityPacket(ServerEntity serverEntity) {
-        return super.getAddEntityPacket(serverEntity);
+        return NetworkManager.createAddEntityPacket(this, serverEntity);
     }
 }

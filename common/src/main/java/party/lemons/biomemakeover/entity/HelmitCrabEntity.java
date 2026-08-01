@@ -3,7 +3,6 @@ package party.lemons.biomemakeover.entity;
 import com.google.common.collect.Lists;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
@@ -51,10 +50,11 @@ import party.lemons.biomemakeover.init.BMEffects;
 import party.lemons.biomemakeover.init.BMEntities;
 import party.lemons.biomemakeover.init.BMItems;
 import party.lemons.biomemakeover.item.HatItem;
+import party.lemons.biomemakeover.util.EntityUtil;
 
 import java.util.EnumSet;
 import java.util.List;
-import java.util.stream.Stream;
+import java.util.Optional;
 
 /*
     🦀🦀🦀🦀🦀🦀🦀🦀🦀🦀🦀🦀🦀🦀🦀🦀🦀🦀🦀🦀🦀🦀🦀🦀🦀🦀🦀🦀🦀🦀🦀🦀🦀🦀
@@ -101,9 +101,9 @@ public class HelmitCrabEntity extends Animal
 	@Override
 	protected void defineSynchedData(SynchedEntityData.Builder builder)
 	{
-		getEntityData().set(SHELL_ITEM, ItemStack.EMPTY);
-		getEntityData().set(HIDING, false);
 		super.defineSynchedData(builder);
+		builder.define(SHELL_ITEM, ItemStack.EMPTY);
+		builder.define(HIDING, false);
 	}
 
 	public static boolean checkSpawnRules(EntityType<HelmitCrabEntity> type, ServerLevelAccessor level, MobSpawnType mobSpawnType, BlockPos pos, RandomSource random)
@@ -135,7 +135,7 @@ public class HelmitCrabEntity extends Animal
 				default -> new ItemStack(Items.NAUTILUS_SHELL);
 			};
 			if(random.nextFloat() < 0.05F)
-				EnchantmentHelper.enchantItem(this.random, itemStack, (int)(5.0F + (float)this.random.nextInt(10)), Stream.<Holder<Enchantment>>builder().build());
+				EnchantmentHelper.enchantItem(this.random, itemStack, (int)(5.0F + (float)this.random.nextInt(10)), serverLevelAccessor.registryAccess(), Optional.empty());
 
 			if(itemStack.isDamageableItem())
 				itemStack.setDamageValue(itemStack.getMaxDamage() - this.random.nextInt(1 + this.random.nextInt(Math.max(itemStack.getMaxDamage() - 3, 1))));
@@ -202,8 +202,9 @@ public class HelmitCrabEntity extends Animal
 	protected void dropCustomDeathLoot(ServerLevel serverLevel, DamageSource damageSource, boolean i) {
 		super.dropCustomDeathLoot(serverLevel, damageSource, i);
 
-		if(!EnchantmentHelper.hasAnyEnchantments(getShellItemStack()))
-			spawnAtLocation(getShellItemStack());
+		ItemStack shell = getShellItemStack();
+		if(!shell.isEmpty() && !hasEnchantment(shell, Enchantments.VANISHING_CURSE))
+			spawnAtLocation(shell);
 		setShellItem(ItemStack.EMPTY);
 	}
 
@@ -221,7 +222,7 @@ public class HelmitCrabEntity extends Animal
 			return false;
 
 		ItemStack currentShell = getShellItemStack();
-		if (EnchantmentHelper.hasAnyEnchantments(currentShell))   //If our shell has binding, we can't switch
+		if (hasEnchantment(currentShell, Enchantments.BINDING_CURSE))   //If our shell has binding, we can't switch
 		{
 			return false;
 		}
@@ -318,8 +319,9 @@ public class HelmitCrabEntity extends Animal
 	public void addAdditionalSaveData(CompoundTag tag) {
 		super.addAdditionalSaveData(tag);
 
-		CompoundTag shellTag = (CompoundTag) getEntityData().get(SHELL_ITEM).save(this.registryAccess());
-		tag.put("Shell", shellTag);
+		ItemStack shell = getShellItemStack();
+		if(!shell.isEmpty())
+			tag.put("Shell", shell.save(this.registryAccess()));
 
 		tag.putInt("HideTime", hideTime);
 		tag.putInt("ShellCooldown", shellChangeCooldown);
@@ -382,6 +384,15 @@ public class HelmitCrabEntity extends Animal
 	public boolean canHide()
 	{
 		return !getShellItemStack().isEmpty();
+	}
+
+	private boolean hasEnchantment(ItemStack stack, net.minecraft.resources.ResourceKey<Enchantment> enchantment)
+	{
+		if(stack.isEmpty())
+			return false;
+
+		Holder<Enchantment> holder = this.level().registryAccess().registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(enchantment);
+		return EnchantmentHelper.getItemEnchantmentLevel(holder, stack) > 0;
 	}
 
 	public ItemStack getShellItemStack()
@@ -557,6 +568,7 @@ public class HelmitCrabEntity extends Animal
 					this.setDeltaMovement(vec37.x * (double)f, q * (double)0.98f, vec37.z * (double)f);
 				}
 			}
+			EntityUtil.markVelocityChanged(this);
 		}
 		this.calculateEntityAnimation(this instanceof FlyingAnimal);
 	}

@@ -34,6 +34,7 @@ import org.jetbrains.annotations.Nullable;
 import party.lemons.biomemakeover.init.BMEffects;
 import party.lemons.biomemakeover.init.BMEntities;
 import party.lemons.biomemakeover.level.PoltergeistHandler;
+import party.lemons.biomemakeover.util.EntityUtil;
 
 import java.util.EnumSet;
 import java.util.UUID;
@@ -82,7 +83,7 @@ public class GhostEntity extends Monster implements NeutralMob
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
 
-        this.getEntityData().set(IsCharging, false);
+        builder.define(IsCharging, false);
     }
 
     @Override
@@ -314,9 +315,11 @@ public class GhostEntity extends Monster implements NeutralMob
                 {
                     this.operation = MoveControl.Operation.WAIT;
                     GhostEntity.this.setDeltaMovement(GhostEntity.this.getDeltaMovement().scale(0.5D));
+                    EntityUtil.markVelocityChanged(GhostEntity.this);
                 }else
                 {
                     GhostEntity.this.setDeltaMovement(GhostEntity.this.getDeltaMovement().add(targetPosition.scale(this.speedModifier * 0.05D / length)));
+                    EntityUtil.markVelocityChanged(GhostEntity.this);
                     if(GhostEntity.this.getTarget() == null)
                     {
                         if(EntitySelector.NO_CREATIVE_OR_SPECTATOR.test(getTarget())) setTarget(null);

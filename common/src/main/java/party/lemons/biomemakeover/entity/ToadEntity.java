@@ -66,7 +66,7 @@ public class ToadEntity extends Animal {
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
-        getEntityData().set(TONGUE_ENTITY, -1);
+        builder.define(TONGUE_ENTITY, -1);
     }
 
     @Override

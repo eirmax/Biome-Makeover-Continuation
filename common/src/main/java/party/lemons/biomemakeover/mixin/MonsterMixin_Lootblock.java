@@ -13,7 +13,7 @@ public class MonsterMixin_Lootblock
     @Inject(at = @At("HEAD"), method = "shouldDropLoot", cancellable = true)
     protected void shouldDropLoot(CallbackInfoReturnable<Boolean> cbi)
     {
-        if(((LootBlocker) this).isLootBlocked())
+        if(LootBlocker.isBlocked((Monster) (Object) this))
             cbi.setReturnValue(false);
     }
 }

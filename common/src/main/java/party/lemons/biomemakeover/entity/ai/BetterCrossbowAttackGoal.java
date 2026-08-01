@@ -2,24 +2,20 @@ package party.lemons.biomemakeover.entity.ai;
 
 import net.minecraft.util.TimeUtil;
 import net.minecraft.util.valueproviders.UniformInt;
-import net.minecraft.world.entity.Entity;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.monster.CrossbowAttackMob;
-import net.minecraft.world.entity.monster.Monster;
-import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.storage.loot.IntRange;
-import party.lemons.biomemakeover.entity.StoneGolemEntity;
+import net.minecraft.world.item.component.ChargedProjectiles;
 
 import java.util.EnumSet;
 
-public class BetterCrossbowAttackGoal<T extends Mob & CrossbowAttackMob>
-        extends Goal {
+public class BetterCrossbowAttackGoal<T extends Mob & CrossbowAttackMob> extends Goal {
     public static final UniformInt PATHFINDING_DELAY_RANGE = TimeUtil.rangeOfSeconds(1, 2);
     private final T mob;
     private CrossbowState crossbowState = CrossbowState.UNCHARGED;
@@ -61,9 +57,10 @@ public class BetterCrossbowAttackGoal<T extends Mob & CrossbowAttackMob>
         this.mob.setTarget(null);
         this.seeTime = 0;
         if (this.mob.isUsingItem()) {
+            ItemStack useItem = this.mob.getUseItem();
             this.mob.stopUsingItem();
             this.mob.setChargingCrossbow(false);
-            CrossbowItem.isCharged(this.mob.getUseItem());
+            clearChargedProjectiles(useItem);
         }
     }
 
@@ -125,9 +122,13 @@ public class BetterCrossbowAttackGoal<T extends Mob & CrossbowAttackMob>
         } else if (this.crossbowState == CrossbowState.READY_TO_ATTACK && bl) {
             this.mob.performRangedAttack(livingEntity, 1.0f);
             ItemStack itemStack2 = this.mob.getItemInHand(ProjectileUtil.getWeaponHoldingHand(this.mob, Items.CROSSBOW));
-            CrossbowItem.isCharged(itemStack2);
+            clearChargedProjectiles(itemStack2);
             this.crossbowState = CrossbowState.UNCHARGED;
         }
+    }
+
+    private static void clearChargedProjectiles(ItemStack stack) {
+        stack.set(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.EMPTY);
     }
 
     private boolean canRun() {

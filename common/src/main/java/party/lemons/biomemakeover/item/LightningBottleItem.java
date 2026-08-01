@@ -22,7 +22,7 @@ import party.lemons.biomemakeover.entity.LightningBottleEntity;
 import party.lemons.biomemakeover.init.BMEffects;
 import party.lemons.biomemakeover.util.RandomUtil;
 
-public class LightningBottleItem extends Item
+public class LightningBottleItem extends Item implements ProjectileItem
 {
     public LightningBottleItem(Properties settings) {
         super(settings);
@@ -53,6 +53,13 @@ public class LightningBottleItem extends Item
     public boolean isFoil(ItemStack stack)
     {
         return true;
+    }
+
+    @Override
+    public Projectile asProjectile(Level level, Position position, ItemStack stack, Direction direction) {
+        LightningBottleEntity bottleEntity = new LightningBottleEntity(level, position.x(), position.y(), position.z());
+        bottleEntity.setItem(stack.copyWithCount(1));
+        return bottleEntity;
     }
 
     @Override

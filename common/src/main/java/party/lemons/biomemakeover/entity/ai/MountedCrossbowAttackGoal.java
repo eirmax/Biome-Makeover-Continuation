@@ -1,5 +1,6 @@
 package party.lemons.biomemakeover.entity.ai;
 
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.util.TimeUtil;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.entity.LivingEntity;
@@ -11,7 +12,7 @@ import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import party.lemons.biomemakeover.entity.adjudicator.AdjudicatorEntity;
+import net.minecraft.world.item.component.ChargedProjectiles;
 
 import java.util.EnumSet;
 
@@ -66,9 +67,10 @@ public class MountedCrossbowAttackGoal<T extends Monster & RangedAttackMob & Cro
         this.seeingTargetTicker = 0;
         if (this.actor.isUsingItem())
         {
+            ItemStack useItem = this.actor.getUseItem();
             this.actor.stopUsingItem();
             this.actor.setChargingCrossbow(false);
-            CrossbowItem.isCharged(this.actor.getUseItem());
+            clearChargedProjectiles(useItem);
         }
 
     }
@@ -134,7 +136,7 @@ public class MountedCrossbowAttackGoal<T extends Monster & RangedAttackMob & Cro
             {
                 this.actor.performCrossbowAttack(this.actor, 1.0F);
                 ItemStack cbStack = this.actor.getItemInHand(ProjectileUtil.getWeaponHoldingHand(this.actor, Items.CROSSBOW));
-                CrossbowItem.isCharged(cbStack);
+                clearChargedProjectiles(cbStack);
                 this.stage = Stage.UNCHARGED;
             }
 
@@ -146,5 +148,9 @@ public class MountedCrossbowAttackGoal<T extends Monster & RangedAttackMob & Cro
         CHARGING,
         CHARGED,
         READY_TO_ATTACK;
+    }
+
+    private static void clearChargedProjectiles(ItemStack stack) {
+        stack.set(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.EMPTY);
     }
 }

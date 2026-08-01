@@ -5,6 +5,7 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import party.lemons.biomemakeover.init.BMEffects;
+import party.lemons.biomemakeover.util.EntityUtil;
 import party.lemons.taniwha.util.MathUtils;
 
 public class ToadTargetEntity extends PathfinderMob {
@@ -47,6 +48,7 @@ public class ToadTargetEntity extends PathfinderMob {
                 absMoveTo(xx, yy, zz, getYRot(), getXRot());
                 setPos(xx, yy, zz);
                 setDeltaMovement(0, 0, 0);
+                EntityUtil.markVelocityChanged(this);
 
                 if(distanceTo(eatenBy) <= 0.2F)
                 {

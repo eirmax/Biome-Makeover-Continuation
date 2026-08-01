@@ -67,7 +67,7 @@ public class DragonflyEntity extends ToadTargetEntity implements FlyingAnimal {
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
 
-        getEntityData().set(VARIANT, 2);
+        builder.define(VARIANT, 2);
     }
 
     @Override

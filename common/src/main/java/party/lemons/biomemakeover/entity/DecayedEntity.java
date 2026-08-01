@@ -49,6 +49,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import party.lemons.biomemakeover.init.BMEffects;
 import party.lemons.biomemakeover.init.BMEnchantments;
+import party.lemons.biomemakeover.util.EntityUtil;
 
 import java.util.Random;
 
@@ -106,7 +107,7 @@ public class DecayedEntity extends Zombie
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
-        getEntityData().set(SHIELD_DOWN, false);
+        builder.define(SHIELD_DOWN, false);
     }
 
     @Override
@@ -199,7 +200,8 @@ public class DecayedEntity extends Zombie
                         {
                             ItemStack stack = new ItemStack(item);
 
-                            stack.enchant(BMEnchantments.DECAY_CURSE, 1 + random.nextInt(4));
+                            BMEnchantments.getHolder(level.registryAccess(), BMEnchantments.DECAY_CURSE)
+                                    .ifPresent(decayCurse -> stack.enchant(decayCurse, 1 + random.nextInt(4)));
                             this.setItemSlot(equipmentSlot, stack);
                         }
                     }
@@ -210,7 +212,8 @@ public class DecayedEntity extends Zombie
 
 
         ItemStack shield = new ItemStack(Items.SHIELD);
-        shield.enchant(BMEnchantments.DECAY_CURSE, 1 + random.nextInt(4));
+        BMEnchantments.getHolder(level.registryAccess(), BMEnchantments.DECAY_CURSE)
+                .ifPresent(decayCurse -> shield.enchant(decayCurse, 1 + random.nextInt(4)));
         this.setItemSlot(EquipmentSlot.OFFHAND, shield);
         return spawnGroupData;
     }
@@ -300,6 +303,7 @@ public class DecayedEntity extends Zombie
             this.moveRelative(0.01f, vec3);
             this.move(MoverType.SELF, this.getDeltaMovement());
             this.setDeltaMovement(this.getDeltaMovement().scale(0.9));
+            EntityUtil.markVelocityChanged(this);
         } else {
             super.travel(vec3);
         }
@@ -394,6 +398,7 @@ public class DecayedEntity extends Zombie
             if (this.drowned.wantsToSwim() && this.drowned.isInWater()) {
                 if (livingEntity != null && livingEntity.getY() > this.drowned.getY() || this.drowned.targetingUnderwater) {
                     this.drowned.setDeltaMovement(this.drowned.getDeltaMovement().add(0.0, 0.002, 0.0));
+                    EntityUtil.markVelocityChanged(this.drowned);
                 }
                 if (this.operation != MoveControl.Operation.MOVE_TO || this.drowned.getNavigation().isDone()) {
                     this.drowned.setSpeed(0.0f);
@@ -411,9 +416,11 @@ public class DecayedEntity extends Zombie
                 float j = Mth.lerp(0.125f, this.drowned.getSpeed(), i);
                 this.drowned.setSpeed(j);
                 this.drowned.setDeltaMovement(this.drowned.getDeltaMovement().add((double)j * d * 0.005, (double)j * e * 0.1, (double)j * f * 0.005));
+                EntityUtil.markVelocityChanged(this.drowned);
             } else {
                 if (!this.drowned.onGround()) {
                     this.drowned.setDeltaMovement(this.drowned.getDeltaMovement().add(0.0, -0.008, 0.0));
+                    EntityUtil.markVelocityChanged(this.drowned);
                 }
                 super.tick();
             }

@@ -1,7 +1,10 @@
 package party.lemons.biomemakeover.init;
 
+import dev.architectury.networking.NetworkManager;
 import dev.architectury.networking.simple.MessageType;
 import dev.architectury.networking.simple.SimpleNetworkManager;
+import dev.architectury.platform.Platform;
+import dev.architectury.utils.Env;
 import party.lemons.biomemakeover.Constants;
 import party.lemons.biomemakeover.network.*;
 
@@ -22,5 +25,25 @@ public class BMNetwork
 
     public static void init()
     {
+        if(Platform.getEnvironment() != Env.SERVER)
+            return;
+
+        registerS2CPayloadTypes(
+                ENTITY_PARTICLE,
+                LIGHTNING_SPLASH,
+                LIGHTNING_ENTITY,
+                POLTERGEIST_PARTICLE,
+                WITCH_QUESTS,
+                BM_EFFECT,
+                ENTITY_EVENT
+        );
+    }
+
+    private static void registerS2CPayloadTypes(MessageType... messageTypes)
+    {
+        for(MessageType messageType : messageTypes)
+        {
+            NetworkManager.registerS2CPayloadType(messageType.getId());
+        }
     }
 }

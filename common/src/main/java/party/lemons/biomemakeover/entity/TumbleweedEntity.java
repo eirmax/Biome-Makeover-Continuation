@@ -134,7 +134,6 @@ public class TumbleweedEntity extends Entity
 
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
-
     }
 
     @Override

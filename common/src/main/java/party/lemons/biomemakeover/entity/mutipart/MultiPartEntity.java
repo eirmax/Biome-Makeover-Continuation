@@ -20,7 +20,12 @@ public interface MultiPartEntity<T extends EntityPart<?>>
 
         for(int i = 0; i < parts.size(); i++)
         {
-            parts.get(i).setId(i + packet.getId());
+            EntityPart<?> part = parts.get(i);
+            part.setId(packet.getId() + i + 1);
+            part.updatePartPosition();
+            part.xOld = part.getX();
+            part.yOld = part.getY();
+            part.zOld = part.getZ();
         }
     }
 

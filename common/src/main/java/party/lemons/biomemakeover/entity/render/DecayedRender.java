@@ -64,7 +64,7 @@ public class DecayedRender extends AbstractZombieRenderer<DecayedEntity, Decayed
 
         @Override
         public void render(PoseStack poseStack, MultiBufferSource multiBufferSource, int i, DecayedEntity drowned, float f, float g, float h, float j, float k, float l) {
-            coloredCutoutModelCopyLayerRender(this.getParentModel(), this.model, TEXTURE, poseStack, multiBufferSource, i, drowned, f, g, j, k, l, h, (int) 1.0);
+            coloredCutoutModelCopyLayerRender(this.getParentModel(), this.model, TEXTURE, poseStack, multiBufferSource, i, drowned, f, g, j, k, l, h, 0xFFFFFFFF);
         }
     }
 

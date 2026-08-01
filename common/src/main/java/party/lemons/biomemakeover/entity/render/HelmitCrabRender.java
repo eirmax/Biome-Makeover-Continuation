@@ -169,7 +169,7 @@ public class HelmitCrabRender extends MobRenderer<HelmitCrabEntity, HelmitCrabMo
 
 		private void renderSpecialShell(ResourceLocation texture, HelmitCrabEntity crab, PoseStack poseStack, MultiBufferSource mbSource, int light, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch)
 		{
-			coloredCutoutModelCopyLayerRender(this.getParentModel(), CRAB_MODEL, texture, poseStack, mbSource, light, crab, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch, (int) 1.0F);
+			coloredCutoutModelCopyLayerRender(this.getParentModel(), CRAB_MODEL, texture, poseStack, mbSource, light, crab, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch, 0xFFFFFFFF);
 		}
 
 		public Model getHatModel(ItemStack stack)
