@@ -47,7 +47,7 @@ public abstract class WitchMixin_Antidote extends Raider
             for(MobEffectInstance effect : getActiveEffects())
                 if(effect.getEffect().value().getCategory() == MobEffectCategory.HARMFUL)
                 {
-                    return BMPotions.ANTIDOTE_POT;
+                    return BMPotions.antidotePotion();
                 }
         }
         return value;
@@ -70,7 +70,7 @@ public abstract class WitchMixin_Antidote extends Raider
 
                 if(found)
                 {
-                    this.setItemSlot(EquipmentSlot.MAINHAND, PotionContents.createItemStack(new ItemStack(Items.POTION).getItem(), BMPotions.ANTIDOTE_POT));
+                    this.setItemSlot(EquipmentSlot.MAINHAND, PotionContents.createItemStack(new ItemStack(Items.POTION).getItem(), BMPotions.antidotePotion()));
                     this.usingTime = this.getMainHandItem().getUseDuration(this);
                     this.setUsingItem(true);
                     if(!this.isSilent())
