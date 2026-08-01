@@ -32,9 +32,9 @@ public abstract class HorseMixin extends AbstractHorse implements HorseHat
 
 
     @Inject(at = @At("TAIL"), method = "defineSynchedData")
-    private void initDataTacker(CallbackInfo cbi)
+    private void initDataTacker(SynchedEntityData.Builder builder, CallbackInfo cbi)
     {
-        this.getEntityData().set(HAS_HAT, false);
+        builder.define(HAS_HAT, false);
     }
 
     @Inject(at = @At("RETURN"), method = "addAdditionalSaveData")

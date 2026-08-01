@@ -34,8 +34,6 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.entity.BannerPattern;
 import net.minecraft.world.level.block.entity.BannerPatterns;
 import org.jetbrains.annotations.Nullable;
-import party.lemons.biomemakeover.BiomeMakeover;
-import party.lemons.biomemakeover.Constants;
 import party.lemons.biomemakeover.init.BMItems;
 
 import java.util.Iterator;
@@ -114,7 +112,7 @@ public class CowboyEntity extends Pillager {
      */
     private void grantAdvancement(ServerPlayer player)
     {
-        AdvancementHolder advancement = player.level().getServer().getAdvancements().get(ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "adventure/voluntary_exile"));
+        AdvancementHolder advancement = player.level().getServer().getAdvancements().get(ResourceLocation.withDefaultNamespace("adventure/voluntary_exile"));
         if(advancement != null)
         {
             AdvancementProgress advancementProgress = player.getAdvancements().getOrStartProgress(advancement);
@@ -156,7 +154,7 @@ public class CowboyEntity extends Pillager {
         blockEntityTag.put("patterns", patterns);
         itemStack.set(DataComponents.BLOCK_ENTITY_DATA, CustomData.of(blockEntityTag));
 
-        itemStack.set(DataComponents.CUSTOM_NAME, Component.translatable("block.minecraft.ominous_banner").withStyle(ChatFormatting.GOLD));
+        itemStack.set(DataComponents.CUSTOM_NAME, Component.translatable("block.biomemakeover.cowboy_banner").withStyle(ChatFormatting.GOLD));
 
         itemStack.set(DataComponents.HIDE_ADDITIONAL_TOOLTIP, Unit.INSTANCE);
 

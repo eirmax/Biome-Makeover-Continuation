@@ -14,14 +14,11 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.PatrolSpawner;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.gen.Invoker;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import party.lemons.biomemakeover.init.BMEntities;
 import party.lemons.biomemakeover.util.extension.HorseHat;
-
-import java.util.Random;
 
 @Mixin(PatrolSpawner.class)
 public abstract class PatrolSpawnerMixin_Cowboy {
@@ -35,9 +32,11 @@ public abstract class PatrolSpawnerMixin_Cowboy {
             BlockState blockState = level.getBlockState(pos);
             if (!NaturalSpawner.isValidEmptySpawnBlock(level, pos, blockState, blockState.getFluidState(), BMEntities.COWBOY.get())) {
                 cbi.setReturnValue(false);
+                return;
             }
             if (!PatrollingMonster.checkPatrollingMonsterSpawnRules(EntityType.PILLAGER, level, MobSpawnType.PATROL, pos, random)) {
                 cbi.setReturnValue(false);
+                return;
             }
             PatrollingMonster patrollingMonster = BMEntities.COWBOY.get().create(level);
             if (patrollingMonster != null)
@@ -58,6 +57,7 @@ public abstract class PatrolSpawnerMixin_Cowboy {
                 patrollingMonster.finalizeSpawn(level, level.getCurrentDifficultyAt(pos), MobSpawnType.PATROL, null);
                 level.addFreshEntityWithPassengers(horse);
                 cbi.setReturnValue(true);
+                return;
             }
             cbi.setReturnValue(false);
         }
