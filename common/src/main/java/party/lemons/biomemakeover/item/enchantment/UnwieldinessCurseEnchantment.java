@@ -2,11 +2,8 @@ package party.lemons.biomemakeover.item.enchantment;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.item.AxeItem;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import party.lemons.biomemakeover.BMConfig;
 
@@ -20,7 +17,7 @@ public class UnwieldinessCurseEnchantment extends TickableAttributeEnchantment {
 
     @Override
     public void initAttributes() {
-        addAttributeModifier((Attribute) Attributes.ATTACK_SPEED, ResourceLocation.parse(UUID.randomUUID().toString()), -0.25, AttributeModifier.Operation.ADD_VALUE);
+        addAttributeModifier(Attributes.ATTACK_SPEED, ResourceLocation.parse(UUID.randomUUID().toString()), -0.25, AttributeModifier.Operation.ADD_VALUE);
     }
 
 }

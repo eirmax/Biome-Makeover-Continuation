@@ -3,12 +3,12 @@ package party.lemons.biomemakeover;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;
-import dev.architectury.platform.Platform;
 
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class BMConfig
@@ -92,6 +92,18 @@ public class BMConfig
 
 	public static void writeConfig(Gson gson, File cfgFile, BMConfig config)
 	{
+		try {
+			File parent = cfgFile.getParentFile();
+			if(parent != null) {
+				Files.createDirectories(parent.toPath());
+			}
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+			return;
+		}
+
 		try(FileWriter writer = new FileWriter(cfgFile)){
 			gson.toJson(config, writer);
 		}
@@ -103,12 +115,7 @@ public class BMConfig
 
 	public static Path getConfigFile()
 	{
-		try {
-			return Platform.getConfigFolder().resolve(Constants.MOD_ID + ".json");
-		} catch (Exception e) {
-			// Platform not ready, return a temporary path
-			return Path.of(System.getProperty("java.io.tmpdir")).resolve(Constants.MOD_ID + ".json");
-		}
+		return Path.of(System.getProperty("user.dir"), "config", Constants.MOD_ID + ".json");
 	}
 	
 	public static void ensureLoaded()

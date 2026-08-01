@@ -2,7 +2,6 @@ package party.lemons.biomemakeover.mixin.enchantment;
 
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -28,7 +27,7 @@ public abstract class EntityMixin {
         {
             if((Entity) ((Object)this) instanceof LivingEntity living)
             {
-                float level = (float) EnchantmentHelper.getEnchantmentLevel(BMEnchantments.FLAMMABILITY_CURSE, living);
+                float level = (float) BMEnchantments.getEnchantmentLevel(BMEnchantments.FLAMMABILITY_CURSE, living);
                 if(level > 0)
                 {
                     ticks += ((float)ticks * (level / 2));
@@ -44,7 +43,7 @@ public abstract class EntityMixin {
     {
         if((Entity) ((Object)this) instanceof LivingEntity living && living.isSwimming())
         {
-            if(EnchantmentHelper.getEnchantmentLevel(BMEnchantments.DEPTH_CURSE,living) > 0)
+            if(BMEnchantments.getEnchantmentLevel(BMEnchantments.DEPTH_CURSE,living) > 0)
             {
                 setSwimming(false);
             }
@@ -58,7 +57,7 @@ public abstract class EntityMixin {
         {
             if(((Entity) ((Object) this)).tickCount > 20) //Max air gets checked before inventory is created, this prevents a npe
             {
-                float level = (float) EnchantmentHelper.getEnchantmentLevel(BMEnchantments.SUFFOCATION_CURSE,living);
+                float level = (float) BMEnchantments.getEnchantmentLevel(BMEnchantments.SUFFOCATION_CURSE,living);
                 if(level > 0)
                 {
                     int maxAir = (int) (300F / ((level) * 1.5F));

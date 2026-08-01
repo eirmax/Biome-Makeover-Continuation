@@ -51,12 +51,11 @@ public abstract class LivingEntityMixin extends Entity
                     ItemEnchantments enchants = EnchantmentHelper.getEnchantmentsForCrafting(st);
                     for(Holder<Enchantment> enchantmentHolder : enchants.keySet())
                     {
-                        Enchantment enchantment = enchantmentHolder.value();
-                        // Check if this enchantment is a TickableAttributeEnchantment by checking the registry
-                        if(BMEnchantments.isTickableAttributeEnchantment(enchantment))
+                        // Check if this enchantment is a TickableAttributeEnchantment by checking the registry key
+                        if(BMEnchantments.isTickableAttributeEnchantment(enchantmentHolder))
                         {
                             // Get the BMEnchantment instance and cast to TickableAttributeEnchantment
-                            TickableAttributeEnchantment tickable = BMEnchantments.getTickableAttributeEnchantment(enchantment);
+                            TickableAttributeEnchantment tickable = BMEnchantments.getTickableAttributeEnchantment(enchantmentHolder);
                             if(tickable != null)
                             {
                                 tickable.removeAttributes((LivingEntity) (Object) this, pair.getFirst());
@@ -77,14 +76,13 @@ public abstract class LivingEntityMixin extends Entity
                     for(Object2IntMap.Entry<Holder<Enchantment>> entry : enchants.entrySet())
                     {
                         Holder<Enchantment> enchantmentHolder = entry.getKey();
-                        Enchantment enchantment = enchantmentHolder.value();
                         int lvl = entry.getIntValue();
 
-                        // Check if this enchantment is a TickableAttributeEnchantment by checking the registry
-                        if(BMEnchantments.isTickableAttributeEnchantment(enchantment))
+                        // Check if this enchantment is a TickableAttributeEnchantment by checking the registry key
+                        if(BMEnchantments.isTickableAttributeEnchantment(enchantmentHolder))
                         {
                             // Get the BMEnchantment instance and cast to TickableAttributeEnchantment
-                            TickableAttributeEnchantment tickable = BMEnchantments.getTickableAttributeEnchantment(enchantment);
+                            TickableAttributeEnchantment tickable = BMEnchantments.getTickableAttributeEnchantment(enchantmentHolder);
                             if(tickable != null)
                             {
                                 tickable.onTick((LivingEntity) (Object) this, stack, lvl);
@@ -103,7 +101,7 @@ public abstract class LivingEntityMixin extends Entity
     @ModifyArg(method = "causeFallDamage", at = @At(value = "INVOKE", target="Lnet/minecraft/world/entity/LivingEntity;calculateFallDamage(FF)I"), index = 0)
     private float changeFallDistance(float distance){
         if(distance >= 3.0)
-            return distance + EnchantmentHelper.getEnchantmentLevel(BMEnchantments.BUCKLING_CURSE, (LivingEntity)(Object)this);
+            return distance + BMEnchantments.getEnchantmentLevel(BMEnchantments.BUCKLING_CURSE, (LivingEntity)(Object)this);
 
         return distance;
     }

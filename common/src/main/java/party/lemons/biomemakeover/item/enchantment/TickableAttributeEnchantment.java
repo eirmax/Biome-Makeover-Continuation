@@ -19,7 +19,7 @@ import java.util.function.Supplier;
 
 public class TickableAttributeEnchantment extends BMEnchantment
 {
-    private final Map<Attribute, AttributeModifier> attributeModifiers = Maps.newHashMap();
+    private final Map<Holder<Attribute>, AttributeModifier> attributeModifiers = Maps.newHashMap();
 
     public TickableAttributeEnchantment(Supplier<BMConfig.EnchantConfig> config, boolean isCurse, Rarity weight, EquipmentSlot[] slotTypes)
     {
@@ -38,7 +38,7 @@ public class TickableAttributeEnchantment extends BMEnchantment
 
     }
 
-    protected void addAttributeModifier(Attribute attribute, ResourceLocation uuid, double amount, AttributeModifier.Operation operation)
+    protected void addAttributeModifier(Holder<Attribute> attribute, ResourceLocation uuid, double amount, AttributeModifier.Operation operation)
     {
         AttributeModifier entityAttributeModifier = new AttributeModifier(uuid, amount, operation);
         this.attributeModifiers.put(attribute, entityAttributeModifier);
@@ -48,10 +48,10 @@ public class TickableAttributeEnchantment extends BMEnchantment
     {
         if(attributeModifiers.size() <= 0 || stack.isEmpty()) return false;
 
-        for(Map.Entry<Attribute, AttributeModifier> attributeEntry : this.attributeModifiers.entrySet())
+        for(Map.Entry<Holder<Attribute>, AttributeModifier> attributeEntry : this.attributeModifiers.entrySet())
         {
             UUID id = MathUtils.uuidFromString(slot.toString());
-            AttributeInstance entityAttributeInstance = entity.getAttributes().getInstance((Holder<Attribute>) attributeEntry.getKey());
+            AttributeInstance entityAttributeInstance = entity.getAttributes().getInstance(attributeEntry.getKey());
             if(entityAttributeInstance != null)
             {
                 AttributeModifier mod = attributeEntry.getValue();
@@ -70,10 +70,10 @@ public class TickableAttributeEnchantment extends BMEnchantment
 
     public void removeAttributes(LivingEntity entity, EquipmentSlot slot)
     {
-        for(Map.Entry<Attribute, AttributeModifier> attributeEntry : this.attributeModifiers.entrySet())
+        for(Map.Entry<Holder<Attribute>, AttributeModifier> attributeEntry : this.attributeModifiers.entrySet())
         {
             UUID slotID = MathUtils.uuidFromString(slot.toString());
-            AttributeInstance entityAttributeInstance = entity.getAttributes().getInstance((Holder<Attribute>) attributeEntry.getKey());
+            AttributeInstance entityAttributeInstance = entity.getAttributes().getInstance(attributeEntry.getKey());
             if(entityAttributeInstance != null)
             {
                 AttributeModifier mod = entityAttributeInstance.getModifier(ResourceLocation.parse(String.valueOf(slotID)));
