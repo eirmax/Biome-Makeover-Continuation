@@ -42,7 +42,8 @@ public class BetterLootTableReference extends LootPoolSingletonContainer {
         lootContext.getResolver()
                 .get(LootDataType.TABLE.registryKey(), lootTableKey)
                 .map(ref -> ref.value())
-                .ifPresent(table -> table.getRandomItems(lootContext, consumer));
+                .orElse(LootTable.EMPTY)
+                .getRandomItemsRaw(lootContext, consumer);
     }
 
 
