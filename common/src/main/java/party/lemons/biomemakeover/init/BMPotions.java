@@ -56,9 +56,9 @@ public class BMPotions
         POTIONS.register();
 
         LifecycleEvent.SETUP.register(() -> {
-            BrewingStandHooks.addMix(Potions.AWKWARD, BMItems.WART, antidotePotion());
-            BrewingStandHooks.addMix(Potions.AWKWARD, BMItems.SCUTTLER_TAIL, antidotePotion());
-            BrewingStandHooks.addMix(Potions.AWKWARD, BMItems.MOTH_SCALES, nocturnalPotion());
+            BrewingStandHooks.addMix(Potions.AWKWARD, BMItems.WART.get(), antidotePotion());
+            BrewingStandHooks.addMix(Potions.AWKWARD, BMItems.SCUTTLER_TAIL.get(), antidotePotion());
+            BrewingStandHooks.addMix(Potions.AWKWARD, BMItems.MOTH_SCALES.get(), nocturnalPotion());
             BrewingStandHooks.addMix(nocturnalPotion(), Items.REDSTONE, longNocturnalPotion());
         });
 

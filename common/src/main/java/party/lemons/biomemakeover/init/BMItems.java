@@ -142,7 +142,7 @@ public class BMItems
 
     public static final RegistrySupplier<Item> ICON_ITEM = registerItem("icon_item", FakeItem::new, false);
 
-    public static final RegistrySupplier<TradeTypes.TradeType<?>> SUSPICIOUS_STEW_TRADE = TRADE_TYPES.register(BiomeMakeover.ID("sussy_stew"), ()->new TradeTypes.TradeType<>(SuspiciousStewListing.CODEC));
+    public static final RegistrySupplier<TradeTypes.TradeType<?>> SUSPICIOUS_STEW_TRADE = TRADE_TYPES.register(BiomeMakeover.ID("sussy_stew"), ()->new TradeTypes.TradeType<>(SuspiciousStewListing.CODEC.codec()));
     public static final RegistrySupplier<DecoratedPotPattern>  CRACKED_PATTERN = DECORATED_POT_PATTERNS.register("cracked_pottery_pattern", () -> new DecoratedPotPattern(BiomeMakeover.ID("cracked_pottery_pattern")));
     public static final RegistrySupplier<DecoratedPotPattern>  REFINED_PATTERN = DECORATED_POT_PATTERNS.register("refined_pottery_pattern", () -> new DecoratedPotPattern(BiomeMakeover.ID("refined_pottery_pattern")));
     public static final RegistrySupplier<DecoratedPotPattern> WORKER_PATTERN = DECORATED_POT_PATTERNS.register("worker_pottery_pattern", () -> new DecoratedPotPattern(BiomeMakeover.ID("worker_pottery_pattern")));
@@ -153,7 +153,7 @@ public class BMItems
     public static void init() {
 
         BMEntities.ATT_PROJECTILE_RESISTANCE.listen(a->{
-            ArmorBuilder CLADDED_ARMOR_BUILDER = ArmorBuilder.create(ArmorMaterialRegistry.CLADDED_MATERIAL).attribute(ResourceLocation.parse("armor_proj_res"), BMEntities.ATT_PROJECTILE_RESISTANCE, 1.5, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
+            ArmorBuilder CLADDED_ARMOR_BUILDER = ArmorBuilder.create(ArmorMaterialRegistry.CLADDED_MATERIAL).attribute(ResourceLocation.parse("armor_proj_res"), BMEntities.ATT_PROJECTILE_RESISTANCE.get(), 1.5, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
             Supplier<Item> CLADDED_HELMET = registerItem("cladded_helmet", CLADDED_ARMOR_BUILDER.build(ArmorItem.Type.HELMET, properties()));
             Supplier<Item> CLADDED_CHESTPLATE = registerItem("cladded_chestplate", CLADDED_ARMOR_BUILDER.build(ArmorItem.Type.CHESTPLATE, properties()));
             Supplier<Item> CLADDED_LEGGINGS = registerItem("cladded_leggings",CLADDED_ARMOR_BUILDER.build(ArmorItem.Type.LEGGINGS, properties()));
