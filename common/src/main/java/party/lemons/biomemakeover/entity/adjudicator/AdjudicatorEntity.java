@@ -3,6 +3,7 @@ package party.lemons.biomemakeover.entity.adjudicator;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ColorParticleOption;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -15,7 +16,6 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerBossEvent;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -29,7 +29,6 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.WrappedGoal;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.boss.wither.WitherBoss;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.CrossbowAttackMob;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.RangedAttackMob;
@@ -44,10 +43,6 @@ import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.loot.LootContext;
-import net.minecraft.world.level.storage.loot.LootParams;
-import net.minecraft.world.level.storage.loot.LootTable;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
@@ -55,6 +50,7 @@ import party.lemons.biomemakeover.BiomeMakeover;
 import party.lemons.biomemakeover.entity.adjudicator.phase.*;
 import party.lemons.biomemakeover.entity.event.EntityEventBroadcaster;
 import party.lemons.biomemakeover.init.BMEffects;
+import party.lemons.biomemakeover.util.BMLootUtil;
 import party.lemons.biomemakeover.util.EntityUtil;
 import party.lemons.biomemakeover.util.NBTUtil;
 import party.lemons.biomemakeover.util.extension.GoalSelectorExtension;
@@ -93,6 +89,7 @@ public class AdjudicatorEntity extends Monster implements PowerableMob, Adjudica
     private boolean active = false;
     private BlockPos homePos;
     private boolean firstTick = true;
+    private boolean checkedArenaDuplicate = false;
     private AABB roomBounds;
     private List<BlockPos> arenaPositions;
     public int stateTime = 0;
@@ -121,9 +118,9 @@ public class AdjudicatorEntity extends Monster implements PowerableMob, Adjudica
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
-        getEntityData().set(STATE, 0);
-        getEntityData().set(CHARGING, false);
-        getEntityData().set(INVULNERABLE, false);
+        builder.define(STATE, 0);
+        builder.define(CHARGING, false);
+        builder.define(INVULNERABLE, false);
     }
 
     @Override
@@ -150,6 +147,13 @@ public class AdjudicatorEntity extends Monster implements PowerableMob, Adjudica
                             arenaPositions.add(b.immutable());
                         }
                     });
+        }
+
+        if(!level().isClientSide() && !checkedArenaDuplicate && roomBounds != null)
+        {
+            checkedArenaDuplicate = true;
+            if(discardArenaDuplicate())
+                return;
         }
 
         super.tick();
@@ -207,8 +211,9 @@ public class AdjudicatorEntity extends Monster implements PowerableMob, Adjudica
             float angle = this.yBodyRot * 0.017453292F + Mth.cos((float)this.tickCount * 0.6662F) * 0.25F;
             float xOffset = Mth.cos(angle);
             float zOffset = Mth.sin(angle);
-            this.level().addParticle((ParticleOptions) ParticleTypes.ENTITY_EFFECT, this.getX() + (double)xOffset * 0.6D, this.getY() + 1.8D, this.getZ() + (double)zOffset * 0.6D, r, g, b);
-            this.level().addParticle((ParticleOptions) ParticleTypes.ENTITY_EFFECT, this.getX() - (double)xOffset * 0.6D, this.getY() + 1.8D, this.getZ() - (double)zOffset * 0.6D, r, g, b);
+            ParticleOptions particle = ColorParticleOption.create(ParticleTypes.ENTITY_EFFECT, (float) r, (float) g, (float) b);
+            this.level().addParticle(particle, this.getX() + (double)xOffset * 0.6D, this.getY() + 1.8D, this.getZ() + (double)zOffset * 0.6D, 0, 0, 0);
+            this.level().addParticle(particle, this.getX() - (double)xOffset * 0.6D, this.getY() + 1.8D, this.getZ() - (double)zOffset * 0.6D, 0, 0, 0);
         }
     }
 
@@ -232,6 +237,8 @@ public class AdjudicatorEntity extends Monster implements PowerableMob, Adjudica
                 setState(AdjudicatorState.WAITING);
                 setPhase(IDLE);
                 active = false;
+                bossBar.removeAllPlayers();
+                bossBar.setVisible(false);
             }
         }
         else
@@ -303,13 +310,7 @@ public class AdjudicatorEntity extends Monster implements PowerableMob, Adjudica
     @Override
     protected void dropFromLootTable(DamageSource damageSource, boolean causedByPlayer)
     {
-        LootTable lootTable = level().getServer().reloadableRegistries().getLootTable(this.getLootTable());
-        LootParams.Builder context = new LootParams.Builder((ServerLevel)level());
-        lootTable.getRandomItems(context.create(LootContextParamSets.EMPTY), (i) -> {
-            ItemEntity item = spawnAtLocation(i);
-            if(item != null)
-                item.setExtendedLifetime();
-        });
+        BMLootUtil.dropEntityLoot(this, this.getLootTable(), damageSource, true);
     }
     
     private void setPhase(AdjudicatorPhase phase)
@@ -397,7 +398,9 @@ public class AdjudicatorEntity extends Monster implements PowerableMob, Adjudica
             ListTag arenaPosTags = new ListTag();
             for(BlockPos pos : arenaPositions)
             {
-                arenaPosTags.add(NbtUtils.writeBlockPos(pos));
+                CompoundTag arenaPosTag = new CompoundTag();
+                arenaPosTag.put("Pos", NbtUtils.writeBlockPos(pos));
+                arenaPosTags.add(arenaPosTag);
             }
             tag.put("ArenaPositions", arenaPosTags);
         }
@@ -413,28 +416,36 @@ public class AdjudicatorEntity extends Monster implements PowerableMob, Adjudica
     @Override
     public void readAdditionalSaveData(CompoundTag tag) {
         super.readAdditionalSaveData(tag);
-        firstTick = tag.getBoolean("FirstTick");
-        active = tag.getBoolean("BossActive");
-        homePos = NBTUtil.readBlockPos(tag);
-        roomBounds = NBTUtil.readBox(tag);
+        firstTick = !tag.contains("FirstTick") || tag.getBoolean("FirstTick");
+        active = tag.contains("BossActive") && tag.getBoolean("BossActive");
+        homePos = tag.contains(NBTUtil.BLOCKPOS_TAG) ? NBTUtil.readBlockPos(tag) : null;
+        roomBounds = tag.contains(NBTUtil.BOX_TAG) ? NBTUtil.readBox(tag) : null;
+
+        if(roomBounds == null)
+            firstTick = true;
 
         if(tag.contains("ArenaPositions"))
         {
             ListTag arenaTags = tag.getList("ArenaPositions", Tag.TAG_COMPOUND);
             this.arenaPositions = Lists.newArrayList();
             for(int i = 0; i < arenaTags.size(); i++) {
-                CompoundTag c = arenaTags.getCompound(i);
-                NbtUtils.readBlockPos(c, "Pos").ifPresent(this.arenaPositions::add);
+                NbtUtils.readBlockPos(arenaTags.getCompound(i), "Pos").ifPresent(this.arenaPositions::add);
             }
         }
 
-        ResourceLocation phaseID = ResourceLocation.withDefaultNamespace(tag.getString("Phase"));
-        AdjudicatorPhase adjPhase = PHASES.get(phaseID);
-        adjPhase.fromTag(tag.getCompound("PhaseData"));
-        this.phase = adjPhase;
-        setUpPhase();
+        ResourceLocation phaseID = tag.contains("Phase", Tag.TAG_STRING) ? ResourceLocation.tryParse(tag.getString("Phase")) : null;
+        AdjudicatorPhase adjPhase = phaseID != null ? PHASES.get(phaseID) : null;
+        if(adjPhase == null)
+            adjPhase = IDLE;
 
-        setState(AdjudicatorState.values()[tag.getInt("State")]);
+        if(tag.contains("PhaseData", Tag.TAG_COMPOUND))
+            adjPhase.fromTag(tag.getCompound("PhaseData"));
+        setPhase(adjPhase);
+
+        int stateIndex = tag.contains("State", Tag.TAG_INT) ? tag.getInt("State") : AdjudicatorState.WAITING.ordinal();
+        if(stateIndex < 0 || stateIndex >= AdjudicatorState.values().length)
+            stateIndex = AdjudicatorState.WAITING.ordinal();
+        setState(AdjudicatorState.values()[stateIndex]);
     }
 
     /*
@@ -457,6 +468,20 @@ public class AdjudicatorEntity extends Monster implements PowerableMob, Adjudica
     public void setActive()
     {
         this.active = true;
+    }
+
+    private boolean discardArenaDuplicate()
+    {
+        for(AdjudicatorEntity adjudicator : level().getEntitiesOfClass(AdjudicatorEntity.class, roomBounds, e->e.isAlive() && !e.isRemoved()))
+        {
+            if(adjudicator != this && adjudicator.getId() < getId())
+            {
+                discard();
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public BlockPos getHomePosition()
@@ -531,7 +556,6 @@ public class AdjudicatorEntity extends Monster implements PowerableMob, Adjudica
     {
         return active;
     }
-
 
     /*
     Finds one of the preset arena positions
@@ -658,6 +682,8 @@ public class AdjudicatorEntity extends Monster implements PowerableMob, Adjudica
 
     @Override
     public void remove(RemovalReason removalReason) {
+        bossBar.removeAllPlayers();
+        bossBar.setVisible(false);
         super.remove(removalReason);
         AdjudicatorRoomListener.disableAdjudicator(this);
     }

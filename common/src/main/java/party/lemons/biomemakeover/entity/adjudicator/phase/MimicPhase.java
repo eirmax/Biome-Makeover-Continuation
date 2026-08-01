@@ -38,11 +38,15 @@ public class MimicPhase extends BowAttackingPhase
         int mimicCount = RandomUtil.randomRange(3, 6);
         for(int i = 0; i < mimicCount; i++)
         {
-            BlockPos spawnPos;
-            do
+            BlockPos spawnPos = adjudicator.findSuitableArenaPos();
+            for(int attempts = 0; attempts < 32 && setPositions.contains(spawnPos); attempts++)
             {
                 spawnPos = adjudicator.findSuitableArenaPos();
-            }while(setPositions.contains(spawnPos));
+            }
+
+            if(setPositions.contains(spawnPos))
+                continue;
+
             setPositions.add(spawnPos);
 
             if(level.getBlockState(spawnPos.below()).isAir())

@@ -2,6 +2,7 @@ package party.lemons.biomemakeover.entity.adjudicator;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
@@ -53,7 +54,8 @@ public class RavagerChargePhase extends AdjudicatorPhase
         adjudicator.startRiding(ravager, true);
 
         ItemStack stack = new ItemStack(Items.CROSSBOW);
-        stack.enchant((Holder<Enchantment>) Enchantments.MULTISHOT, 3);
+        Holder<Enchantment> multishot = level.registryAccess().registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(Enchantments.MULTISHOT);
+        stack.enchant(multishot, 3);
         adjudicator.setItemInHand(InteractionHand.MAIN_HAND, stack);
 
         adjudicator.playSound(BMEffects.ADJUDICATOR_SPELL_GRUNT.get(), 1F, 1F);

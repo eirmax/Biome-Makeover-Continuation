@@ -2,6 +2,7 @@ package party.lemons.biomemakeover.entity.adjudicator.phase;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
@@ -64,7 +65,8 @@ public class StoneGolemPhase extends AttackingPhase
         adjudicator.clearArea(golem);
 
         ItemStack stack = new ItemStack(Items.BOW);
-        stack.enchant((Holder<Enchantment>) Enchantments.PUNCH, 1);
+        Holder<Enchantment> punch = level.registryAccess().registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(Enchantments.PUNCH);
+        stack.enchant(punch, 1);
         adjudicator.setItemInHand(InteractionHand.MAIN_HAND, stack);
 
         adjudicator.playSound(BMEffects.ADJUDICATOR_SPELL_GRUNT.get(), 1F, 1F);
