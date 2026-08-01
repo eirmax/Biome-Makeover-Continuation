@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "###",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "biomemakeover:crude_cladding"
+    }
+  },
+  "result": {
+    "count": 1,
+    "id": "biomemakeover:crude_cladding_block"
+  },
+  "category": "building"
+}

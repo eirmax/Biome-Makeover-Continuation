@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "##",
+    "##",
+    "##"
+  ],
+  "key": {
+    "#": {
+      "item": "biomemakeover:blighted_balsa_planks"
+    }
+  },
+  "result": {
+    "count": 3,
+    "id": "biomemakeover:blighted_balsa_door"
+  },
+  "category": "building"
+}

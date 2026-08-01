@@ -1,0 +1,15 @@
+{
+  "replace": false,
+  "values": [
+    "biomemakeover:buckling_curse",
+    "biomemakeover:conductivity_curse",
+    "biomemakeover:decay_curse",
+    "biomemakeover:depth_curse",
+    "biomemakeover:enfeeblement_curse",
+    "biomemakeover:flammability_curse",
+    "biomemakeover:inaccuracy_curse",
+    "biomemakeover:insomnia_curse",
+    "biomemakeover:suffocation_curse",
+    "biomemakeover:unwieldiness_curse"
+  ]
+}

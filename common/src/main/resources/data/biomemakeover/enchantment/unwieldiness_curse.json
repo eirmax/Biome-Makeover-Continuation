@@ -1,0 +1,22 @@
+{
+  "description": {
+    "translate": "enchantment.biomemakeover.unwieldiness_curse"
+  },
+  "supported_items": "#minecraft:enchantable/weapon",
+  "primary_items": "#minecraft:enchantable/weapon",
+  "weight": 5,
+  "max_level": 3,
+  "min_cost": {
+    "base": 25,
+    "per_level_above_first": 0
+  },
+  "max_cost": {
+    "base": 50,
+    "per_level_above_first": 0
+  },
+  "anvil_cost": 1,
+  "slots": [
+    "hand"
+  ],
+  "effects": {}
+}

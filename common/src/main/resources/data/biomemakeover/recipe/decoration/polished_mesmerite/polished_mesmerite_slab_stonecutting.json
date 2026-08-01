@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "biomemakeover:polished_mesmerite"
+  },
+  "result": {
+    "id": "biomemakeover:polished_mesmerite_slab",
+    "count": 2
+  }
+}

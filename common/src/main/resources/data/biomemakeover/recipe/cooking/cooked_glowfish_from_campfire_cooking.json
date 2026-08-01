@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:campfire_cooking",
+  "ingredient": {
+    "item": "biomemakeover:glowfish"
+  },
+  "result": {
+    "id": "biomemakeover:cooked_glowfish"
+  },
+  "experience": 0.35,
+  "cookingtime": 600
+}

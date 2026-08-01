@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "biomemakeover:glowshroom_stem"
+  },
+  "result": {
+    "id": "biomemakeover:glowshroom_stem_brick",
+    "count": 1
+  }
+}

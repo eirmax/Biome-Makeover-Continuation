@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "biomemakeover:mushroom_stem_brick"
+  },
+  "result": {
+    "id": "biomemakeover:mushroom_stem_brick_slab",
+    "count": 2
+  }
+}

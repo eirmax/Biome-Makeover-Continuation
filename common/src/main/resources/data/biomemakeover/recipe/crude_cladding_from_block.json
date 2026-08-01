@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "biomemakeover:crude_cladding_block"
+    }
+  ],
+  "result": {
+    "count": 9,
+    "id": "biomemakeover:crude_cladding"
+  },
+  "category": "misc"
+}

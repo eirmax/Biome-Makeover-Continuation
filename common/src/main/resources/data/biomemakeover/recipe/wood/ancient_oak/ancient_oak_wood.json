@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "##",
+    "##"
+  ],
+  "key": {
+    "#": {
+      "item": "biomemakeover:ancient_oak_log"
+    }
+  },
+  "result": {
+    "count": 4,
+    "id": "biomemakeover:ancient_oak_wood"
+  },
+  "category": "building"
+}

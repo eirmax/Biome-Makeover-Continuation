@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "chest_boat",
+  "ingredients": [
+    {
+      "item": "minecraft:chest"
+    },
+    {
+      "item": "biomemakeover:ancient_oak_boat"
+    }
+  ],
+  "result": {
+    "id": "biomemakeover:ancient_oak_chest_boat"
+  },
+  "category": "misc"
+}

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "##",
+    "##"
+  ],
+  "key": {
+    "#": {
+      "item": "biomemakeover:glowshroom_stem"
+    }
+  },
+  "result": {
+    "count": 4,
+    "id": "biomemakeover:glowshroom_stem_brick"
+  },
+  "category": "building"
+}

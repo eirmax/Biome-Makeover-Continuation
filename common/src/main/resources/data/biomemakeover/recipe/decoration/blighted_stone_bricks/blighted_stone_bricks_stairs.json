@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "#  ",
+    "## ",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "biomemakeover:blighted_stone_bricks"
+    }
+  },
+  "result": {
+    "count": 4,
+    "id": "biomemakeover:blighted_stone_bricks_stairs"
+  },
+  "category": "building"
+}

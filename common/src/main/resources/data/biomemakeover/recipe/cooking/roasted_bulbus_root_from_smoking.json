@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:smoking",
+  "ingredient": {
+    "item": "biomemakeover:bulbus_root"
+  },
+  "result": {
+    "id": "biomemakeover:roasted_bulbus_root"
+  },
+  "experience": 0.35,
+  "cookingtime": 100
+}

@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "biomemakeover:mossy_dried_peat_bricks"
+  },
+  "result": {
+    "id": "biomemakeover:mossy_dried_peat_brick_slab",
+    "count": 2
+  }
+}

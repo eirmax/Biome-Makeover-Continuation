@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "planks",
+  "ingredients": [
+    {
+      "item": "biomemakeover:stripped_swamp_cypress_wood"
+    }
+  ],
+  "result": {
+    "count": 4,
+    "id": "biomemakeover:swamp_cypress_planks"
+  },
+  "category": "building"
+}

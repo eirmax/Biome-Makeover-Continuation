@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:smoking",
+  "ingredient": {
+    "item": "biomemakeover:raw_crab"
+  },
+  "result": {
+    "id": "biomemakeover:cooked_crab"
+  },
+  "experience": 0.35,
+  "cookingtime": 100
+}

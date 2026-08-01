@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "# #",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "biomemakeover:willow_planks"
+    }
+  },
+  "result": {
+    "count": 1,
+    "id": "biomemakeover:willow_boat"
+  },
+  "category": "misc"
+}

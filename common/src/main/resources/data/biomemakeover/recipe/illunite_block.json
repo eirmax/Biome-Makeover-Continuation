@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "###",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "biomemakeover:illunite_shard"
+    }
+  },
+  "result": {
+    "count": 1,
+    "id": "biomemakeover:illunite_block"
+  },
+  "category": "building"
+}

@@ -10,18 +10,12 @@
             "entries": [
               {
                 "data": {
-                  "Properties": {
-                    "pads": "0"
-                  },
                   "Name": "biomemakeover:barrel_cactus"
                 },
                 "weight": 5
               },
               {
                 "data": {
-                  "Properties": {
-                    "pads": "1"
-                  },
                   "Name": "biomemakeover:barrel_cactus_flowered"
                 },
                 "weight": 1

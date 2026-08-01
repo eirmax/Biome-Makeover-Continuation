@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "biomemakeover:blue_terracotta_bricks"
+    }
+  },
+  "result": {
+    "count": 6,
+    "id": "biomemakeover:blue_terracotta_brick_wall"
+  },
+  "category": "building"
+}

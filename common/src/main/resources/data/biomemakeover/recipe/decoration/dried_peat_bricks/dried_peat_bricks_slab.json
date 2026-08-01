@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "biomemakeover:dried_peat_bricks"
+    }
+  },
+  "result": {
+    "count": 6,
+    "id": "biomemakeover:dried_peat_bricks_slab"
+  },
+  "category": "building"
+}

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "planks",
+  "ingredients": [
+    {
+      "item": "biomemakeover:mycelium_roots"
+    },
+    {
+      "item": "minecraft:stone_bricks"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "biomemakeover:blighted_stone_bricks"
+  },
+  "category": "building"
+}

@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "planks",
+  "ingredients": [
+    {
+      "item": "biomemakeover:willow_log"
+    }
+  ],
+  "result": {
+    "count": 4,
+    "id": "biomemakeover:willow_planks"
+  },
+  "category": "building"
+}

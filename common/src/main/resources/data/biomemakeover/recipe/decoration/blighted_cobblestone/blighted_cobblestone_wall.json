@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "biomemakeover:blighted_cobblestone"
+    }
+  },
+  "result": {
+    "count": 6,
+    "id": "biomemakeover:blighted_cobblestone_wall"
+  },
+  "category": "building"
+}

@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "##",
+    "##",
+    "##"
+  ],
+  "key": {
+    "#": {
+      "item": "biomemakeover:willow_planks"
+    }
+  },
+  "result": {
+    "count": 3,
+    "id": "biomemakeover:willow_door"
+  },
+  "category": "building"
+}

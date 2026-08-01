@@ -1,0 +1,33 @@
+{
+ "type": "minecraft:entity",
+ "pools": [
+  {
+   "rolls": 1,
+   "entries": [
+    {
+     "type": "minecraft:item",
+     "functions": [
+      {
+       "function": "minecraft:set_count",
+       "count": {
+        "min": 0.0,
+        "max": 1.0,
+        "type": "minecraft:uniform"
+       }
+      },
+      {
+       "function": "minecraft:enchanted_count_increase",
+       "enchantment": "minecraft:looting",
+       "count": {
+        "min": 0.0,
+        "max": 1.0
+       }
+      }
+     ],
+     "name": "biomemakeover:ectoplasm"
+    }
+   ]
+  }
+ ],
+ "random_sequence": "biomemakeover:entities/ghost"
+}

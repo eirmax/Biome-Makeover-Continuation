@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "planks",
+  "ingredients": [
+    {
+      "item": "minecraft:vine"
+    },
+    {
+      "item": "biomemakeover:dried_peat_bricks"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "biomemakeover:mossy_dried_peat_bricks"
+  },
+  "category": "building"
+}
