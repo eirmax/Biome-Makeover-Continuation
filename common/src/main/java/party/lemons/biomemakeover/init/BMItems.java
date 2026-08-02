@@ -142,7 +142,7 @@ public class BMItems
 
     public static final RegistrySupplier<Item> ICON_ITEM = registerItem("icon_item", FakeItem::new, false);
 
-    public static final RegistrySupplier<TradeTypes.TradeType<?>> SUSPICIOUS_STEW_TRADE = TRADE_TYPES.register(BiomeMakeover.ID("sussy_stew"), ()->new TradeTypes.TradeType<>(SuspiciousStewListing.CODEC.codec()));
+    public static final RegistrySupplier<TradeTypes.TradeType<?>> SUSPICIOUS_STEW_TRADE = TRADE_TYPES.register(BiomeMakeover.ID("sussy_stew"), ()->new TradeTypes.TradeType<>(SuspiciousStewListing.CODEC));
     public static final RegistrySupplier<DecoratedPotPattern>  CRACKED_PATTERN = DECORATED_POT_PATTERNS.register("cracked_pottery_pattern", () -> new DecoratedPotPattern(BiomeMakeover.ID("cracked_pottery_pattern")));
     public static final RegistrySupplier<DecoratedPotPattern>  REFINED_PATTERN = DECORATED_POT_PATTERNS.register("refined_pottery_pattern", () -> new DecoratedPotPattern(BiomeMakeover.ID("refined_pottery_pattern")));
     public static final RegistrySupplier<DecoratedPotPattern> WORKER_PATTERN = DECORATED_POT_PATTERNS.register("worker_pottery_pattern", () -> new DecoratedPotPattern(BiomeMakeover.ID("worker_pottery_pattern")));
