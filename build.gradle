@@ -45,15 +45,13 @@ allprojects {
     repositories {
         mavenLocal()
 
-        def githubUser = apikeyProperties['gpr.user'] ?: System.getenv("GITHUB_ACTOR") ?: System.getenv("USERNAME")
-        def githubToken = apikeyProperties['gpr.key'] ?: System.getenv("GITHUB_TOKEN") ?: System.getenv("TOKEN")
-        if (githubUser && githubToken) {
-            maven {
-                url = uri("https://maven.pkg.github.com/eirmax/taniwha-remaked")
-                credentials {
-                    username = githubUser
-                    password = githubToken
-                }
+        def githubUser = apikeyProperties['gpr.user'] ?: System.getenv("GPR_USER") ?: System.getenv("GITHUB_ACTOR") ?: System.getenv("USERNAME") ?: ""
+        def githubToken = apikeyProperties['gpr.key'] ?: System.getenv("GPR_KEY") ?: System.getenv("GITHUB_TOKEN") ?: System.getenv("TOKEN") ?: ""
+        maven {
+            url = uri("https://maven.pkg.github.com/eirmax/taniwha-remaked")
+            credentials {
+                username = githubUser
+                password = githubToken
             }
         }
         maven { url "https://maven.shedaniel.me" }
