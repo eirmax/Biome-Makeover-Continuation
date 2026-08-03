@@ -1,0 +1,38 @@
+{
+    "parent":  "biomemakeover:biomemakeover/enter_dark_forest",
+    "display":  {
+                    "icon":  {
+                                 "count":  1,
+                                 "id":  "biomemakeover:crude_cladding"
+                             },
+                    "title":  {
+                                  "translate":  "advancements.biomemakeover.crude_cladding.title"
+                              },
+                    "description":  {
+                                        "translate":  "advancements.biomemakeover.crude_cladding.description"
+                                    },
+                    "frame":  "task",
+                    "show_toast":  true,
+                    "announce_to_chat":  true,
+                    "hidden":  false
+                },
+    "criteria":  {
+                     "get_disc":  {
+                                      "trigger":  "minecraft:inventory_changed",
+                                      "conditions":  {
+                                                         "items":  [
+                                                                       {
+                                                                           "items":  [
+                                                                                         "biomemakeover:crude_cladding"
+                                                                                     ]
+                                                                       }
+                                                                   ]
+                                                     }
+                                  }
+                 },
+    "requirements":  [
+                         [
+                             "get_disc"
+                         ]
+                     ]
+}

@@ -1,0 +1,38 @@
+{
+    "parent":  "biomemakeover:biomemakeover/crude_cladding",
+    "display":  {
+                    "icon":  {
+                                 "count":  1,
+                                 "id":  "biomemakeover:cladding_upgrade_smithing_template"
+                             },
+                    "title":  {
+                                  "translate":  "advancements.biomemakeover.cladding_template.title"
+                              },
+                    "description":  {
+                                        "translate":  "advancements.biomemakeover.cladding_template.description"
+                                    },
+                    "frame":  "task",
+                    "show_toast":  true,
+                    "announce_to_chat":  true,
+                    "hidden":  false
+                },
+    "criteria":  {
+                     "get_disc":  {
+                                      "trigger":  "minecraft:inventory_changed",
+                                      "conditions":  {
+                                                         "items":  [
+                                                                       {
+                                                                           "items":  [
+                                                                                         "biomemakeover:cladding_upgrade_smithing_template"
+                                                                                     ]
+                                                                       }
+                                                                   ]
+                                                     }
+                                  }
+                 },
+    "requirements":  [
+                         [
+                             "get_disc"
+                         ]
+                     ]
+}

@@ -23,10 +23,15 @@
       "party.lemons.biomemakeover.fabric.BMFabricClient"
     ]
   },
-  "mixins": ["biomemakeover.mixins.json", "biomemakeover-common.mixins.json"],
+  "mixins": [
+    "biomemakeover.mixins.json",
+    "biomemakeover-common.mixins.json"
+  ],
   "depends": {
+    "fabricloader": ">=0.16.5",
     "fabric-api": "*",
-    "minecraft": ">=1.20-beta.1",
-    "architectury": ">=9.0.0"
+    "minecraft": "1.21.1",
+    "java": ">=21",
+    "architectury": ">=13.0.11"
   }
 }

@@ -69,4 +69,55 @@ allprojects {
     java {
         withSourcesJar()
     }
+
+    tasks.register("validateJsonResources") {
+        doLast {
+            def resourcesDir = file("src/main/resources")
+            if (!resourcesDir.exists()) {
+                return
+            }
+
+            def slurper = new groovy.json.JsonSlurper()
+            fileTree(resourcesDir).matching { include "**/*.json" }.each { jsonFile ->
+                try {
+                    slurper.parse(jsonFile)
+                } catch (Exception ex) {
+                    throw new GradleException("Invalid JSON resource: ${jsonFile}", ex)
+                }
+            }
+
+            def legacyAdvancements = new File(resourcesDir, "data/biomemakeover/advancements")
+            if (legacyAdvancements.exists()) {
+                throw new GradleException("Legacy 1.20 resource directory remains: ${legacyAdvancements}")
+            }
+
+            ["data/forge/blocks", "data/forge/items"].each { oldForgeTagPath ->
+                def legacyForgeTagDir = new File(resourcesDir, oldForgeTagPath)
+                if (legacyForgeTagDir.exists()) {
+                    throw new GradleException("Legacy forge tag directory remains: ${legacyForgeTagDir}")
+                }
+            }
+
+            fileTree(new File(resourcesDir, "data")).matching {
+                include "**/tags/blocks/**", "**/tags/items/**", "**/tags/entity_types/**"
+            }.files.each { legacyTagFile ->
+                throw new GradleException("Legacy 1.20 tag directory remains: ${legacyTagFile}")
+            }
+
+            def advancementDir = new File(resourcesDir, "data/biomemakeover/advancement")
+            if (advancementDir.exists()) {
+                fileTree(advancementDir).matching { include "**/*.json" }.each { advancementFile ->
+                    def advancement = slurper.parse(advancementFile)
+                    def icon = advancement.display?.icon
+                    if (icon instanceof Map && (icon.containsKey("item") || icon.containsKey("nbt"))) {
+                        throw new GradleException("Legacy advancement icon format in ${advancementFile}")
+                    }
+                }
+            }
+        }
+    }
+
+    tasks.named("check") {
+        dependsOn tasks.named("validateJsonResources")
+    }
 }

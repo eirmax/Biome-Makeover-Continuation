@@ -1,0 +1,30 @@
+{
+    "parent":  "biomemakeover:biomemakeover/enter_mushroom_fields",
+    "display":  {
+                    "icon":  {
+                                 "count":  1,
+                                 "id":  "biomemakeover:glowfish_bucket"
+                             },
+                    "title":  {
+                                  "translate":  "advancements.biomemakeover.glowfish_bucket_save.title"
+                              },
+                    "description":  {
+                                        "translate":  "advancements.biomemakeover.glowfish_bucket_save.description"
+                                    },
+                    "frame":  "challenge",
+                    "show_toast":  true,
+                    "announce_to_chat":  true,
+                    "hidden":  false
+                },
+    "criteria":  {
+                     "get_stew":  {
+                                      "trigger":  "biomemakeover:glowfish_bucket_save",
+                                      "conditions":  {
+
+                                                     }
+                                  }
+                 },
+    "requirements":  [
+
+                     ]
+}

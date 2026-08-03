@@ -1,0 +1,41 @@
+{
+    "parent":  "biomemakeover:biomemakeover/ghost_town",
+    "display":  {
+                    "icon":  {
+                                 "count":  1,
+                                 "id":  "biomemakeover:cowboy_hat"
+                             },
+                    "title":  {
+                                  "translate":  "advancements.biomemakeover.cursed_hat.title"
+                              },
+                    "description":  {
+                                        "translate":  "advancements.biomemakeover.cursed_hat.description"
+                                    },
+                    "frame":  "challenge",
+                    "show_toast":  true,
+                    "announce_to_chat":  true,
+                    "hidden":  false
+                },
+    "criteria":  {
+                     "wear_hat":  {
+                                      "trigger":  "taniwha:wear_armor",
+                                      "conditions":  {
+                                                         "item":  {
+                                                                      "items":  [
+                                                                                    "biomemakeover:cowboy_hat"
+                                                                                ],
+                                                                      "enchantments":  [
+                                                                                           {
+                                                                                               "enchantment":  "minecraft:binding_curse"
+                                                                                           }
+                                                                                       ]
+                                                                  }
+                                                     }
+                                  }
+                 },
+    "requirements":  [
+                         [
+                             "wear_hat"
+                         ]
+                     ]
+}

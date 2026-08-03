@@ -1,0 +1,34 @@
+{
+    "parent":  "biomemakeover:biomemakeover/enter_badlands",
+    "display":  {
+                    "icon":  {
+                                 "count":  1,
+                                 "id":  "minecraft:potion",
+                                 "components":  {
+                                                    "minecraft:potion_contents":  {
+                             "potion":  "biomemakeover:actidote_pot"
+                                                                                  }
+                                                }
+                             },
+                    "title":  {
+                                  "translate":  "advancements.biomemakeover.antidote.title"
+                              },
+                    "description":  {
+                                        "translate":  "advancements.biomemakeover.antidote.description"
+                                    },
+                    "frame":  "task",
+                    "show_toast":  true,
+                    "announce_to_chat":  true,
+                    "hidden":  false
+                },
+    "criteria":  {
+                     "has_effect":  {
+                                        "trigger":  "biomemakeover:antidote"
+                                    }
+                 },
+    "requirements":  [
+                         [
+                             "has_effect"
+                         ]
+                     ]
+}

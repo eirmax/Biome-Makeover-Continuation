@@ -1,0 +1,38 @@
+{
+    "parent":  "biomemakeover:biomemakeover/pink_bud",
+    "display":  {
+                    "icon":  {
+                                 "count":  1,
+                                 "id":  "biomemakeover:scuttler_tail"
+                             },
+                    "title":  {
+                                  "translate":  "advancements.biomemakeover.scuttler_tail.title"
+                              },
+                    "description":  {
+                                        "translate":  "advancements.biomemakeover.scuttler_tail.description"
+                                    },
+                    "frame":  "task",
+                    "show_toast":  true,
+                    "announce_to_chat":  true,
+                    "hidden":  false
+                },
+    "criteria":  {
+                     "get_stew":  {
+                                      "trigger":  "minecraft:inventory_changed",
+                                      "conditions":  {
+                                                         "items":  [
+                                                                       {
+                                                                           "items":  [
+                                                                                         "biomemakeover:scuttler_tail"
+                                                                                     ]
+                                                                       }
+                                                                   ]
+                                                     }
+                                  }
+                 },
+    "requirements":  [
+                         [
+                             "get_stew"
+                         ]
+                     ]
+}

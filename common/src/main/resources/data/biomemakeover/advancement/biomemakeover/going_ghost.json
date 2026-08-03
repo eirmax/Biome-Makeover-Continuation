@@ -1,0 +1,30 @@
+{
+    "parent":  "biomemakeover:biomemakeover/poltergeist",
+    "display":  {
+                    "icon":  {
+                                 "count":  1,
+                                 "id":  "biomemakeover:poltergeist"
+                             },
+                    "title":  {
+                                  "translate":  "advancements.biomemakeover.going_ghost.title"
+                              },
+                    "description":  {
+                                        "translate":  "advancements.biomemakeover.going_ghost.description"
+                                    },
+                    "frame":  "challenge",
+                    "show_toast":  true,
+                    "announce_to_chat":  true,
+                    "hidden":  false
+                },
+    "criteria":  {
+                     "go_ghost":  {
+                                      "trigger":  "biomemakeover:poltergeist_yourself",
+                                      "conditions":  {
+
+                                                     }
+                                  }
+                 },
+    "requirements":  [
+
+                     ]
+}

@@ -6,9 +6,9 @@ import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -25,8 +25,10 @@ public class DisabledSpawnEggItem extends ArchitecturySpawnEggItem
 		super(entityType, backgroundColor, highlightColor, properties, dispenseItemBehavior);
 	}
 
-	public void appendHoverText(ItemStack itemStack, @Nullable Level level, List<Component> list, TooltipFlag tooltipFlag)
+	@Override
+	public void appendHoverText(ItemStack itemStack, Item.TooltipContext tooltipContext, List<Component> list, TooltipFlag tooltipFlag)
 	{
+		super.appendHoverText(itemStack, tooltipContext, list, tooltipFlag);
 		list.add(Component.translatable("item.biomemakeover.toad_spawn_egg.desc"));
 	}
 }

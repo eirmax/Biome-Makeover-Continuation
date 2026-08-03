@@ -1,0 +1,93 @@
+{
+    "display":  {
+                    "icon":  {
+                                 "count":  1,
+                                 "id":  "biomemakeover:icon_item"
+                             },
+                    "title":  {
+                                  "translate":  "advancements.biomemakeover.root.title"
+                              },
+                    "description":  {
+                                        "translate":  "advancements.biomemakeover.root.description"
+                                    },
+                    "frame":  "task",
+                    "show_toast":  false,
+                    "announce_to_chat":  false,
+                    "hidden":  false,
+                    "background":  "biomemakeover:textures/gui/advancements.png"
+                },
+    "criteria":  {
+                     "enter_badlands":  {
+                                            "conditions":  {
+                                                               "player":  [
+                                                                              {
+                                                                                  "condition":  "minecraft:entity_properties",
+                                                                                  "entity":  "this",
+                                                                                  "predicate":  {
+                                                                                                    "location":  {
+                                                                                                                     "biome":  "minecraft:badlands"
+                                                                                                                 }
+                                                                                                }
+                                                                              }
+                                                                          ]
+                                                           },
+                                            "trigger":  "minecraft:location"
+                                        },
+                     "enter_mushroom_fields":  {
+                                                   "conditions":  {
+                                                                      "player":  [
+                                                                                     {
+                                                                                         "condition":  "minecraft:entity_properties",
+                                                                                         "entity":  "this",
+                                                                                         "predicate":  {
+                                                                                                           "location":  {
+                                                                                                                            "biome":  "minecraft:mushroom_fields"
+                                                                                                                        }
+                                                                                                       }
+                                                                                     }
+                                                                                 ]
+                                                                  },
+                                                   "trigger":  "minecraft:location"
+                                               },
+                     "enter_swamp":  {
+                                         "conditions":  {
+                                                            "player":  [
+                                                                           {
+                                                                               "condition":  "minecraft:entity_properties",
+                                                                               "entity":  "this",
+                                                                               "predicate":  {
+                                                                                                 "location":  {
+                                                                                                                  "biome":  "minecraft:swamp"
+                                                                                                              }
+                                                                                             }
+                                                                           }
+                                                                       ]
+                                                        },
+                                         "trigger":  "minecraft:location"
+                                     },
+                     "enter_dark_forest":  {
+                                               "conditions":  {
+                                                                  "player":  [
+                                                                                 {
+                                                                                     "condition":  "minecraft:entity_properties",
+                                                                                     "entity":  "this",
+                                                                                     "predicate":  {
+                                                                                                       "location":  {
+                                                                                                                        "biome":  "minecraft:dark_forest"
+                                                                                                                    }
+                                                                                                   }
+                                                                                 }
+                                                                             ]
+                                                              },
+                                               "trigger":  "minecraft:location"
+                                           }
+                 },
+    "requirements":  [
+                         [
+                             "enter_badlands",
+                             "enter_mushroom_fields",
+                             "enter_swamp",
+                             "enter_dark_forest"
+                         ]
+                     ]
+}

@@ -1,0 +1,42 @@
+{
+    "parent":  "biomemakeover:biomemakeover/enter_badlands",
+    "display":  {
+                    "icon":  {
+                                 "count":  1,
+                                 "id":  "biomemakeover:ectoplasm"
+                             },
+                    "title":  {
+                                  "translate":  "advancements.biomemakeover.ghost_town.title"
+                              },
+                    "description":  {
+                                        "translate":  "advancements.biomemakeover.ghost_town.description"
+                                    },
+                    "frame":  "task",
+                    "show_toast":  true,
+                    "announce_to_chat":  true,
+                    "hidden":  false
+                },
+    "criteria":  {
+                     "ghost_town":  {
+                                        "trigger":  "minecraft:location",
+                                        "conditions":  {
+                                                           "player":  [
+                                                                          {
+                                                                              "condition":  "minecraft:entity_properties",
+                                                                              "entity":  "this",
+                                                                              "predicate":  {
+                                                                                                "location":  {
+                                                                                                                 "structure":  "biomemakeover:ghost_town"
+                                                                                                             }
+                                                                                            }
+                                                                          }
+                                                                      ]
+                                                       }
+                                    }
+                 },
+    "requirements":  [
+                         [
+                             "ghost_town"
+                         ]
+                     ]
+}

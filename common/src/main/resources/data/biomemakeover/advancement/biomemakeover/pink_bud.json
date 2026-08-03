@@ -1,0 +1,38 @@
+{
+    "parent":  "biomemakeover:biomemakeover/cacti",
+    "display":  {
+                    "icon":  {
+                                 "count":  1,
+                                 "id":  "biomemakeover:pink_bud"
+                             },
+                    "title":  {
+                                  "translate":  "advancements.biomemakeover.pink_bud.title"
+                              },
+                    "description":  {
+                                        "translate":  "advancements.biomemakeover.pink_bud.description"
+                                    },
+                    "frame":  "task",
+                    "show_toast":  true,
+                    "announce_to_chat":  true,
+                    "hidden":  false
+                },
+    "criteria":  {
+                     "get_stew":  {
+                                      "trigger":  "minecraft:inventory_changed",
+                                      "conditions":  {
+                                                         "items":  [
+                                                                       {
+                                                                           "items":  [
+                                                                                         "biomemakeover:pink_bud"
+                                                                                     ]
+                                                                       }
+                                                                   ]
+                                                     }
+                                  }
+                 },
+    "requirements":  [
+                         [
+                             "get_stew"
+                         ]
+                     ]
+}

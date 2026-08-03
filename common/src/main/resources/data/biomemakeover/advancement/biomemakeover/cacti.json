@@ -1,0 +1,53 @@
+{
+    "parent":  "biomemakeover:biomemakeover/enter_badlands",
+    "display":  {
+                    "icon":  {
+                                 "count":  1,
+                                 "id":  "biomemakeover:barrel_cactus_flowered"
+                             },
+                    "title":  {
+                                  "translate":  "advancements.biomemakeover.cacti.title"
+                              },
+                    "description":  {
+                                        "translate":  "advancements.biomemakeover.cacti.description"
+                                    },
+                    "frame":  "task",
+                    "show_toast":  true,
+                    "announce_to_chat":  true,
+                    "hidden":  false
+                },
+    "criteria":  {
+                     "cacti":  {
+                                   "trigger":  "minecraft:inventory_changed",
+                                   "conditions":  {
+                                                      "items":  [
+                                                                    {
+                                                                        "items":  [
+                                                                                      "biomemakeover:saguaro_cactus"
+                                                                                  ]
+                                                                    },
+                                                                    {
+                                                                        "items": [
+                                                                                     "minecraft:cactus"
+                                                                                 ]
+                                                                    },
+                                                                    {
+                                                                        "items":  [
+                                                                                      "biomemakeover:barrel_cactus_flowered"
+                                                                                  ]
+                                                                    },
+                                                                    {
+                                                                        "items":  [
+                                                                                      "biomemakeover:barrel_cactus"
+                                                                                  ]
+                                                                    }
+                                                                ]
+                                                  }
+                               }
+                 },
+    "requirements":  [
+                         [
+                             "cacti"
+                         ]
+                     ]
+}
