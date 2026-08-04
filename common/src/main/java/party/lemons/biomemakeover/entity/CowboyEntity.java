@@ -4,11 +4,11 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementProgress;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.data.registries.VanillaRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -27,16 +27,14 @@ import net.minecraft.world.entity.raid.Raid;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.entity.BannerPattern;
+import net.minecraft.world.level.block.entity.BannerPatternLayers;
 import net.minecraft.world.level.block.entity.BannerPatterns;
 import org.jetbrains.annotations.Nullable;
 import party.lemons.biomemakeover.init.BMItems;
-
-import java.util.Iterator;
 
 public class CowboyEntity extends Pillager {
     public CowboyEntity(EntityType<? extends Pillager> entityType, Level level) {
@@ -84,7 +82,7 @@ public class CowboyEntity extends Pillager {
                         player = sp;
                     }
                 }
-                if (!itemStack.isEmpty() && ItemStack.matches(itemStack, getOminousBanner()) && player != null) {
+                if (!itemStack.isEmpty() && ItemStack.matches(itemStack, getOminousBanner(this.registryAccess().lookupOrThrow(Registries.BANNER_PATTERN))) && player != null) {
                     MobEffectInstance mobEffectInstance = player.getEffect(MobEffects.BAD_OMEN);
                     int i = 1;
                     if (mobEffectInstance != null) {
@@ -130,7 +128,7 @@ public class CowboyEntity extends Pillager {
         SpawnGroupData data = super.finalizeSpawn(serverLevelAccessor, difficultyInstance, mobSpawnType, spawnGroupData);
         if(isPatrolLeader())
         {
-            this.setItemSlot(EquipmentSlot.HEAD, getOminousBanner());
+            this.setItemSlot(EquipmentSlot.HEAD, getOminousBanner(serverLevelAccessor.registryAccess().lookupOrThrow(Registries.BANNER_PATTERN)));
             this.armorDropChances[0] = 2.0F;
         }
         return data;
@@ -138,33 +136,27 @@ public class CowboyEntity extends Pillager {
 
     public static ItemStack getOminousBanner()
     {
+        return getOminousBanner(VanillaRegistries.createLookup().lookupOrThrow(Registries.BANNER_PATTERN));
+    }
+
+    public static ItemStack getOminousBanner(HolderGetter<BannerPattern> bannerPatterns)
+    {
         ItemStack itemStack = new ItemStack(Items.WHITE_BANNER);
 
-        CompoundTag blockEntityTag = new CompoundTag();
-        ListTag patterns = new ListTag();
+        itemStack.set(DataComponents.BANNER_PATTERNS, new BannerPatternLayers.Builder()
+                .addIfRegistered(bannerPatterns, BannerPatterns.RHOMBUS_MIDDLE, DyeColor.CYAN)
+                .addIfRegistered(bannerPatterns, BannerPatterns.STRIPE_BOTTOM, DyeColor.RED)
+                .addIfRegistered(bannerPatterns, BannerPatterns.HALF_HORIZONTAL, DyeColor.BROWN)
+                .addIfRegistered(bannerPatterns, BannerPatterns.TRIANGLES_TOP, DyeColor.BLACK)
+                .addIfRegistered(bannerPatterns, BannerPatterns.BORDER, DyeColor.BLACK)
+                .addIfRegistered(bannerPatterns, BannerPatterns.CIRCLE_MIDDLE, DyeColor.LIGHT_GRAY)
+                .addIfRegistered(bannerPatterns, BannerPatterns.STRIPE_MIDDLE, DyeColor.BROWN)
+                .build());
 
-        patterns.add(createPatternTag(BannerPatterns.RHOMBUS_MIDDLE, DyeColor.CYAN));
-        patterns.add(createPatternTag(BannerPatterns.STRIPE_BOTTOM, DyeColor.RED));
-        patterns.add(createPatternTag(BannerPatterns.HALF_HORIZONTAL, DyeColor.BROWN));
-        patterns.add(createPatternTag(BannerPatterns.TRIANGLES_TOP, DyeColor.BLACK));
-        patterns.add(createPatternTag(BannerPatterns.BORDER, DyeColor.BLACK));
-        patterns.add(createPatternTag(BannerPatterns.CIRCLE_MIDDLE, DyeColor.LIGHT_GRAY));
-        patterns.add(createPatternTag(BannerPatterns.STRIPE_MIDDLE, DyeColor.BROWN));
-
-        blockEntityTag.put("patterns", patterns);
-        itemStack.set(DataComponents.BLOCK_ENTITY_DATA, CustomData.of(blockEntityTag));
-
-        itemStack.set(DataComponents.CUSTOM_NAME, Component.translatable("block.biomemakeover.cowboy_banner").withStyle(ChatFormatting.GOLD));
+        itemStack.set(DataComponents.ITEM_NAME, Component.translatable("block.biomemakeover.cowboy_banner").withStyle(ChatFormatting.GOLD));
 
         itemStack.set(DataComponents.HIDE_ADDITIONAL_TOOLTIP, Unit.INSTANCE);
 
         return itemStack;
-    }
-
-    private static CompoundTag createPatternTag(ResourceKey<BannerPattern> pattern, DyeColor color) {
-        CompoundTag patternTag = new CompoundTag();
-        patternTag.putString("pattern", pattern.location().toString());
-        patternTag.putInt("color", color.getId());
-        return patternTag;
     }
 }

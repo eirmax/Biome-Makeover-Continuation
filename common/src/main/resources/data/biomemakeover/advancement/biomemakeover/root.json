@@ -2,7 +2,7 @@
     "display":  {
                     "icon":  {
                                  "count":  1,
-                                 "id":  "biomemakeover:icon_item"
+                                 "id":  "biomemakeover:illunite_shard"
                              },
                     "title":  {
                                   "translate":  "advancements.biomemakeover.root.title"

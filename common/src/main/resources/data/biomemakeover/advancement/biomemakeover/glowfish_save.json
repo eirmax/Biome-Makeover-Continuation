@@ -25,6 +25,8 @@
                                   }
                  },
     "requirements":  [
-
+                         [
+                             "get_stew"
+                         ]
                      ]
 }

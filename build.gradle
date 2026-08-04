@@ -112,6 +112,22 @@ allprojects {
                     if (icon instanceof Map && (icon.containsKey("item") || icon.containsKey("nbt"))) {
                         throw new GradleException("Legacy advancement icon format in ${advancementFile}")
                     }
+                    if (icon instanceof Map && icon.id == "biomemakeover:icon_item") {
+                        throw new GradleException("Advancement icon uses non-stackable fake item in ${advancementFile}")
+                    }
+
+                    def criteria = advancement.criteria
+                    def requirements = advancement.requirements
+                    if (criteria instanceof Map && requirements instanceof List) {
+                        def criteriaKeys = criteria.keySet() as Set
+                        def requirementKeys = requirements.collectMany { requirement ->
+                            requirement instanceof List ? requirement : [requirement]
+                        } as Set
+
+                        if (criteriaKeys != requirementKeys) {
+                            throw new GradleException("Advancement requirements do not match criteria in ${advancementFile}")
+                        }
+                    }
                 }
             }
         }

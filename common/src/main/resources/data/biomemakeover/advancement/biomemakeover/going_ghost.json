@@ -25,6 +25,8 @@
                                   }
                  },
     "requirements":  [
-
+                         [
+                             "go_ghost"
+                         ]
                      ]
 }
