@@ -77,8 +77,8 @@ public class BMItems
     public static final RegistrySupplier<Item> COOKED_CRAB = registerItem("cooked_crab", ()->new TItem(properties().food(COOKED_CRAB_FOOD)));
     public static final RegistrySupplier<Item> CRAB_CHOWDER = registerItem("crab_chowder", ()->new TItem(properties().food(CRAB_CHOWDER_FOOD).stacksTo(1)));
 
-    public static final RegistrySupplier<Item> COWBOY_HAT = registerItem("cowboy_hat", ()->new HatItem(BiomeMakeover.ID("textures/misc/cowboy_hat.png"), properties()));
-    public static final RegistrySupplier<Item> WITCH_HAT = registerItem("witch_hat", ()->new HatItem(BiomeMakeover.ID("textures/misc/witch_hat.png"), properties()));
+    public static final RegistrySupplier<Item> COWBOY_HAT = registerItem("cowboy_hat", ()->new HatItem(BiomeMakeover.ID("textures/misc/cowboy_hat.png"), properties().stacksTo(1)));
+    public static final RegistrySupplier<Item> WITCH_HAT = registerItem("witch_hat", ()->new HatItem(BiomeMakeover.ID("textures/misc/witch_hat.png"), properties().stacksTo(1)));
 
     public static final RegistrySupplier<Item> MAGENTA_BUD = registerItem("magenta_bud", ()->new TItem(properties()));
     public static final RegistrySupplier<Item> PINK_BUD = registerItem("pink_bud", ()->new TItem(properties()));
@@ -154,10 +154,10 @@ public class BMItems
 
         BMEntities.ATT_PROJECTILE_RESISTANCE.listen(a->{
             ArmorBuilder CLADDED_ARMOR_BUILDER = ArmorBuilder.create(ArmorMaterialRegistry.CLADDED_MATERIAL).attribute(ResourceLocation.parse("armor_proj_res"), BMEntities.ATT_PROJECTILE_RESISTANCE.get(), 1.5, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
-            Supplier<Item> CLADDED_HELMET = registerItem("cladded_helmet", CLADDED_ARMOR_BUILDER.build(ArmorItem.Type.HELMET, properties()));
-            Supplier<Item> CLADDED_CHESTPLATE = registerItem("cladded_chestplate", CLADDED_ARMOR_BUILDER.build(ArmorItem.Type.CHESTPLATE, properties()));
-            Supplier<Item> CLADDED_LEGGINGS = registerItem("cladded_leggings",CLADDED_ARMOR_BUILDER.build(ArmorItem.Type.LEGGINGS, properties()));
-            Supplier<Item> CLADDED_BOOTS = registerItem("cladded_boots", CLADDED_ARMOR_BUILDER.build(ArmorItem.Type.BOOTS, properties()));
+            Supplier<Item> CLADDED_HELMET = registerItem("cladded_helmet", CLADDED_ARMOR_BUILDER.build(ArmorItem.Type.HELMET, properties().stacksTo(1)));
+            Supplier<Item> CLADDED_CHESTPLATE = registerItem("cladded_chestplate", CLADDED_ARMOR_BUILDER.build(ArmorItem.Type.CHESTPLATE, properties().stacksTo(1)));
+            Supplier<Item> CLADDED_LEGGINGS = registerItem("cladded_leggings",CLADDED_ARMOR_BUILDER.build(ArmorItem.Type.LEGGINGS, properties().stacksTo(1)));
+            Supplier<Item> CLADDED_BOOTS = registerItem("cladded_boots", CLADDED_ARMOR_BUILDER.build(ArmorItem.Type.BOOTS, properties().stacksTo(1)));
         });
 
         ICON_ITEM.listen((i)->{

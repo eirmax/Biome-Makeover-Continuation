@@ -1,6 +1,5 @@
 package party.lemons.biomemakeover.mixin;
 
-import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.grower.TreeGrower;
@@ -9,7 +8,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import party.lemons.biomemakeover.BiomeMakeover;
 import party.lemons.biomemakeover.init.BMFeatures;
 
 @Mixin(TreeGrower.class)

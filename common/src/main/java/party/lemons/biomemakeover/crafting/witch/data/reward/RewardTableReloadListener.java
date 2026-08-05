@@ -1,24 +1,15 @@
 package party.lemons.biomemakeover.crafting.witch.data.reward;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
-import net.minecraft.util.RandomSource;
 import net.minecraft.util.profiling.ProfilerFiller;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
-import party.lemons.biomemakeover.BiomeMakeover;
 import party.lemons.biomemakeover.Constants;
-import party.lemons.biomemakeover.crafting.witch.QuestCategory;
-import party.lemons.biomemakeover.crafting.witch.QuestItem;
-import party.lemons.biomemakeover.crafting.witch.data.QuestCategories;
 
 import java.util.Map;
 

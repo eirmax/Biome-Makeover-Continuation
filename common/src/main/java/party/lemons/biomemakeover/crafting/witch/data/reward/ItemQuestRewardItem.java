@@ -1,4 +1,3 @@
-
 package party.lemons.biomemakeover.crafting.witch.data.reward;
 
 import com.mojang.serialization.Codec;
