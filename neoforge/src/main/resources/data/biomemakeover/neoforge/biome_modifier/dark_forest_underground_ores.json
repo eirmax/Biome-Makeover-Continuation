@@ -1,9 +1,0 @@
-{
-  "type": "neoforge:add_features",
-  "biomes": "#biomemakeover:dark_forest",
-  "features": [
-    "biomemakeover:dark_forest/trees",
-    "biomemakeover:dark_forest/wild_mushrooms"
-  ],
-  "step": "underground_ores"
-}
