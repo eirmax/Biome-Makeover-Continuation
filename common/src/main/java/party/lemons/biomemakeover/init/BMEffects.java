@@ -15,7 +15,6 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.world.item.JukeboxPlayable;
 import net.minecraft.world.item.JukeboxSong;
 import party.lemons.biomemakeover.BiomeMakeover;
 import party.lemons.biomemakeover.Constants;
@@ -29,12 +28,15 @@ import java.util.function.Supplier;
 public class BMEffects
 {
     public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(Constants.MOD_ID, Registries.SOUND_EVENT);
-    private static final DeferredRegister<JukeboxSong> JUKEBOX_SONGS = DeferredRegister.create(Constants.MOD_ID, Registries.JUKEBOX_SONG);
 
     public static final ResourceKey<JukeboxSong> BUTTON_MUSHROOMS = of("button_mushrooms");
     public static final ResourceKey<JukeboxSong> GHOST_TOWN = of("ghost_town");
     public static final ResourceKey<JukeboxSong> SWAMP_JIVES = of("swamp_jives");
     public static final ResourceKey<JukeboxSong> RED_ROSE = of("red_rose");
+    private static final RegistrySupplier<SoundEvent> BUTTON_MUSHROOMS_SOUND = registerSound(BiomeMakeover.ID("button_mushrooms"));
+    private static final RegistrySupplier<SoundEvent> GHOST_TOWN_SOUND = registerSound(BiomeMakeover.ID("ghost_town"));
+    private static final RegistrySupplier<SoundEvent> SWAMP_JIVES_SOUND = registerSound(BiomeMakeover.ID("swamp_jives"));
+    private static final RegistrySupplier<SoundEvent> RED_ROSE_SOUND = registerSound(BiomeMakeover.ID("red_rose"));
     public static final Supplier<SoundEvent> GHOST_CHARGE = registerSound(BiomeMakeover.ID("ghost_charge"));
     public static final Supplier<SoundEvent> GHOST_DEATH = registerSound(BiomeMakeover.ID("ghost_death"));
     public static final Supplier<SoundEvent> GHOST_IDLE = registerSound(BiomeMakeover.ID("ghost_idle"));

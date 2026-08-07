@@ -74,8 +74,6 @@ public class BiomeMakeover {
                 Item.BY_BLOCK.put(block.get(), item.get());
             });
 
-            CreativeTabRegistry.appendStack(BMTab.TAB, CowboyEntity.getOminousBanner());
-
             BMEntities.initSpawnsAndAttributes();
 
             //TODO: Find somewhere else for this

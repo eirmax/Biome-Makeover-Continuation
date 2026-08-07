@@ -7,7 +7,6 @@ import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.registries.VanillaRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -132,11 +131,6 @@ public class CowboyEntity extends Pillager {
             this.armorDropChances[0] = 2.0F;
         }
         return data;
-    }
-
-    public static ItemStack getOminousBanner()
-    {
-        return getOminousBanner(VanillaRegistries.createLookup().lookupOrThrow(Registries.BANNER_PATTERN));
     }
 
     public static ItemStack getOminousBanner(HolderGetter<BannerPattern> bannerPatterns)
