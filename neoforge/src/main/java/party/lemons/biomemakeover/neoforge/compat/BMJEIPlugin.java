@@ -4,6 +4,7 @@ import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.gui.widgets.IRecipeExtrasBuilder;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
@@ -43,11 +44,7 @@ public class BMJEIPlugin implements IModPlugin {
     @Override
     public void registerCategories(IRecipeCategoryRegistration registration) {
         IGuiHelper helper = registration.getJeiHelpers().getGuiHelper();
-        registration.addRecipeCategories(
-                new AltarCategory(helper),
-                new WitchQuestCategory(helper),
-                new WitchRewardCategory(helper)
-        );
+        registration.addRecipeCategories(new AltarCategory(helper), new WitchQuestCategory(helper), new WitchRewardCategory(helper));
     }
 
     @Override
@@ -125,7 +122,7 @@ public class BMJEIPlugin implements IModPlugin {
         }
 
         @Override
-        public void draw(BMRecipeViewerData.AltarInfo recipe, mezz.jei.api.gui.ingredient.IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
+        public void draw(BMRecipeViewerData.AltarInfo recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
             drawText(graphics, recipe.note(), 5, 5, 0x404040);
         }
     }
