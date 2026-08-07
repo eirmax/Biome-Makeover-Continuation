@@ -27,6 +27,11 @@ dependencies {
 
     modApi "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"
     modApi "dev.architectury:architectury-fabric:${rootProject.architectury_version}"
+    modCompileOnly "me.shedaniel:RoughlyEnoughItems-api-fabric:${rootProject.rei_version}"
+    modCompileOnly "mezz.jei:jei-1.21.1-common-api:${rootProject.jei_version}"
+    modCompileOnly "mezz.jei:jei-1.21.1-fabric-api:${rootProject.jei_version}"
+    modLocalRuntime "me.shedaniel:RoughlyEnoughItems-fabric:${rootProject.rei_version}"
+    modLocalRuntime "mezz.jei:jei-1.21.1-fabric:${rootProject.jei_version}"
 
    include("eirmax:taniwha-remaked-fabric:${rootProject.taniwha_version}"){
         transitive = true;

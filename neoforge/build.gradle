@@ -23,6 +23,10 @@ configurations {
 dependencies {
     neoForge "net.neoforged:neoforge:${neoforge_version}"
     modApi "dev.architectury:architectury-neoforge:${architectury_version}"
+    modCompileOnly "mezz.jei:jei-1.21.1-common-api:${rootProject.jei_version}"
+    modCompileOnly "mezz.jei:jei-1.21.1-neoforge-api:${rootProject.jei_version}"
+    modCompileOnly "me.shedaniel:RoughlyEnoughItems-api-neoforge:${rootProject.rei_version}"
+    modLocalRuntime "mezz.jei:jei-1.21.1-neoforge:${rootProject.jei_version}"
 
     modApi("eirmax:taniwha-remaked-neoforge:${rootProject.taniwha_version}"){
         transitive = true;
