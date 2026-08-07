@@ -629,5 +629,14 @@
   "item.biomemakeover.cracked_brick": "Cracked Brick",
   "item.biomemakeover.refined_pottery_sherd": "Refined Pottery Sherd",
   "item.biomemakeover.worker_pottery_sherd": "Worker Pottery Sherd",
-  "item.biomemakeover.whinny_pottery_sherd": "Whinny Pottery Sherd"
+  "item.biomemakeover.whinny_pottery_sherd": "Whinny Pottery Sherd",
+  "recipe.biomemakeover.altar_cursing": "Altar Cursing",
+  "recipe.biomemakeover.altar.book_info": "Book + Illunite Shard creates a random curse book.",
+  "recipe.biomemakeover.altar.cursed_item": "Cursed Item",
+  "recipe.biomemakeover.altar.item_info": "Enchanted item + Illunite Shard upgrades one enchantment and adds a curse.",
+  "recipe.biomemakeover.altar.random_curse_book": "Random Curse Book",
+  "recipe.biomemakeover.witch_requests": "Witch Quest Requests",
+  "recipe.biomemakeover.witch_requests.note": "%s requests, weight %s",
+  "recipe.biomemakeover.witch_rewards": "Witch Quest Rewards",
+  "recipe.biomemakeover.witch_rewards.note": "%s rewards"
 }

@@ -629,5 +629,14 @@
   "tooltip.rare": "Редкое",
   "tooltip.uncommon": "Необычное",
   "upgrade.biomemakeover.cladding_upgrade": "Облицовка",
-  "witch.quests": "Задания"
+  "witch.quests": "Задания",
+  "recipe.biomemakeover.altar_cursing": "Проклятие на алтаре",
+  "recipe.biomemakeover.altar.book_info": "Книга + осколок иллюнита создаёт случайную книгу проклятия.",
+  "recipe.biomemakeover.altar.cursed_item": "Проклятый предмет",
+  "recipe.biomemakeover.altar.item_info": "Зачарованный предмет + осколок иллюнита улучшает зачарование и добавляет проклятие.",
+  "recipe.biomemakeover.altar.random_curse_book": "Случайная книга проклятия",
+  "recipe.biomemakeover.witch_requests": "Запросы ведьмы",
+  "recipe.biomemakeover.witch_requests.note": "%s: запросы, вес %s",
+  "recipe.biomemakeover.witch_rewards": "Награды ведьмы",
+  "recipe.biomemakeover.witch_rewards.note": "%s: награды"
 }
