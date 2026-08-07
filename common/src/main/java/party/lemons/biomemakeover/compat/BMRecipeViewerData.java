@@ -5,6 +5,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -61,7 +62,9 @@ public final class BMRecipeViewerData {
             }
 
             List<ItemStack> requests = new ArrayList<>();
+
             JsonArray requestArray = json.getAsJsonArray("requests");
+
             if (requestArray != null) {
                 for (JsonElement requestElement : requestArray) {
                     JsonObject request = requestElement.getAsJsonObject();
@@ -76,12 +79,7 @@ public final class BMRecipeViewerData {
             }
 
             if (!requests.isEmpty()) {
-                displays.add(new WitchQuestInfo(
-                        BiomeMakeover.ID("witch_quest/" + category),
-                        category,
-                        json.get("weight").getAsInt(),
-                        requests
-                ));
+                displays.add(new WitchQuestInfo(BiomeMakeover.ID("witch_quest/" + category), category, json.get("weight").getAsInt(), requests));
             }
         }
         return displays;
@@ -108,11 +106,7 @@ public final class BMRecipeViewerData {
             }
 
             if (!rewards.isEmpty()) {
-                displays.add(new WitchRewardInfo(
-                        BiomeMakeover.ID("witch_reward/" + table),
-                        table,
-                        rewards
-                ));
+                displays.add(new WitchRewardInfo(BiomeMakeover.ID("witch_reward/" + table), table, rewards));
             }
         }
         return displays;
@@ -141,7 +135,9 @@ public final class BMRecipeViewerData {
         String type = reward.get("type").getAsString();
         if (type.endsWith(":potion")) {
             ResourceLocation potionId = ResourceLocation.parse(reward.get("potion").getAsString());
+
             Holder<Potion> potion = BuiltInRegistries.POTION.getHolder(potionId).orElse(null);
+
             if (potion == null) {
                 return named(new ItemStack(Items.POTION), potionId.toString());
             }
@@ -166,17 +162,17 @@ public final class BMRecipeViewerData {
     }
 
     private static ItemStack glint(ItemStack stack) {
-        stack.set(net.minecraft.core.component.DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true);
+        stack.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true);
         return stack;
     }
 
     private static ItemStack named(ItemStack stack, String translationKey) {
-        stack.set(net.minecraft.core.component.DataComponents.CUSTOM_NAME, Component.translatable(translationKey));
+        stack.set(DataComponents.CUSTOM_NAME, Component.translatable(translationKey));
         return stack;
     }
 
     private static int clampStackCount(int count) {
-        return Math.max(1, Math.min(64, count));
+        return Math.clamp(count, 1, 64);
     }
 
     private static String title(String id) {
