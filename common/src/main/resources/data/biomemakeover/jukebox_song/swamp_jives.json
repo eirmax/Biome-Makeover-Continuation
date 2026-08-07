@@ -1,0 +1,8 @@
+{
+  "comparator_output": 1,
+  "description": {
+    "translate": "item.biomemakeover.swamp_jives_music_disk.desc"
+  },
+  "length_in_seconds": 277.76,
+  "sound_event": "biomemakeover:swamp_jives"
+}
