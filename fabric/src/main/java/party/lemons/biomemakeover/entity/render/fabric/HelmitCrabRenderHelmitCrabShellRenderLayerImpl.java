@@ -7,6 +7,7 @@ import com.mojang.math.Axis;
 import net.fabricmc.fabric.api.client.rendering.v1.ArmorRenderer;
 import net.fabricmc.fabric.impl.client.rendering.ArmorRendererRegistryImpl;
 import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.model.Model;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -19,7 +20,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.armortrim.TrimMaterials;
 import org.jetbrains.annotations.Nullable;
 import party.lemons.biomemakeover.entity.HelmitCrabEntity;
+import party.lemons.biomemakeover.entity.render.HatModels;
 import party.lemons.biomemakeover.entity.render.HelmitCrabRender;
+import party.lemons.biomemakeover.item.HatItem;
 
 import java.util.Locale;
 import java.util.Map;
@@ -32,7 +35,17 @@ public class HelmitCrabRenderHelmitCrabShellRenderLayerImpl
 		matrices.pushPose();
 		ArmorRenderer renderer = ArmorRendererRegistryImpl.get(stack.getItem());
 
-		if (renderer != null) {
+		if (stack.getItem() instanceof HatItem hat) {
+			matrices.mulPose(Axis.XN.rotationDegrees(10F));
+			matrices.translate(0, 1.5F, 0.3);
+			Model model = HatModels.getHatModel(hat, bipedModel.getHead());
+			model.renderToBuffer(matrices, vertexConsumers.getBuffer(model.renderType(hat.getHatTexture())), light, OverlayTexture.NO_OVERLAY);
+			if (stack.hasFoil()) {
+				model.renderToBuffer(matrices, vertexConsumers.getBuffer(RenderType.armorEntityGlint()), light, OverlayTexture.NO_OVERLAY);
+			}
+			matrices.popPose();
+			return;
+		} else if (renderer != null) {
 			matrices.mulPose(Axis.XN.rotationDegrees(10F));
 			matrices.translate(0, 1.5F, 0.3);
 			renderer.render(matrices, vertexConsumers, stack, entity, EquipmentSlot.HEAD, light, bipedModel);

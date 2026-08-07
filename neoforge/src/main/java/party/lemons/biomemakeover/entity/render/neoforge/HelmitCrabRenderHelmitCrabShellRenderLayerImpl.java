@@ -15,8 +15,11 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.armortrim.TrimMaterials;
+import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import party.lemons.biomemakeover.entity.HelmitCrabEntity;
+import party.lemons.biomemakeover.entity.render.HatModels;
 import party.lemons.biomemakeover.entity.render.HelmitCrabRender;
+import party.lemons.biomemakeover.item.HatItem;
 
 import javax.annotation.Nullable;
 import java.util.Locale;
@@ -26,14 +29,24 @@ public class HelmitCrabRenderHelmitCrabShellRenderLayerImpl
 {
 	public static Model getHelmetModel(HelmitCrabEntity entity, HumanoidModel bipedModel, ItemStack stack)
 	{
-		// Use the base model for NeoForge compatibility
-		Model model = bipedModel;
-		return model;
+		return IClientItemExtensions.of(stack).getGenericArmorModel(entity, stack, EquipmentSlot.HEAD, bipedModel);
     }
 
 	public static void renderHelmetPlatform(HelmitCrabEntity entity, ItemStack stack, PoseStack matrices, MultiBufferSource vertexConsumers, int light, HumanoidModel baseModel)
 	{
 		matrices.pushPose();
+
+		if (stack.getItem() instanceof HatItem hat) {
+			matrices.mulPose(Axis.XN.rotationDegrees(10F));
+			matrices.translate(0, 1.5F, 0.3);
+			Model model = HatModels.getHatModel(hat, baseModel.getHead());
+			model.renderToBuffer(matrices, vertexConsumers.getBuffer(model.renderType(hat.getHatTexture())), light, OverlayTexture.NO_OVERLAY);
+			if (stack.hasFoil()) {
+				model.renderToBuffer(matrices, vertexConsumers.getBuffer(RenderType.armorEntityGlint()), light, OverlayTexture.NO_OVERLAY);
+			}
+			matrices.popPose();
+			return;
+		}
 
 		Model model = getHelmetModel(entity, baseModel, stack);
 		if(model instanceof HumanoidModel)
