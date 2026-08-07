@@ -59,9 +59,7 @@ public class BMREIPlugin implements REIClientPlugin {
         private final BMRecipeViewerData.AltarInfo info;
 
         private AltarDisplay(BMRecipeViewerData.AltarInfo info) {
-            super(List.of(EntryIngredients.of(info.inputs().get(0)), EntryIngredients.of(info.inputs().get(1))),
-                    List.of(EntryIngredients.of(info.output())),
-                    Optional.of(info.id()));
+            super(List.of(EntryIngredients.of(info.inputs().get(0)), EntryIngredients.of(info.inputs().get(1))), List.of(EntryIngredients.of(info.output())), Optional.of(info.id()));
             this.info = info;
         }
 
@@ -75,9 +73,7 @@ public class BMREIPlugin implements REIClientPlugin {
         private final BMRecipeViewerData.WitchQuestInfo info;
 
         private WitchQuestDisplay(BMRecipeViewerData.WitchQuestInfo info) {
-            super(List.of(EntryIngredients.ofItemStacks(info.requests())),
-                    List.of(EntryIngredients.of(BMItems.WITCH_HAT.get())),
-                    Optional.of(info.id()));
+            super(List.of(EntryIngredients.ofItemStacks(info.requests())), List.of(EntryIngredients.of(BMItems.WITCH_HAT.get())), Optional.of(info.id()));
             this.info = info;
         }
 
@@ -91,9 +87,7 @@ public class BMREIPlugin implements REIClientPlugin {
         private final BMRecipeViewerData.WitchRewardInfo info;
 
         private WitchRewardDisplay(BMRecipeViewerData.WitchRewardInfo info) {
-            super(List.of(EntryIngredients.of(BMItems.WITCH_HAT.get())),
-                    List.of(EntryIngredients.ofItemStacks(info.rewards())),
-                    Optional.of(info.id()));
+            super(List.of(EntryIngredients.of(BMItems.WITCH_HAT.get())), List.of(EntryIngredients.ofItemStacks(info.rewards())), Optional.of(info.id()));
             this.info = info;
         }
 

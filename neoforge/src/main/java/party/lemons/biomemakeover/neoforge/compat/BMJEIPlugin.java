@@ -166,7 +166,7 @@ public class BMJEIPlugin implements IModPlugin {
         }
 
         @Override
-        public void draw(BMRecipeViewerData.WitchRewardInfo recipe, mezz.jei.api.gui.ingredient.IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
+        public void draw(BMRecipeViewerData.WitchRewardInfo recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
             drawText(graphics, recipe.note(), 5, 5, 0x404040);
         }
     }

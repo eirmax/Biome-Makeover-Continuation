@@ -26,6 +26,7 @@ import java.util.Locale;
 
 public final class BMRecipeViewerData {
     private static final Gson GSON = new Gson();
+
     private static final String[] QUEST_CATEGORIES = {
             "common", "dark_forest", "flower", "jungle", "mesa", "mushroom", "nether", "ocean", "rare", "swamp"
     };

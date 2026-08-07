@@ -4,6 +4,7 @@ import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.gui.widgets.IRecipeExtrasBuilder;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
@@ -28,12 +29,10 @@ import party.lemons.biomemakeover.init.BMItems;
 
 @JeiPlugin
 public class BMJEIPlugin implements IModPlugin {
-    private static final RecipeType<BMRecipeViewerData.AltarInfo> ALTAR =
-            RecipeType.create("biomemakeover", "altar_cursing", BMRecipeViewerData.AltarInfo.class);
-    private static final RecipeType<BMRecipeViewerData.WitchQuestInfo> WITCH_REQUESTS =
-            RecipeType.create("biomemakeover", "witch_requests", BMRecipeViewerData.WitchQuestInfo.class);
-    private static final RecipeType<BMRecipeViewerData.WitchRewardInfo> WITCH_REWARDS =
-            RecipeType.create("biomemakeover", "witch_rewards", BMRecipeViewerData.WitchRewardInfo.class);
+
+    private static final RecipeType<BMRecipeViewerData.AltarInfo> ALTAR = RecipeType.create("biomemakeover", "altar_cursing", BMRecipeViewerData.AltarInfo.class);
+    private static final RecipeType<BMRecipeViewerData.WitchQuestInfo> WITCH_REQUESTS = RecipeType.create("biomemakeover", "witch_requests", BMRecipeViewerData.WitchQuestInfo.class);
+    private static final RecipeType<BMRecipeViewerData.WitchRewardInfo> WITCH_REWARDS = RecipeType.create("biomemakeover", "witch_rewards", BMRecipeViewerData.WitchRewardInfo.class);
 
     @Override
     public ResourceLocation getPluginUid() {
@@ -125,7 +124,7 @@ public class BMJEIPlugin implements IModPlugin {
         }
 
         @Override
-        public void draw(BMRecipeViewerData.AltarInfo recipe, mezz.jei.api.gui.ingredient.IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
+        public void draw(BMRecipeViewerData.AltarInfo recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
             drawText(graphics, recipe.note(), 5, 5, 0x404040);
         }
     }
@@ -147,7 +146,7 @@ public class BMJEIPlugin implements IModPlugin {
         }
 
         @Override
-        public void draw(BMRecipeViewerData.WitchQuestInfo recipe, mezz.jei.api.gui.ingredient.IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
+        public void draw(BMRecipeViewerData.WitchQuestInfo recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
             drawText(graphics, recipe.note(), 5, 5, 0x404040);
         }
     }
@@ -169,7 +168,7 @@ public class BMJEIPlugin implements IModPlugin {
         }
 
         @Override
-        public void draw(BMRecipeViewerData.WitchRewardInfo recipe, mezz.jei.api.gui.ingredient.IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
+        public void draw(BMRecipeViewerData.WitchRewardInfo recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
             drawText(graphics, recipe.note(), 5, 5, 0x404040);
         }
     }
